@@ -1,0 +1,24 @@
+.idea/
+.sass-cache/
+config.rb
+node_modules/
+bower_components/
+
+
+web/fonts/
+web/img/
+web/js/vendor/
+web/js/tests/
+libs/
+tests/
+logs/
+db/
+
+## special mac
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes

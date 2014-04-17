@@ -1,0 +1,80 @@
+@import "compass";
+
+$hotelColorGreen: #97bf0d;
+$hotelColorLightBrown: #f6f3ea;
+$hotelColorDarkBrown: #A9A085;
+$hotelColorBorder: #dad8ce;
+html{
+  &.lt-ie9{
+    .browserhappy{
+      display: block;
+    }
+  }
+  .browserhappy{
+    display: none;
+  }
+  &.js{
+    .alert-js{
+      display: none;
+    }
+  }
+  &.no-js{
+    .alert-js{
+      display: block;
+    }
+  }
+}
+body{
+  padding-top: 50px;
+  background-color: #f2ecdc;
+  color: #666;
+}
+
+.navbar{
+  &.navbar-hotel{
+    background-color: $hotelColorGreen;
+    @include box-shadow(rgba(0,0,0,0.3) 0 0 5px);
+    .navbar-brand{
+      color: #fff;
+    }
+
+  }
+}
+
+.jumbotron{
+  background-color: $hotelColorDarkBrown;
+  color: #fff;
+}
+.wrapper{
+  &:nth-child(2n){
+    background-color: $hotelColorLightBrown;
+  }
+}
+.btn-hotel{
+  background-color: $hotelColorGreen;
+  color: #fff;
+  border-color: darken($hotelColorGreen, 5%);
+  &:hover, &:focus{
+    color: #eee;
+  }
+}
+.btn-hotel-inverse{
+  background-color: $hotelColorDarkBrown;
+  color: #fff;
+  border-color: darken($hotelColorDarkBrown, 5%);
+  &:hover, &:focus{
+    color: #eee;
+  }
+}
+
+.page-header{
+  &.page-header-hotel{
+    border-bottom-color: $hotelColorDarkBrown;
+  }
+}
+
+section{
+  &.question{
+    margin-bottom: 25px;
+  }
+}
