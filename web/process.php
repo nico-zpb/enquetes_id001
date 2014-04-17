@@ -18,6 +18,11 @@
       (__<  |mm_|mm_|  |mm_|mm_|
 */
 
+if(strtolower($_SERVER["REQUEST_METHOD"]) != "post" || empty($_POST)){
+    header("Location: /index.php");
+    die();
+}
+
 include_once "../datas/all.php";
 $depts_num = array_keys($departements);
 

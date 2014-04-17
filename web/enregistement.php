@@ -1,4 +1,5 @@
 <?php
+session_start();
 /**
  * Created by PhpStorm.
  * User: Nicolas Canfrere
@@ -17,6 +18,14 @@
     (_ (_   |   |   |  |   |   |
       (__<  |mm_|mm_|  |mm_|mm_|
 */
+
+
+$page = "enregistement";
+$isConnected = false;
+if(isset($_SESSION["user"]) && $_SESSION["user"] != null){
+    $isConnected = true;
+}
+
 
 include_once "../php/header.php";
 

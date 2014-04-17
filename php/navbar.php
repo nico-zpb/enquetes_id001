@@ -31,7 +31,20 @@
             <a class="navbar-brand" href="/index.php">Les Jardins de Beauval - Enquêtes Clientèle</a>
         </div>
         <div class="navbar-collapse collapse">
-            <a class="btn btn-hotel-inverse navbar-btn navbar-right">Connexion</a>
+            <ul class="nav navbar-nav">
+                <li <?php if(isset($page) && $page == "enregistement"){ echo 'class="active"'; } ?>>
+                    <a href="/enregistement.php">Enregistrer</a>
+                </li>
+                <li <?php if(isset($page) && $page == "faq"){ echo 'class="active"'; } ?>>
+                    <a href="/faq.php">FAQ</a>
+                </li>
+            </ul>
+            <?php if($isConnected): ?>
+                <a class="btn btn-hotel-inverse navbar-btn navbar-right" href="/logout.php">Déconnexion</a>
+            <?php else: ?>
+                <a class="btn btn-hotel-inverse navbar-btn navbar-right" href="/login.php">Connexion</a>
+            <?php endif; ?>
+
         </div><!--/.navbar-collapse -->
     </div>
 </div>

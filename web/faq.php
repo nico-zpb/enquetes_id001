@@ -1,10 +1,9 @@
 <?php
-session_start();
 /**
  * Created by PhpStorm.
  * User: Nicolas Canfrère
  * Date: 17/04/14
- * Time: 16:48
+ * Time: 17:39
  */
   /*
            ____________________
@@ -19,7 +18,13 @@ session_start();
       (__<  |mm_|mm_|  |mm_|mm_|
 */
 
+$page = "faq";
 $isConnected = false;
+if(isset($_SESSION["user"]) && $_SESSION["user"] != null){
+    $isConnected = true;
+}
+
+
 include_once "../php/header.php";
 
 include_once "../php/navbar.php";
