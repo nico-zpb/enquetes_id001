@@ -51,6 +51,17 @@ include_once "../php/navbar.php";
         <div class="col-md-9">
             <h2>Raccourcis clavier</h2>
 
+            <h4>Déplacements sur les champs</h4>
+
+            <p>Touche tabulation pour avancer</p>
+            <p>Touche majuscule + tabulation pour reculer</p>
+
+            <h4>Séléctions</h4>
+
+            <p>Case à cocher, à choix multiple : Touche espace pour séléctionner, à nouveau Touche espace pour déséléctionner.</p>
+            <p>Case à cocher, à choix unique : Touche espace pour séléctionner, flèche haut, bas pour modifier.</p>
+            <p>Menu déroulant : déplacement avec flèche haut, bas le texte apparant est le texte séléctionné.</p>
+
         </div>
         <div class="col-md-3">
 
