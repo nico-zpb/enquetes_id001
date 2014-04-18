@@ -45,6 +45,13 @@
                 <?php endif; ?>
             </ul>
             <?php if(isConnected()): ?>
+            <ul class="nav navbar-nav navbar-right">
+
+                    <li>
+                        <a href="/admin/mon-compte.php">Mon compte</a>
+                    </li>
+
+            </ul>
                 <a class="btn btn-hotel-inverse navbar-btn navbar-right" href="/logout.php">Déconnexion</a>
             <?php else: ?>
                 <a class="btn btn-hotel-inverse navbar-btn navbar-right" href="/login.php">Connexion</a>
