@@ -93,10 +93,6 @@ function create(){
     $date["timestamp"] = $theDate->getTimestamp();
 
 
-
-
-
-
     $sql = "INSERT INTO clients (departement_num, arrive_annee, arrive_mois, arrive_jour, arrive_timestamp, pays, sexe, tranche_age, nom, prenom, email, infos, profession, tps_trajet, commentaire, departement_name) VALUES (:departement_num, :arrive_annee, :arrive_mois, :arrive_jour, :arrive_timestamp, :pays, :sexe, :tranche_age, :nom, :prenom, :email, :infos, :profession, :tps_trajet, :commentaire, :departement_name)";
 
     $stmt = $pdo->prepare($sql);
@@ -121,10 +117,130 @@ function create(){
     $stmt->execute();
     $client_id = $pdo->lastInsertId();
 
+    $nbrNuit = rand(1,7);
+    $nbrAdulte = rand(1,6);
+    $nbrEnfant = rand(1,6);
+    $wifi = rand(1,3);
+    $visiteZoo = rand(1,2);
+    $typeChambre = rand(1,4);
+
+
+    // insert sejour
+    $sql="INSERT INTO sejours (client_id, nbre_nuit, nbre_adulte, nbre_enfant, wifi, visite_zoo, type_chambre, arrive_timestamp) VALUES (:client_id, :nbre_nuit, :nbre_adulte, :nbre_enfant, :wifi, :visite_zoo, :type_chambre, :arrive_timestamp)";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(":client_id",$client_id);
+    $stmt->bindValue(":nbre_nuit",$nbrNuit);
+    $stmt->bindValue(":nbre_adulte",$nbrAdulte);
+    $stmt->bindValue(":nbre_enfant",$nbrEnfant);
+    $stmt->bindValue(":wifi",$wifi);
+    $stmt->bindValue(":visite_zoo",$visiteZoo);
+    $stmt->bindValue(":type_chambre",$typeChambre);
+    $stmt->bindValue(":arrive_timestamp",$date["timestamp"]);
+    $stmt->execute();
+
+
+    $satisf = [1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,4,4,4];
+    shuffle($satisf);
+    $n = rand(0,21);
+    $chambre = $satisf[$n];
+    $n = rand(0,21);
+    $restauration = $satisf[$n];
+    $n = rand(0,21);
+    $bar = $satisf[$n];
+    $n = rand(0,21);
+    $accueil = $satisf[$n];
+    $n = rand(0,21);
+    $environnement = $satisf[$n];
+    $n = rand(0,21);
+    $rapport = $satisf[$n];
+    $n = rand(0,21);
+    $resto_amabilite = $satisf[$n];
+    $n = rand(0,21);
+    $resto_service = $satisf[$n];
+    $n = rand(0,21);
+    $resto_diversite = $satisf[$n];
+    $n = rand(0,21);
+    $resto_plats = $satisf[$n];
+    $n = rand(0,21);
+    $resto_vins = $satisf[$n];
+    $n = rand(0,21);
+    $resto_prix = $satisf[$n];
+    $n = rand(0,21);
+    $spa = $satisf[$n];
+    $n = rand(0,21);
+    $revenir = $satisf[$n];
+    $n = rand(0,21);
+    $recommander = $satisf[$n];
+    $n = rand(0,21);
+    $globalement = $satisf[$n];
+    $prix = rand(1,3);
+
+
+    // insert satisfaction
+    $sql="INSERT INTO satisfaction (chambres, restauration, bar, accueil, environnement, rapport, resto_amabilite, resto_service, resto_diversite, resto_plats, resto_vins, resto_prix, spa, revenir, recommander, prix, client_id, globalement) VALUES (:chambres, :restauration, :bar, :accueil, :environnement, :rapport, :resto_amabilite, :resto_service, :resto_diversite, :resto_plats, :resto_vins, :resto_prix, :spa, :revenir, :recommander, :prix, :client_id, :globalement)";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(":chambres",$chambre);
+    $stmt->bindValue(":restauration",$restauration );
+    $stmt->bindValue(":bar",$bar);
+    $stmt->bindValue(":accueil",$accueil);
+    $stmt->bindValue(":environnement",$environnement);
+    $stmt->bindValue(":rapport",$rapport);
+    $stmt->bindValue(":resto_amabilite",$resto_amabilite);
+    $stmt->bindValue(":resto_service",$resto_service);
+    $stmt->bindValue(":resto_diversite",$resto_diversite);
+    $stmt->bindValue(":resto_plats",$resto_plats);
+    $stmt->bindValue(":resto_vins",$resto_vins);
+    $stmt->bindValue(":resto_prix",$resto_prix);
+    $stmt->bindValue(":spa",$spa);
+    $stmt->bindValue(":revenir",$revenir);
+    $stmt->bindValue(":recommander",$recommander);
+    $stmt->bindValue(":prix",$prix);
+    $stmt->bindValue(":client_id",$client_id);
+    $stmt->bindValue(":globalement",$globalement);
+    $stmt->execute();
+
+
+    // insert connaissance/custom
+    $sql="INSERT INTO client_connaissance_type (client_id, type_id) VALUES (:client_id, :type_id)";
+
+
+    $q1_1 = rand(0,1);
+    $q1_2 = rand(0,1);
+    $q1_3 = rand(0,1);
+    $q1_4 = rand(0,1);
+    $q1_5 = rand(0,1);
+    $q1_6 = rand(0,1);
+    $q1_7 = rand(0,1);
+    $q1_8 = rand(0,1);
+    $q1_9 = rand(0,1);
+    $q1_10 = rand(0,1);
+    $q1_11 = rand(0,1);
+    $q1_12 = "lorem ipsum";
+
+    for($i=0; $i<11; $i++){
+        $val = $i+1;
+        $tmp = "q1_" . $val;
+        if(${$tmp} == 1){
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":client_id",$client_id);
+            $stmt->bindValue(":type_id", $val);
+            $stmt->execute();
+        }
+
+        if($tmp == "q1_11" && ${$tmp} == 1){
+            $sqlc = "INSERT INTO connaissance_types_custom (name, client_id) VALUES (:name, :client_id)";
+            $stmtc = $pdo->prepare($sqlc);
+            $stmtc->bindValue(":name", $q1_12);
+            $stmtc->bindValue(":client_id", $client_id);
+            $stmtc->execute();
+        }
+    }
+
+
 
 }
 
 
-for($i=0; $i<2; $i++){
+for($i=0; $i<10; $i++){
     create();
 }
