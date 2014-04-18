@@ -29,8 +29,42 @@ if(!isConnected()){
 include_once "../../php/header.php";
 include_once "../../php/navbar.php";
 
+$error = [];
+$success = false;
 if(isPost() && postExists("newpass_form")){
-    include_once ROOT . DIRECTORY_SEPARATOR . "php" . DIRECTORY_SEPARATOR . "enquete-connexion.php";
+    $datas = getPost("newpass_form");
+    if($datas["newpass_first"] !== $datas["newpass_second"]){
+        $error["pass_not_equals"] = "Les deux nouveaux mots de passe ne sont pas identiques.";
+    } else {
+        include_once ROOT . DIRECTORY_SEPARATOR . "php" . DIRECTORY_SEPARATOR . "enquete-connexion.php";
+        $username = $_SESSION["user"]["username"];
+        $passLib = new \PasswordLib\PasswordLib();
+
+
+        // user exists ?
+
+        $sql = "SELECT * FROM users WHERE pseudo=:username LIMIT 1";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(":username", $username);
+        $stmt->execute();
+        $user = $stmt->fetch();
+
+        if($user && $passLib->verifyPasswordHash($datas["oldpass"], $user["password"])){
+
+            $newPass = $passLib->createPasswordHash($datas["newpass_first"]);
+
+            $sql = "UPDATE users SET password=:pass WHERE id=:id";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":pass", $newPass);
+            $stmt->bindValue(":id", $user["id"]);
+            $stmt->execute();
+            $success = true;
+
+        } else {
+
+        }
+    }
+
 }
 
 ?>
@@ -51,6 +85,27 @@ if(isPost() && postExists("newpass_form")){
     </div>
 </div>
 <div class="container">
+    <?php if($error): ?>
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="alert alert-danger">
+                    <?php if($error["pass_not_equals"]): ?>
+                    <strong>Problème</strong> <?php echo $error["pass_not_equals"]; ?>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <?php if($success): ?>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="alert alert-success">
+                <strong>OK !</strong> Votre mot de passe à bien été réinitialisé.
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
     <div class="row">
         <div class="col-md-3"></div>
         <div class="col-md-6">
