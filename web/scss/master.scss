@@ -37,7 +37,14 @@ body{
     .navbar-brand{
       color: #fff;
     }
-
+    .navbar-nav{
+      a, a:focus, a:hover{
+        color: #fff;
+      }
+    }
+    .nav li a:hover, .nav li a:focus{
+      background-color: darken($hotelColorGreen, 3%);
+    }
   }
 }
 

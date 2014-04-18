@@ -354,7 +354,7 @@ for($i=0; $i<11; $i++){
     }
 
     if($tmp == "q1_11" && ${$tmp} == 1){
-        $sqlc = "INSERT INTO connaissance_type_custom (name, client_id) VALUES (:name, :client_id)";
+        $sqlc = "INSERT INTO connaissance_types_custom (name, client_id) VALUES (:name, :client_id)";
         $stmtc = $pdo->prepare($sqlc);
         $stmtc->bindValue(":name", $q1_12);
         $stmtc->bindValue(":client_id", $client_id);
@@ -362,3 +362,5 @@ for($i=0; $i<11; $i++){
     }
 }
 
+header('Location: /enregistrement.php');
+die();

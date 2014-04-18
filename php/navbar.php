@@ -38,6 +38,11 @@
                 <li <?php if(isset($page) && $page == "faq"){ echo 'class="active"'; } ?>>
                     <a href="/faq.php">FAQ</a>
                 </li>
+                <?php if($isConnected): ?>
+                <li>
+                    <a href="/survey/index.php">Statistiques</a>
+                </li>
+                <?php endif; ?>
             </ul>
             <?php if($isConnected): ?>
                 <a class="btn btn-hotel-inverse navbar-btn navbar-right" href="/logout.php">Déconnexion</a>
