@@ -22,8 +22,17 @@ if(strtolower($_SERVER["REQUEST_METHOD"]) != "post" || empty($_POST)){
     header("Location: /index.php");
     die();
 }
+try{
+    $pdo = new PDO("sqlite:../db/enquetes_hjdb.sqlite");
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    echo $e->getMessage();
+    die();
+}
+include_once "../php/functions.php";
 
 include_once "../datas/all.php";
+
 $depts_num = array_keys($departements);
 
 $date = new DateTime('now', new DateTimeZone("Europe/Paris"));
@@ -270,13 +279,7 @@ $q_prenom = isset($f["q_prenom"]) ? htmlentities(strip_tags($f["q_prenom"])) : "
 
 $q_email = isset($f["q_email"]) ? htmlentities(strip_tags($f["q_email"])) : "";
 
-try{
-    $pdo = new PDO("sqlite:../db/enquetes_hjdb.sqlite");
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    echo $e->getMessage();
-    die();
-}
+
 
 // insert client
 
@@ -362,5 +365,5 @@ for($i=0; $i<11; $i++){
     }
 }
 
-header('Location: /enregistrement.php');
+header('Location:/index.php');
 die();

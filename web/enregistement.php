@@ -19,12 +19,10 @@ session_start();
       (__<  |mm_|mm_|  |mm_|mm_|
 */
 
+include_once "../php/functions.php";
 
 $page = "enregistement";
-$isConnected = false;
-if(isset($_SESSION["user"]) && $_SESSION["user"] != null){
-    $isConnected = true;
-}
+
 
 
 include_once "../php/header.php";

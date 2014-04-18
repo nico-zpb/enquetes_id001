@@ -19,10 +19,7 @@ session_start();
 */
 
 
-$isConnected = false;
-if(isset($_SESSION["user"]) && $_SESSION["user"] != null){
-   $isConnected = true;
-}
+include_once "../php/functions.php";
 
 
 include_once "../php/header.php";
@@ -62,7 +59,7 @@ include_once "../php/navbar.php";
        <div class="col-md-6">
            <h2>Consultation des statistiques</h2>
            <p>Dans cette section est réservée à la consultation des statistiques tirées des enregistrements des enquêtes.</p>
-           <?php if($isConnected): ?>
+           <?php if(isConnected()): ?>
            <p><a class="btn btn-default" href="/survey/index.php" role="button">Voir les statistiques &raquo;</a></p>
            <?php else: ?>
            <p><a class="btn btn-default" href="/login.php" role="button">Connexion &raquo;</a></p>

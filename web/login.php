@@ -19,7 +19,20 @@ session_start();
       (__<  |mm_|mm_|  |mm_|mm_|
 */
 
-$isConnected = false;
+include_once "../php/functions.php";
+
+if(isConnected()){
+    header("Location: /survey/index.php");
+    die();
+}
+
+if(isPost() && postExists("login_form")){
+
+} else {
+
+}
+
+
 include_once "../php/header.php";
 
 include_once "../php/navbar.php";
@@ -35,10 +48,7 @@ include_once "../php/navbar.php";
             <div class="col-md-10">
                 <h1>Connexion</h1>
             </div>
-            <div class="col-md-10 col-md-offset-2">
-
-                <p><a class="btn btn-hotel btn-lg" role="button" href="/enregistement.php">Enregistrement des enquêtes <i class="fa fa-arrow-right"></i></a></p>
-            </div>
+            <div class="col-md-10 col-md-offset-2"></div>
         </div>
 
     </div>

@@ -19,10 +19,7 @@
 */
 
 $page = "faq";
-$isConnected = false;
-if(isset($_SESSION["user"]) && $_SESSION["user"] != null){
-    $isConnected = true;
-}
+include_once "../php/functions.php";
 
 
 include_once "../php/header.php";
