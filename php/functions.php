@@ -18,7 +18,21 @@
       (__<  |mm_|mm_|  |mm_|mm_|
 */
 
+defined("ROOT") || define("ROOT", realpath(dirname(__DIR__)));
+defined("LIBS") || define("LIBS", ROOT . DIRECTORY_SEPARATOR . "libs");
 
+function autoload($classname){
+
+    if($classname[0] == "\\"){
+        $classname = substr($classname, 1);
+    }
+
+    $path = LIBS . DIRECTORY_SEPARATOR . str_replace("\\", DIRECTORY_SEPARATOR, $classname) . ".php";
+
+    include_once $path;
+}
+
+spl_autoload_register("autoload");
 
 function isPost(){
     return strtolower($_SERVER["REQUEST_METHOD"]) === "post";
@@ -40,6 +54,10 @@ function postExists($key){
     return isset($_POST[$key]) && $_POST[$key] != null;
 }
 
-function usernameExists($username){
+function getPost($key, $default=null){
+    if(array_key_exists($key, $_POST)){
+        return $_POST[$key];
+    }
 
+    return $default;
 }
