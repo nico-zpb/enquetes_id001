@@ -45,54 +45,90 @@ include_once "../../php/navbar.php";
     </div>
 </div>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h3>Obtenir les données sous forme de fichier Excel</h3>
-            <p>Séléctionnez vos dates</p>
+<div class="wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header page-header-hotel">
+                    <h3>Obtenir les données sous forme de fichier Excel</h3>
+                </div>
+
+                <p>Séléctionnez vos dates</p>
+
+            </div>
+
 
         </div>
+        <form action="/survey/processing/excel.php" method="post" id="excelForm">
+            <div class="row">
+                <?php
+                $dateTimeZone = new DateTimeZone("Europe/Paris");
+                $date = new DateTime('now', $dateTimeZone);
+                $date->sub(new DateInterval("P1M"));
+                $annee = $date->format("Y");
+                $mois = $date->format("n");
+                //$jour = $date->format("j");
+                $jourStart = 1;
 
+                $joursDansMois = $date->format("t");
+                $jourEnd = $joursDansMois;
+                $yearRange = range($annee-4, $annee);
+                ?>
+                <div class="col-md-6">
+                    <h5>Date de début</h5>
 
-    </div>
-    <form action="/survey/processing/excel.php" method="post" id="excelForm">
-        <div class="row">
-            <?php
-            $dateTimeZone = new DateTimeZone("Europe/Paris");
-            $date = new DateTime('now', $dateTimeZone);
-            $date->sub(new DateInterval("P1M"));
-            $annee = $date->format("Y");
-            $mois = $date->format("n");
-            //$jour = $date->format("j");
-            $jourStart = 1;
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="jour_start">jour</label>
+                                <select name="form_excel_range[jour_start]" id="jour_start">
+                                    <?php for($i=0;$i<$joursDansMois; $i++): ?>
+                                        <option value="<?php echo $i+1; ?>" <?php if($i+1 == $jourStart) { echo 'selected="selected"'; } ?>><?php echo $i+1; ?></option>
+                                    <?php endfor; ?>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="mois_start">mois</label>
+                                <select name="form_excel_range[mois_start]" id="mois_start">
+                                    <?php foreach($datas_mois as $k=>$v): ?>
+                                        <option value="<?php echo $k+1; ?>" <?php if($k+1 == $mois) { echo 'selected="selected"'; } ?>><?php echo $v; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="annee_start">année</label>
+                                <select name="form_excel_range[annee_start]" id="annee_start">
+                                    <?php foreach($yearRange as $year): ?>
+                                        <option value="<?php echo $year; ?>" <?php if($year == $annee) { echo 'selected="selected"'; } ?>><?php echo $year; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
 
-            $joursDansMois = $date->format("t");
-            $jourEnd = $joursDansMois;
-            $yearRange = range($annee-4, $annee);
-            ?>
-            <div class="col-md-6">
-                <h5>Date de début</h5>
+                </div>
+
+                <div class="col-md-6">
+                    <h5>Date de fin</h5>
 
                     <div class="row">
                         <div class="col-md-4">
-                            <label for="jour_start">jour</label>
-                            <select name="form_excel_range[jour_start]" id="jour_start">
+                            <label for="jour_end">jour</label>
+                            <select name="form_excel_range[jour_end]" id="jour_end">
                                 <?php for($i=0;$i<$joursDansMois; $i++): ?>
-                                    <option value="<?php echo $i+1; ?>" <?php if($i+1 == $jourStart) { echo 'selected="selected"'; } ?>><?php echo $i+1; ?></option>
+                                    <option value="<?php echo $i+1; ?>" <?php if($i+1 == $jourEnd) { echo 'selected="selected"'; } ?>><?php echo $i+1; ?></option>
                                 <?php endfor; ?>
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label for="mois_start">mois</label>
-                            <select name="form_excel_range[mois_start]" id="mois_start">
+                            <label for="mois_end">mois</label>
+                            <select name="form_excel_range[mois_end]" id="mois_end">
                                 <?php foreach($datas_mois as $k=>$v): ?>
                                     <option value="<?php echo $k+1; ?>" <?php if($k+1 == $mois) { echo 'selected="selected"'; } ?>><?php echo $v; ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label for="annee_start">année</label>
-                            <select name="form_excel_range[annee_start]" id="annee_start">
+                            <label for="annee_end">année</label>
+                            <select name="form_excel_range[annee_end]" id="annee_end">
                                 <?php foreach($yearRange as $year): ?>
                                     <option value="<?php echo $year; ?>" <?php if($year == $annee) { echo 'selected="selected"'; } ?>><?php echo $year; ?></option>
                                 <?php endforeach; ?>
@@ -100,63 +136,40 @@ include_once "../../php/navbar.php";
                         </div>
                     </div>
 
-            </div>
+                </div>
 
-            <div class="col-md-6">
-                <h5>Date de fin</h5>
+                <div class="col-md-2">
 
-                <div class="row">
-                    <div class="col-md-4">
-                        <label for="jour_end">jour</label>
-                        <select name="form_excel_range[jour_end]" id="jour_end">
-                            <?php for($i=0;$i<$joursDansMois; $i++): ?>
-                                <option value="<?php echo $i+1; ?>" <?php if($i+1 == $jourEnd) { echo 'selected="selected"'; } ?>><?php echo $i+1; ?></option>
-                            <?php endfor; ?>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="mois_end">mois</label>
-                        <select name="form_excel_range[mois_end]" id="mois_end">
-                            <?php foreach($datas_mois as $k=>$v): ?>
-                                <option value="<?php echo $k+1; ?>" <?php if($k+1 == $mois) { echo 'selected="selected"'; } ?>><?php echo $v; ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="annee_end">année</label>
-                        <select name="form_excel_range[annee_end]" id="annee_end">
-                            <?php foreach($yearRange as $year): ?>
-                                <option value="<?php echo $year; ?>" <?php if($year == $annee) { echo 'selected="selected"'; } ?>><?php echo $year; ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
                 </div>
 
             </div>
+            <div class="row">
 
-            <div class="col-md-2">
-
+                <div class="col-md-6">
+                    <button type="submit" id="excelSubmit">Générer le fichier excel</button><span class="" id="excelSpinner"><span class="spinner" ></span>Récupération de vos données en cours...</span>
+                </div>
+                <div class="col-md-6"></div>
+                <div class="col-md-12">
+                    <div class="alert alert-success" id="excelSuccess"></div>
+                    <div class="alert alert-danger" id="excelError"></div>
+                </div>
             </div>
+        </form>
+        <hr>
 
-        </div>
-        <div class="row">
 
-            <div class="col-md-6">
-                <button type="submit" id="excelSubmit">Générer le fichier excel</button><span class="" id="excelSpinner"><span class="spinner" ></span>Récupération de vos données en cours...</span>
-            </div>
-            <div class="col-md-6"></div>
-            <div class="col-md-12">
-                <div class="alert alert-success" id="excelSuccess"></div>
-                <div class="alert alert-danger" id="excelError"></div>
-            </div>
-        </div>
-    </form>
-    <hr>
+    </div> <!-- /container -->
+</div>
 
-    <footer>
-        <p>&copy; ZooParc de Beauval 2014</p>
-    </footer>
-</div> <!-- /container -->
+
+<div class="wrapper">
+    <div class="container">
+        <footer>
+            <p>&copy; ZooParc de Beauval 2014</p>
+        </footer>
+    </div>
+</div>
+
 <script src="/js/vendor/spin.min.js"></script>
 <script src="/js/vendor/jquery.spin.js"></script>
 <script src="/survey/js/apps/mainSurveyIndex.js"></script>
