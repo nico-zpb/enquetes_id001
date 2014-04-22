@@ -109,9 +109,9 @@ include_once "../php/navbar.php";
 
     <hr>
 
-    <footer>
-        <p>&copy; ZooParc de Beauval 2014</p>
-    </footer>
+<footer>
+    <p>&copy; ZooParc de Beauval 2014</p>
+</footer>
 </div> <!-- /container -->
 </body>
 </html>

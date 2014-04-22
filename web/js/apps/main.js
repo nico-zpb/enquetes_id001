@@ -1,9 +1,7 @@
 
 
 $(function(){
-    function getNumDaysInMonth(m,y){
-        return new Date(y,( m+1), 0).getDate();
-    }
+
 
     var annee = $("#q5_annee"), mois = $("#q5_mois"), jour=$("#q5_jour");
 

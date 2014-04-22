@@ -36,7 +36,7 @@
     <link rel="stylesheet" href="/css/font-awesome.min.css"/>
     <link rel="stylesheet" href="/css/master.css"/>
 
-
+    <script src="/js/apps/utils.js"></script>
     <script src="/js/vendor/jquery-2.1.0.min.js"></script>
 
 </head>
