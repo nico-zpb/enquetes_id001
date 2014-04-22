@@ -74,24 +74,24 @@ include_once "../../php/navbar.php";
             <form action="">
                 <div class="row">
                     <div class="col-md-4">
-                        <label for="">jour</label>
-                        <select name="form_excel_range[]" id="">
+                        <label for="jour_start">jour</label>
+                        <select name="form_excel_range[jour_start]" id="jour_start">
                             <?php for($i=0;$i<$joursDansMois; $i++): ?>
                                 <option value="<?php echo $i+1; ?>" <?php if($i+1 == $jourStart) { echo 'selected="selected"'; } ?>><?php echo $i+1; ?></option>
                             <?php endfor; ?>
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <label for="">mois</label>
-                        <select name="form_excel_range[]" id="">
+                        <label for="mois_start">mois</label>
+                        <select name="form_excel_range[mois_start]" id="mois_start">
                             <?php foreach($datas_mois as $k=>$v): ?>
                                 <option value="<?php echo $k+1; ?>" <?php if($k+1 == $mois) { echo 'selected="selected"'; } ?>><?php echo $v; ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <label for="">année</label>
-                        <select name="form_excel_range[]" id="">
+                        <label for="annee_start">année</label>
+                        <select name="form_excel_range[annee_start]" id="annee_start">
                             <?php foreach($yearRange as $year): ?>
                                 <option value="<?php echo $year; ?>" <?php if($year == $annee) { echo 'selected="selected"'; } ?>><?php echo $year; ?></option>
                             <?php endforeach; ?>
@@ -106,24 +106,24 @@ include_once "../../php/navbar.php";
 
             <div class="row">
                 <div class="col-md-4">
-                    <label for="">jour</label>
-                    <select name="" id="">
+                    <label for="jour_end">jour</label>
+                    <select name="[jour_end]" id="jour_end">
                         <?php for($i=0;$i<$joursDansMois; $i++): ?>
                             <option value="<?php echo $i+1; ?>" <?php if($i+1 == $jourEnd) { echo 'selected="selected"'; } ?>><?php echo $i+1; ?></option>
                         <?php endfor; ?>
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label for="">mois</label>
-                    <select name="" id="">
+                    <label for="mois_end">mois</label>
+                    <select name="[mois_end]" id="mois_end">
                         <?php foreach($datas_mois as $k=>$v): ?>
                             <option value="<?php echo $k+1; ?>" <?php if($k+1 == $mois) { echo 'selected="selected"'; } ?>><?php echo $v; ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label for="">année</label>
-                    <select name="" id="">
+                    <label for="annee_end">année</label>
+                    <select name="[annee_end]" id="annee_end">
                         <?php foreach($yearRange as $year): ?>
                             <option value="<?php echo $year; ?>" <?php if($year == $annee) { echo 'selected="selected"'; } ?>><?php echo $year; ?></option>
                         <?php endforeach; ?>
