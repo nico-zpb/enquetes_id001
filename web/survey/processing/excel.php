@@ -42,11 +42,12 @@ $anneeStart = $formDatas["annee_start"];
 $dateStart = DateTime::createFromFormat("j-n-Y",$jourStart . "-" . $moisStart . "-" . $anneeStart, $dateTimeZone);
 $dateStartTimestamp = $dateStart->getTimestamp();
 
-if($dateStartTimestamp >= $todayTs){
+// TODO décommenter ce morceau de code, commenté pour test
+/*if($dateStartTimestamp >= $todayTs){
     header("Content-Type: appliaction/json");
     echo json_encode(["link"=>"", "error"=>true, "errorMsg"=>"Vous avez séléctionnez une date de début de recherche supérieure ou égale à la date d'aujourd'hui."]);
     die();
-}
+}*/
 
 
 /// date de fin
@@ -56,9 +57,14 @@ $anneeEnd = $formDatas["annee_end"];
 $dateEnd = DateTime::createFromFormat("j-n-Y", $jourEnd . "-" . $moisEnd . "-" . $anneeEnd , $dateTimeZone);
 $dateEndTimestamp = $dateEnd->getTimestamp();
 
-if($dateEndTimestamp >= $todayTs){
+// TODO décommenter ce morceau de code, commenté pour test
+/*if($dateEndTimestamp >= $todayTs){
     $dateEndTimestamp = $todayTs;
-}
+}*/
+
+
+// systeme de mise en cache ????
+//
 
 
 
