@@ -240,7 +240,7 @@ function create(){
 
 }
 
-
-for($i=0; $i<10; $i++){
+ini_set("max_execution_time", 0);
+for($i=0; $i<2000; $i++){
     create();
 }

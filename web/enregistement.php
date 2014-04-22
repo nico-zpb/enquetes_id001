@@ -2,7 +2,7 @@
 session_start();
 /**
  * Created by PhpStorm.
- * User: Nicolas Canfrere
+ * User: Nicolas Canfrère
  * Date: 16/04/2014
  * Time: 13:06
  */
