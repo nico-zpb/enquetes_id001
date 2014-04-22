@@ -80,6 +80,13 @@ body{
   }
 }
 
+.spinner{
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+}
+
 section{
   &.question{
     margin-bottom: 25px;

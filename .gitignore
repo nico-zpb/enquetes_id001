@@ -4,7 +4,7 @@ config.rb
 node_modules/
 bower_components/
 
-
+web/survey/downloads/
 web/fonts/
 web/img/
 web/js/vendor/
