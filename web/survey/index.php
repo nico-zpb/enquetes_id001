@@ -69,7 +69,7 @@ include_once "../../php/navbar.php";
         $jourEnd = $joursDansMois;
         $yearRange = range($annee-4, $annee);
         ?>
-        <div class="col-md-6">
+        <div class="col-md-5">
             <h5>Date de début</h5>
             <form action="">
                 <div class="row">
@@ -101,7 +101,7 @@ include_once "../../php/navbar.php";
 
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-5">
             <h5>Date de fin</h5>
 
             <div class="row">
@@ -130,8 +130,13 @@ include_once "../../php/navbar.php";
                     </select>
                 </div>
             </div>
-            </form>
+
         </div>
+
+        <div class="col-md-2">
+            <button type="submit">Générer</button>
+        </div>
+        </form>
     </div>
 
     <hr>

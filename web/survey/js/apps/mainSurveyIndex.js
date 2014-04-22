@@ -17,11 +17,12 @@
 
 $(function(){
 
-var annee_start =   $("#annee_start");
-var annee_end =     $("#annee_end");
-var mois_start =    $("#mois_start");
-    var mois_end =  $("#mois_end");
-
+    var annee_start =   $("#annee_start");
+    var annee_end =     $("#annee_end");
+    var mois_start =    $("#mois_start");
+    var mois_end =      $("#mois_end");
+    var jour_start =    $("#jour_start");
+    var jour_end =      $("#jour_end");
 
     annee_start.on("change", function(evt){
         var a = parseInt($(this).val());
