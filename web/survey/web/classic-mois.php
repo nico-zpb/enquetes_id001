@@ -174,5 +174,10 @@ include_once "../../../php/navbar.php";
                 <p>&copy; ZooParc de Beauval 2014</p>
             </footer>
         </div>
+    <?php if($multiMonth): ?>
+        <script src="/survey/js/apps/mois/multi.js"></script>
+    <?php else: ?>
+        <script src="/survey/js/apps/mois/alone.js"></script>
+    <?php endif; ?>
     </body>
 </html>

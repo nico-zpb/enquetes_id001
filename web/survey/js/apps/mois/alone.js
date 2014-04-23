@@ -1,0 +1,20 @@
+/**
+ * Created by Nicolas Canfrere on 23/04/2014.
+ */
+ /*
+           ____________________
+  __      /     ______         \
+ {  \ ___/___ /       }         \
+  {  /       / #      }          |
+   {/ ô ô  ;       __}           |
+   /          \__}    /  \       /\
+<=(_    __<==/  |    /\___\     |  \
+   (_ _(    |   |   |  |   |   /    #
+    (_ (_   |   |   |  |   |   |
+      (__<  |mm_|mm_|  |mm_|mm_|
+*/
+$(function(){
+
+
+    $("#pieChartGlobalSatisf").dxPieChart(pieChartGlobalSatisf);
+});

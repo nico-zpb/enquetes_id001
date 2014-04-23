@@ -131,14 +131,31 @@ foreach($satisfaction as $k=>$v){
 }
 
 
-
-
-
-
-
+?>
+<script src="/survey/js/vendor/globalize.min.js"></script>
+<script src="/survey/js/vendor/dx.chartjs.js"></script>
+<script>
+    var pieChartGlobalSatisf = {
+        dataSource: [
+            <?php foreach($datas_satisfaction as $k=>$v): ?>
+            {category: "<?php echo $v["name"]; ?>", value: <?php echo round(($globalSatisf[$k] / $numEntry) * 100); ?>},
+            <?php endforeach; ?>
+        ],
+        series: {
+            argumentField: 'category',
+            valueField: 'value',
+            label: {
+                visible: true,
+                connector: {
+                    visible: true
+                }
+            }
+        }
+    };
+</script>
+<?php
 include "mois/profil-alone.php";
 ?>
-
 <div class="wrapper">
     <div class="container">
         <div class="row">
@@ -164,7 +181,9 @@ include "mois/profil-alone.php";
         </div>
         <div class="row">
             <div class="col-md-6">
+                <div id="pieChartGlobalSatisf">
 
+                </div>
             </div>
             <div class="col-md-6">
                 <table class="table">
