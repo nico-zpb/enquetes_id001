@@ -123,6 +123,9 @@ $satifPlats = [0,0,0,0];
 $satifVins = [0,0,0,0];
 $satifPrix = [0,0,0,0];
 
+$revenir = [0,0,0,0,];
+$recommander = [0,0,0,0];
+
 foreach($satisfaction as $k=>$v){
 
     // satisfaction globale
@@ -340,6 +343,38 @@ foreach($satisfaction as $k=>$v){
             $satifPrix[3]++;
             break;
     }
+
+    switch($v["revenir"]){
+        case 1:
+            $revenir[0]++;
+            break;
+        case 2:
+            $revenir[1]++;
+            break;
+        case 3:
+            $revenir[2]++;
+            break;
+        case 4:
+        default :
+            $revenir[3]++;
+            break;
+    }
+
+    switch($v["recommander"]){
+        case 1:
+            $recommander[0]++;
+            break;
+        case 2:
+            $recommander[1]++;
+            break;
+        case 3:
+            $recommander[2]++;
+            break;
+        case 4:
+        default :
+            $recommander[3]++;
+            break;
+    }
 }
 $toPercent  = function($it) use ($numEntry){
     return round(($it / $numEntry) *100);
@@ -367,6 +402,8 @@ $allRestoSatif = [
 
 $perceptionPrixPercent = array_map($toPercent, $perceptionPrix);
 
+$revenirPercent = array_map($toPercent, $revenir);
+$recommanderPercent = array_map($toPercent, $recommander);
 ?>
 <script src="/survey/js/vendor/globalize.min.js"></script>
 <script src="/survey/js/vendor/dx.chartjs.js"></script>
@@ -466,6 +503,56 @@ $perceptionPrixPercent = array_map($toPercent, $perceptionPrix);
             enabled: true,
             customizeText: function () {
                 return this.seriesName + " " + this.valueText + "%";
+            }
+        }
+    };
+
+    var pieChartRevenir = {
+        dataSource: [
+            <?php foreach($datas_intentions as $k=>$v): ?>
+            {category: "<?php echo $v; ?>", value: <?php echo $revenirPercent[$k]; ?>},
+            <?php endforeach; ?>
+        ],
+        series: {
+            argumentField: 'category',
+            valueField: 'value',
+            label: {
+                visible: true,
+                connector: {
+                    visible: true
+                }
+            }
+        },
+        tooltip: {
+            enabled: true,
+            percentPrecision: 2,
+            customizeText: function (value) {
+                return value.percentText;
+            }
+        }
+    };
+
+    var pieChartRecommander = {
+        dataSource: [
+            <?php foreach($datas_intentions as $k=>$v): ?>
+            {category: "<?php echo $v; ?>", value: <?php echo $recommanderPercent[$k]; ?>},
+            <?php endforeach; ?>
+        ],
+        series: {
+            argumentField: 'category',
+            valueField: 'value',
+            label: {
+                visible: true,
+                connector: {
+                    visible: true
+                }
+            }
+        },
+        tooltip: {
+            enabled: true,
+            percentPrecision: 2,
+            customizeText: function (value) {
+                return value.percentText;
             }
         }
     };

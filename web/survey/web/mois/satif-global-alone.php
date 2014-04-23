@@ -40,46 +40,18 @@
 
             </div>
             <div class="col-md-12">
-                <p>Question : &laquo; Globalement, en ce qui concerne votre séjour à l'Hôtel Les Jardins de Beauval, diriez-vous que vous êtes &raquo;</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div id="pieChartGlobalSatisf">
-
-                </div>
-            </div>
-            <div class="col-md-6">
                 <?php
                 $tauxSatisfaitTres = round(($globalSatisf[0] / $numEntry) * 100);
                 $tauxSatisfait = round(($globalSatisf[1] / $numEntry) * 100)
                 ?>
                 <h4 class="text-success text-center">taux de satisfaits : <?php echo $tauxSatisfait + $tauxSatisfaitTres; ?>% dont <?php echo $tauxSatisfaitTres; ?>% de "très satisfaits".</h4>
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <th>Effectif</th>
-                        <th>%</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach($datas_satisfaction as $k=>$v): ?>
-                        <tr>
-                            <td><?php echo $v["name"]; ?></td>
-                            <td><?php echo $globalSatisf[$k]; ?></td>
-                            <td><?php echo round(($globalSatisf[$k] / $numEntry) * 100); ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                    <tr>
-                        <td>Total</td>
-                        <td><?php echo $numEntry; ?></td>
-                        <td>100%</td>
-                    </tr>
-                    </tbody>
-                </table>
+                <p>Question : &laquo; Globalement, en ce qui concerne votre séjour à l'Hôtel Les Jardins de Beauval, diriez-vous que vous êtes &raquo;</p>
             </div>
-
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="pieChartGlobalSatisf"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -139,6 +111,48 @@
         <div class="row">
             <div class="col-md-12">
                 <div id="fullStackedBarRestoSatif"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header-hotel page-header">
+                    <h3>Intention de revenir</h3>
+                </div>
+
+            </div>
+            <div class="col-md-12">
+                <h4 class="text-center text-success">Taux de fidélisation : <?php echo $revenirPercent[0] + $revenirPercent[1]; ?>%, dont reviendrait &laquo; certainement &raquo; : <?php echo $revenirPercent[0]; ?>%</h4>
+                <p>Question : &laquo; Reviendriez-vous à l'Hôtel Les Jardins de Beauval si vous en aviez l'occasion &raquo;</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="pieChartRevenir"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header-hotel page-header">
+                    <h3>Recommandation à des proches</h3>
+                </div>
+
+            </div>
+            <div class="col-md-12">
+                <h4 class="text-center text-success">Taux de recommandation : <?php echo $recommanderPercent[0] + $recommanderPercent[1]; ?>%, dont &laquo; certainement &raquo; : <?php echo $recommanderPercent[0]; ?>%</h4>
+                <p>Question : &laquo; Et recommanderiez-vous l'hôtel à des proches &raquo;</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="pieChartRecommander"></div>
             </div>
         </div>
     </div>

@@ -23,4 +23,9 @@ $(function(){
     $("#pieChartPerceptionPrix").dxPieChart(pieChartPerceptionPrix);
 
     $("#fullStackedBarRestoSatif").dxChart(fullStackedBarRestoSatif);
+
+    $("#pieChartRevenir").dxPieChart(pieChartRevenir);
+
+    $("#pieChartRecommander").dxPieChart(pieChartRecommander);
+
 });

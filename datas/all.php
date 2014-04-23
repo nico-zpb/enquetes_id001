@@ -71,6 +71,8 @@ $datas_satisfaction = [
     ["num"=>4,"name"=>"pas du tout satisfait"],
 ];
 
+$datas_intentions = ["certainement","problement","problement pas","certainement pas"];
+
 $datas_services = [
     "les chambres",
     "la restauration",

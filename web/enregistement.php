@@ -705,10 +705,10 @@ include_once "../datas/all.php"
                         <h3 id="question_15">Q15. Reviendriez-vous à l'Hôtel Les Jardins de Beauval si vous en aviez l'occasion ?</h3>
                     </div>
                     <div class="radio">
-                        <label for="q15_1"><input type="radio" name="form[q15]" value="1" id="q15_1"/> probablement</label>
+                        <label for="q15_1"><input type="radio" name="form[q15]" value="1" id="q15_1"/> certainement</label>
                     </div>
                     <div class="radio">
-                        <label for="q15_2"><input type="radio" name="form[q15]" value="2" id="q15_2"/> certainement</label>
+                        <label for="q15_2"><input type="radio" name="form[q15]" value="2" id="q15_2"/> probablement</label>
                     </div>
                     <div class="radio">
                         <label for="q15_3"><input type="radio" name="form[q15]" value="3" id="q15_3"/> propablement pas</label>
@@ -736,10 +736,10 @@ include_once "../datas/all.php"
                         <h3 id="question_16">Q16. Et recommanderiez-vous l'hôtel à des proches ?</h3>
                     </div>
                     <div class="radio">
-                        <label for="q16_1"><input type="radio" name="form[q16]" value="1" id="q16_1"/> probablement</label>
+                        <label for="q16_1"><input type="radio" name="form[q16]" value="1" id="q16_1"/> certainement</label>
                     </div>
                     <div class="radio">
-                        <label for="q16_2"><input type="radio" name="form[q16]" value="2" id="q16_2"/> certainement</label>
+                        <label for="q16_2"><input type="radio" name="form[q16]" value="2" id="q16_2"/> probablement</label>
                     </div>
                     <div class="radio">
                         <label for="q16_3"><input type="radio" name="form[q16]" value="3" id="q16_3"/> propablement pas</label>
