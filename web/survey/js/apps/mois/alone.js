@@ -19,4 +19,8 @@ $(function(){
     $("#pieChartGlobalSatisf").dxPieChart(pieChartGlobalSatisf);
 
     $("#fullStackedBarServicesSatif").dxChart(fullStackedBarServicesSatif);
+
+    $("#pieChartPerceptionPrix").dxPieChart(pieChartPerceptionPrix);
+
+    $("#fullStackedBarRestoSatif").dxChart(fullStackedBarRestoSatif);
 });

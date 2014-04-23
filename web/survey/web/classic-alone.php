@@ -114,6 +114,15 @@ $satifAccueil = [0,0,0,0];
 $satifEnvironement = [0,0,0,0];
 $satifRapport = [0,0,0,0];
 
+$perceptionPrix = [0,0,0];
+
+$satifAmabilite = [0,0,0,0];
+$satifService = [0,0,0,0];
+$satifDiversite = [0,0,0,0];
+$satifPlats = [0,0,0,0];
+$satifVins = [0,0,0,0];
+$satifPrix = [0,0,0,0];
+
 foreach($satisfaction as $k=>$v){
 
     // satisfaction globale
@@ -224,6 +233,113 @@ foreach($satisfaction as $k=>$v){
             $satifRapport[3]++;
             break;
     }
+
+    switch($v["prix"]){
+        case 1:
+            $perceptionPrix[0]++;
+            break;
+        case 2:
+            $perceptionPrix[1]++;
+            break;
+        case 3:
+        default :
+            $perceptionPrix[2]++;
+            break;
+    }
+
+    switch($v["resto_amabilite"]){
+        case 1:
+            $satifAmabilite[0]++;
+            break;
+        case 2:
+            $satifAmabilite[1]++;
+            break;
+        case 3:
+            $satifAmabilite[2]++;
+            break;
+        case 4:
+        default :
+            $satifAmabilite[3]++;
+            break;
+    }
+
+    switch($v["resto_service"]){
+        case 1:
+            $satifService[0]++;
+            break;
+        case 2:
+            $satifService[1]++;
+            break;
+        case 3:
+            $satifService[2]++;
+            break;
+        case 4:
+        default :
+            $satifService[3]++;
+            break;
+    }
+    switch($v["resto_diversite"]){
+        case 1:
+            $satifDiversite[0]++;
+            break;
+        case 2:
+            $satifDiversite[1]++;
+            break;
+        case 3:
+            $satifDiversite[2]++;
+            break;
+        case 4:
+        default :
+            $satifDiversite[3]++;
+            break;
+    }
+    switch($v["resto_plats"]){
+        case 1:
+            $satifPlats[0]++;
+            break;
+        case 2:
+            $satifPlats[1]++;
+            break;
+        case 3:
+            $satifPlats[2]++;
+            break;
+        case 4:
+        default :
+            $satifPlats[3]++;
+            break;
+    }
+
+    switch($v["resto_vins"]){
+        case 1:
+            $satifVins[0]++;
+            break;
+        case 2:
+            $satifVins[1]++;
+            break;
+        case 3:
+            $satifVins[2]++;
+            break;
+        case 4:
+        default :
+            $satifVins[3]++;
+            break;
+    }
+
+    switch($v["resto_prix"]){
+        case 1:
+            $satifPrix[0]++;
+            break;
+        case 2:
+            $satifPrix[1]++;
+            break;
+        case 3:
+            $satifPrix[2]++;
+            break;
+        case 4:
+        default :
+            $satifPrix[3]++;
+            break;
+    }
 }
 $toPercent  = function($it) use ($numEntry){
     return round(($it / $numEntry) *100);
@@ -238,7 +354,18 @@ $allServicesSatif = [
     array_map($toPercent, $satifAccueil),
     array_map($toPercent, $satifEnvironement),
     array_map($toPercent, $satifRapport)
-]
+];
+
+$allRestoSatif = [
+  array_map($toPercent, $satifAmabilite),
+  array_map($toPercent, $satifService),
+  array_map($toPercent, $satifDiversite),
+  array_map($toPercent, $satifPlats),
+  array_map($toPercent, $satifVins),
+  array_map($toPercent, $satifPrix),
+];
+
+$perceptionPrixPercent = array_map($toPercent, $perceptionPrix);
 
 ?>
 <script src="/survey/js/vendor/globalize.min.js"></script>
@@ -291,7 +418,57 @@ $allServicesSatif = [
                 return this.seriesName + " " + this.valueText + "%";
             }
         }
-    }
+    };
+
+
+    var pieChartPerceptionPrix = {
+        dataSource: [
+            <?php foreach($datas_perception_prix as $k=>$v): ?>
+            {category: "<?php echo $v; ?>", value: <?php echo $perceptionPrixPercent[$k]; ?>},
+            <?php endforeach; ?>
+        ],
+        series: {
+            argumentField: 'category',
+            valueField: 'value',
+            label: {
+                visible: true,
+                connector: {
+                    visible: true
+                }
+            }
+        },
+        tooltip: {
+            enabled: true,
+            percentPrecision: 2,
+            customizeText: function (value) {
+                return value.percentText;
+            }
+        }
+    };
+
+    var fullStackedBarRestoSatif = {
+        dataSource:[
+            <?php foreach($datas_resto as $k=>$v): ?>
+            {category: "<?php echo $v; ?>", satifTres: <?php echo $allRestoSatif[$k][0]; ?>, satif: <?php echo $allRestoSatif[$k][1]; ?>, satifpeu: <?php echo $allRestoSatif[$k][2]; ?>, satifpas: <?php echo $allRestoSatif[$k][3]; ?>},
+            <?php endforeach; ?>
+        ],
+        commonSeriesSettings: {
+            argumentField: 'category',
+            type: 'stackedBar'
+        },
+        series:[
+            { valueField: "satifTres", name:"très satisfait"},
+            { valueField: "satif", name:"satisfait"},
+            { valueField: "satifpeu", name:"peu satisfait"},
+            { valueField: "satifpas", name:"pas du tout satisfait"}
+        ],
+        tooltip: {
+            enabled: true,
+            customizeText: function () {
+                return this.seriesName + " " + this.valueText + "%";
+            }
+        }
+    };
 </script>
 <?php
 include_once "mois/profil-alone.php";

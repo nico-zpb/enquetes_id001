@@ -39,6 +39,9 @@
                 </div>
 
             </div>
+            <div class="col-md-12">
+                <p>Question : &laquo; Globalement, en ce qui concerne votre séjour à l'Hôtel Les Jardins de Beauval, diriez-vous que vous êtes &raquo;</p>
+            </div>
         </div>
         <div class="row">
             <div class="col-md-6">
@@ -89,10 +92,53 @@
                 </div>
 
             </div>
+            <div class="col-md-12">
+                <p>Question : &laquo; Et plus particulièrement, êtes-vous satisfait(e) des points suivants &raquo;</p>
+            </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <div id="fullStackedBarServicesSatif"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header-hotel page-header">
+                    <h3>Perception du rapport qualité/prix de l'hôtel</h3>
+                </div>
+
+            </div>
+            <div class="col-md-12">
+                <p>Question : &laquo; Au regard de la qualité des chambres et de l'environement de l'hôtel, avez-vous trouvé le prix &raquo;</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="pieChartPerceptionPrix"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header-hotel page-header">
+                    <h3>Satisfaction concernant la restauration</h3>
+                </div>
+
+            </div>
+            <div class="col-md-12">
+                <p>Question : &laquo; En ce qui concerne la restauration de l'hôtel, avez-vous été satisfait de &raquo;</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="fullStackedBarRestoSatif"></div>
             </div>
         </div>
     </div>

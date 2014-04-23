@@ -79,3 +79,16 @@ $datas_services = [
     "l'environnement",
     "le rapport qualité/prix"
 ];
+
+$datas_resto = [
+    "l'amabilité du personnel",
+    "la qualité du service",
+    "la diversité des plats proposés",
+    "la qualité des plats",
+    "les vins",
+    "les prix",
+];
+
+$datas_perception_prix = [
+    "trop cher","approprié","pas très cher"
+];
