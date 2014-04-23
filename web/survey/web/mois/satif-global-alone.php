@@ -28,17 +28,16 @@
             </div>
         </div>
     </div>
+
+</div>
+<div class="wrapper">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <div class="page-header-hotel page-header">
                     <h3>Satisfaction globale</h3>
                 </div>
-                <?php
-                $tauxSatisfaitTres = round(($globalSatisf[0] / $numEntry) * 100);
-                $tauxSatisfait = round(($globalSatisf[1] / $numEntry) * 100)
-                ?>
-                <h4 class="text-success text-center">taux de satisfaits : <?php echo $tauxSatisfait + $tauxSatisfaitTres; ?>% dont <?php echo $tauxSatisfaitTres; ?>% de "très satisfaits".</h4>
+
             </div>
         </div>
         <div class="row">
@@ -48,6 +47,11 @@
                 </div>
             </div>
             <div class="col-md-6">
+                <?php
+                $tauxSatisfaitTres = round(($globalSatisf[0] / $numEntry) * 100);
+                $tauxSatisfait = round(($globalSatisf[1] / $numEntry) * 100)
+                ?>
+                <h4 class="text-success text-center">taux de satisfaits : <?php echo $tauxSatisfait + $tauxSatisfaitTres; ?>% dont <?php echo $tauxSatisfaitTres; ?>% de "très satisfaits".</h4>
                 <table class="table">
                     <thead>
                     <tr>
@@ -73,6 +77,23 @@
                 </table>
             </div>
 
+        </div>
+    </div>
+</div>
+<div class="wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header-hotel page-header">
+                    <h3>Satisfaction des différents services</h3>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="fullStackedBarServicesSatif"></div>
+            </div>
         </div>
     </div>
 </div>

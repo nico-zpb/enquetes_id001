@@ -107,6 +107,12 @@ foreach($clients as $k=>$c){
 
 // satisfaction globale
 $globalSatisf = [0,0,0,0];
+$satifChambre = [0,0,0,0];
+$satifRestauration = [0,0,0,0];
+$satifBar = [0,0,0,0];
+$satifAccueil = [0,0,0,0];
+$satifEnvironement = [0,0,0,0];
+$satifRapport = [0,0,0,0];
 
 foreach($satisfaction as $k=>$v){
 
@@ -128,8 +134,111 @@ foreach($satisfaction as $k=>$v){
 
     }
 
+    switch($v["chambres"]){
+        case 1:
+            $satifChambre[0]++;
+            break;
+        case 2:
+            $satifChambre[1]++;
+            break;
+        case 3:
+            $satifChambre[2]++;
+            break;
+        case 4:
+        default :
+            $satifChambre[3]++;
+            break;
+    }
+    switch($v["restauration"]){
+        case 1:
+            $satifRestauration[0]++;
+            break;
+        case 2:
+            $satifRestauration[1]++;
+            break;
+        case 3:
+            $satifRestauration[2]++;
+            break;
+        case 4:
+        default :
+            $satifRestauration[3]++;
+            break;
+    }
+    switch($v["bar"]){
+        case 1:
+            $satifBar[0]++;
+            break;
+        case 2:
+            $satifBar[1]++;
+            break;
+        case 3:
+            $satifBar[2]++;
+            break;
+        case 4:
+        default :
+            $satifBar[3]++;
+            break;
+    }
+    switch($v["accueil"]){
+        case 1:
+            $satifAccueil[0]++;
+            break;
+        case 2:
+            $satifAccueil[1]++;
+            break;
+        case 3:
+            $satifAccueil[2]++;
+            break;
+        case 4:
+        default :
+            $satifAccueil[3]++;
+            break;
+    }
+    switch($v["environnement"]){
+        case 1:
+            $satifEnvironement[0]++;
+            break;
+        case 2:
+            $satifEnvironement[1]++;
+            break;
+        case 3:
+            $satifEnvironement[2]++;
+            break;
+        case 4:
+        default :
+            $satifEnvironement[3]++;
+            break;
+    }
+    switch($v["rapport"]){
+        case 1:
+            $satifRapport[0]++;
+            break;
+        case 2:
+            $satifRapport[1]++;
+            break;
+        case 3:
+            $satifRapport[2]++;
+            break;
+        case 4:
+        default :
+            $satifRapport[3]++;
+            break;
+    }
 }
+$toPercent  = function($it) use ($numEntry){
+    return round(($it / $numEntry) *100);
+};
 
+
+
+$allServicesSatif = [
+    array_map($toPercent, $satifChambre),
+    array_map($toPercent, $satifRestauration),
+    array_map($toPercent, $satifBar),
+    array_map($toPercent, $satifAccueil),
+    array_map($toPercent, $satifEnvironement),
+    array_map($toPercent, $satifRapport)
+]
 
 ?>
 <script src="/survey/js/vendor/globalize.min.js"></script>
@@ -159,6 +268,30 @@ foreach($satisfaction as $k=>$v){
             }
         }
     };
+
+    var fullStackedBarServicesSatif = {
+        dataSource:[
+            <?php foreach($datas_services as $k=>$v): ?>
+            {category: "<?php echo $v; ?>", satifTres: <?php echo $allServicesSatif[$k][0]; ?>, satif: <?php echo $allServicesSatif[$k][1]; ?>, satifpeu: <?php echo $allServicesSatif[$k][2]; ?>, satifpas: <?php echo $allServicesSatif[$k][3]; ?>},
+            <?php endforeach; ?>
+        ],
+        commonSeriesSettings: {
+            argumentField: 'category',
+            type: 'stackedBar'
+        },
+        series:[
+            { valueField: "satifTres", name:"très satisfait"},
+            { valueField: "satif", name:"satisfait"},
+            { valueField: "satifpeu", name:"peu satisfait"},
+            { valueField: "satifpas", name:"pas du tout satisfait"}
+        ],
+        tooltip: {
+            enabled: true,
+            customizeText: function () {
+                return this.seriesName + " " + this.valueText + "%";
+            }
+        }
+    }
 </script>
 <?php
 include_once "mois/profil-alone.php";

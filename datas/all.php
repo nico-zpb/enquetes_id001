@@ -70,3 +70,12 @@ $datas_satisfaction = [
     ["num"=>3,"name"=>"peu satisfait"],
     ["num"=>4,"name"=>"pas du tout satisfait"],
 ];
+
+$datas_services = [
+    "les chambres",
+    "la restauration",
+    "le bar",
+    "l'accueil",
+    "l'environnement",
+    "le rapport qualité/prix"
+];

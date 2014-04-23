@@ -15,6 +15,7 @@
 - modernizr
 - spin.js
 - jquery.spin.js
+- ChartJS http://chartjs.devexpress.com/
 
 ### Fonts & Icons
 - font awesome
