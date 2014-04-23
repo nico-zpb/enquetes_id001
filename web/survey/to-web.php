@@ -58,12 +58,105 @@ $yearRange = range($annee-4, $annee);
     </div>
 </div>
 
+
 <div class="wrapper">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <div class="page-header page-header-hotel">
-                    <h3>Données classiques</h3>
+                    <h3>Données globales</h3>
+                </div>
+                <p>Séléctionnez l'année</p>
+            </div>
+
+        </div>
+        <form action="" method="post" id="form_cwg">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <select name="form_cwg_range[annee]" id="form_cwg_range_annee" class="form-control">
+                                <?php foreach($yearRange as $year): ?>
+                                    <option value="<?php echo $year; ?>" <?php if($year == $annee) { echo 'selected="selected"'; } ?>><?php echo $year; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" id="submit_cwg" class="btn btn-hotel">continuer &raquo;</button>
+                        </div>
+                        <div class="col-md-6"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header page-header-hotel">
+                    <h3>Données globales - par mois</h3>
+                </div>
+                <p>Séléctionnez les mois à comparer</p>
+            </div>
+
+        </div>
+        <form action="" method="post" id="form_cwm">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label for="form_cwm_range_annee">année</label>
+                            <select name="form_cwm_range[annee]" id="" class="form-control">
+                                <?php foreach($yearRange as $year): ?>
+                                    <option value="<?php echo $year; ?>" <?php if($year == $annee) { echo 'selected="selected"'; } ?>><?php echo $year; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="form_cwm_range_month_start">début</label>
+                            <select name="form_cwm_range[month_start]" id="form_cwm_range_month_start" class="form-control">
+                                <?php for($i=0; $i<12;$i++): ?>
+                                    <option value="<?php echo $i+1; ?>" <?php if($i+1 == $mois) { echo 'selected="selected"'; } ?>><?php echo ucfirst($datas_mois[$i]); ?></option>
+                                <?php endfor; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="form_cwm_range_month_end">fin</label>
+                            <select name="form_cwm_range[month_end]" id="form_cwm_range_month_end" class="form-control">
+                                <?php for($i=0; $i<12;$i++): ?>
+                                    <option value="<?php echo $i+1; ?>" <?php if($i+1 == $mois) { echo 'selected="selected"'; } ?>><?php echo ucfirst($datas_mois[$i]); ?></option>
+                                <?php endfor; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-6"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="spacer"></div>
+                    <button type="submit" id="submit_cwm" class="btn btn-hotel">continuer &raquo;</button>
+                </div>
+                <div class="col-md-12">
+                    <div class="spacer"></div>
+                    <div class="alert alert-success" id="cwmSuccess"></div>
+                    <div class="alert alert-danger" id="cwmError"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header page-header-hotel">
+                    <h3>Données classiques - filtrées</h3>
                 </div>
                 <p>Séléctionnez votre période</p>
             </div>

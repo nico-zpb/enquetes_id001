@@ -37,6 +37,10 @@ $(function(){
     spinners.spin(spinnerOpts);
     var cwSpinner =  $("#cwSpinner");
     cwSpinner.hide();
+    var cwmSuccess =  $("#cwmSuccess");
+    cwmSuccess.hide();
+    var cwmError =    $("#cwmError");
+    cwmError.hide();
     var cwSuccess =  $("#cwSuccess");
     cwSuccess.hide();
     var cwError =    $("#cwError");
