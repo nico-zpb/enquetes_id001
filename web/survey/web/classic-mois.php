@@ -34,22 +34,46 @@ if(!isPost() || !postExists("form_cwm_range")){
     die();
 }
 
+$error = false;
+$errorMsg = "<strong>Erreur</strong> ";
+
 $form = getPost("form_cwm_range");
 $today = new DateTime("now");
+$todayMonth = $today->format("n");
 
 $annee = $form["annee"];
 $monthStart = $form["month_start"];
 $monthEnd = $form["month_end"];
 
 // erreur sur mois
-
-
-
-
+if(!$debug){
+    if($monthStart>$todayMonth){
+        $error = true;
+        $errorMsg .= "Le mois de début de période ne peut être supérieur au mois actuel. ";
+    }
+    if($monthEnd>$todayMonth){
+        $error = true;
+        $errorMsg .= "Le mois de fin de période ne peut être supérieur au mois actuel. ";
+    }
+    if($monthStart>$monthEnd){
+        $error = true;
+        $errorMsg .= "Le mois de début de période ne peut être supérieur au mois de fin de période. ";
+    }
+}
 
 
 $monthStartName = $datas_mois[$monthStart - 1];
 $monthEndName = $datas_mois[$monthEnd - 1];
+$multiMonth = false;
+//
+if($monthStart == $monthEnd && $monthStart != $todayMonth){
+    $period = ucfirst($monthStartName) . " " . $annee . ".";
+} elseif ($monthStart == $monthEnd && $monthStart == $todayMonth) {
+    $period = "Ce mois-ci.";
+} else {
+    $multiMonth = true;
+    $period = "de " . ucfirst($monthStartName) . " " . $annee . " à " . ucfirst($monthEndName) . " " . $annee . ".";
+}
 
 
 include_once "../../../php/header.php";
@@ -70,13 +94,42 @@ include_once "../../../php/navbar.php";
         </div>
     </div>
 </div>
-
+<?php if($error): ?>
+    <div class="wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-danger"><p><?php echo $errorMsg; ?></p><p><a class="alert-link" href="/survey/to-web.php">retour</a></p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php else: ?>
 <div class="wrapper">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h1>Période </h1>
+                <h1><?php echo $period; ?></h1>
             </div>
         </div>
     </div>
 </div>
+<?php endif; ?>
+
+<?php
+    if($multiMonth){
+        // TODO classic-multi
+        include_once "classic-multi.php";
+    } else {
+        include_once "classic-alone.php";
+    }
+
+?>
+        <div class="container">
+            <hr/>
+            <footer>
+                <p>&copy; ZooParc de Beauval 2014</p>
+            </footer>
+        </div>
+    </body>
+</html>

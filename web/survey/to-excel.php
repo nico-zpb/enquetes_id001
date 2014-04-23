@@ -155,7 +155,6 @@ $yearRange = range($annee-4, $annee);
                 </div>
             </div>
         </form>
-        <hr>
 
 
     </div> <!-- /container -->

@@ -76,6 +76,19 @@ function getPost($key, $default=null){
     if(array_key_exists($key, $_POST)){
         return $_POST[$key];
     }
-
     return $default;
+}
+
+
+function setFlash($message = ""){
+    $_SESSION["flash"] = $message;
+}
+
+function getFlash(){
+    if(!empty($_SESSION["flash"])){
+        $msg = $_SESSION["flash"];
+        unset ($_SESSION["flash"]);
+        return $msg;
+    }
+    return "";
 }

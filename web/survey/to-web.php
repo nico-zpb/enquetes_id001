@@ -141,11 +141,13 @@ $yearRange = range($annee-4, $annee);
                     <div class="spacer"></div>
                     <button type="submit" id="submit_cwm" class="btn btn-hotel">continuer &raquo;</button>
                 </div>
+                <?php if(!$debug): ?>
                 <div class="col-md-12">
                     <div class="spacer"></div>
                     <div class="alert alert-success" id="cwmSuccess"></div>
                     <div class="alert alert-danger" id="cwmError"></div>
                 </div>
+                <?php endif; ?>
             </div>
         </form>
     </div>
@@ -156,7 +158,7 @@ $yearRange = range($annee-4, $annee);
         <div class="row">
             <div class="col-md-12">
                 <div class="page-header page-header-hotel">
-                    <h3>Données classiques - filtrées</h3>
+                    <h3>Données filtrées</h3>
                 </div>
                 <p>Séléctionnez votre période</p>
             </div>
@@ -230,12 +232,13 @@ $yearRange = range($annee-4, $annee);
                 </div>
 
 
-
+                <?php if(!$debug): ?>
                 <div class="col-md-12">
                     <div class="spacer"></div>
                     <div class="alert alert-success" id="cwSuccess"></div>
                     <div class="alert alert-danger" id="cwError"></div>
                 </div>
+                <?php endif; ?>
             </div>
         </form>
 
