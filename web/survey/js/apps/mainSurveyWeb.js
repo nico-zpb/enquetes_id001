@@ -45,6 +45,54 @@ $(function(){
     cwSuccess.hide();
     var cwError =    $("#cwError");
     cwError.hide();
+
+    var today = new Date();
+    var todayTs = today.getTime();
+
+    var form_cwm_range_month_start = $("#form_cwm_range_month_start");
+    var form_cwm_range_month_end = $("#form_cwm_range_month_end");
+    var form_cwm = $("#form_cwm");
+    var submit_cwm = $("#submit_cwm");
+
+    form_cwm_range_month_start.on("change", function(evt){
+        cwmError.html("").hide();
+    });
+    form_cwm_range_month_end.on("change", function(evt){
+        cwmError.html("").hide();
+    });
+
+
+    submit_cwm.on("click", function(evt){
+        evt.preventDefault();
+        var m = today.getMonth();
+        var monthStart = parseInt(form_cwm_range_month_start.val()) -1;
+        var monthEnd = parseInt(form_cwm_range_month_end.val()) -1;
+        var errorMsg = "<strong>Erreur</strong> ";
+
+
+        if(monthStart>m){
+            errorMsg += "Le mois de début de période ne peut être supérieur au mois actuel.";
+            cwmError.html(errorMsg).show();
+            return false;
+        }
+
+        if(monthEnd>m){
+            errorMsg += "Le mois de fin de période ne peut être supérieur au mois actuel.";
+            cwmError.html(errorMsg).show();
+            return false;
+        }
+
+        if(monthStart>monthEnd){
+            errorMsg += "Le mois de début de période ne peut être supérieur au mois de fin de période.";
+            cwmError.html(errorMsg).show();
+            return false;
+        }
+
+        form_cwm.submit();
+        return false;
+
+    });
+
     var jour_start_cw =     $("#jour_start_cw");
     var mois_start_cw =     $("#mois_start_cw");
     var annee_start_cw =    $("#annee_start_cw");
@@ -111,8 +159,7 @@ $(function(){
         //verif sur les dates
         cwSpinner.show();
         cwSubmit.attr("disabled", "disabled");
-        var today = new Date();
-        var todayTs = today.getTime();
+
 
         var dateStart = new Date(parseInt(annee_start_cw.val()), parseInt(mois_start_cw.val())-1, parseInt(jour_start_cw.val()), 0,0,0);
         var dateEnd = new Date(parseInt(annee_end_cw.val()), parseInt(mois_end_cw.val())-1, parseInt(jour_end_cw.val()), 0,0,0);
