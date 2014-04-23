@@ -107,7 +107,6 @@ $(function(){
         var url = $(this).attr("action");
         var successText;
         var datas = $(this).serialize();
-        console.log(url, datas);
         $.post(url, datas)
             .done(function(data, textStatus, xhr){
                 excelSpinner.hide();

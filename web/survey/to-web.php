@@ -68,17 +68,17 @@ $yearRange = range($annee-4, $annee);
                 <p>Séléctionnez votre période</p>
             </div>
         </div>
-        <form action="">
+        <form action="/survey/web/classic.php" method="post" id="cwForm">
             <div class="row">
                 <div class="col-md-6">
                     <h5>Date de début</h5>
                     <div class="row">
                         <div class="col-md-4">
-                            <label for="jour_start_cw">jour</label>
-                            <select name="form_cw_range[jour_start]" id="jour_start_cw" class="form-control">
-                                <?php for($i=0;$i<$joursDansMois; $i++): ?>
-                                    <option value="<?php echo $i+1; ?>" <?php if($i+1 == $jourStart) { echo 'selected="selected"'; } ?>><?php echo $i+1; ?></option>
-                                <?php endfor; ?>
+                            <label for="annee_start_cw">année</label>
+                            <select name="form_cw_range[annee_start]" id="annee_start_cw" class="form-control">
+                                <?php foreach($yearRange as $year): ?>
+                                    <option value="<?php echo $year; ?>" <?php if($year == $annee) { echo 'selected="selected"'; } ?>><?php echo $year; ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="col-md-4">
@@ -90,11 +90,11 @@ $yearRange = range($annee-4, $annee);
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label for="annee_start_cw">année</label>
-                            <select name="form_cw_range[annee_start]" id="annee_start_cw" class="form-control">
-                                <?php foreach($yearRange as $year): ?>
-                                    <option value="<?php echo $year; ?>" <?php if($year == $annee) { echo 'selected="selected"'; } ?>><?php echo $year; ?></option>
-                                <?php endforeach; ?>
+                            <label for="jour_start_cw">jour</label>
+                            <select name="form_cw_range[jour_start]" id="jour_start_cw" class="form-control">
+                                <?php for($i=0;$i<$joursDansMois; $i++): ?>
+                                    <option value="<?php echo $i+1; ?>" <?php if($i+1 == $jourStart) { echo 'selected="selected"'; } ?>><?php echo $i+1; ?></option>
+                                <?php endfor; ?>
                             </select>
                         </div>
                     </div>
@@ -103,11 +103,11 @@ $yearRange = range($annee-4, $annee);
                     <h5>Date de fin</h5>
                     <div class="row">
                         <div class="col-md-4">
-                            <label for="jour_end_cw">jour</label>
-                            <select name="form_cw_range[jour_end]" id="jour_end_cw" class="form-control">
-                                <?php for($i=0;$i<$joursDansMois; $i++): ?>
-                                    <option value="<?php echo $i+1; ?>" <?php if($i+1 == $jourEnd) { echo 'selected="selected"'; } ?>><?php echo $i+1; ?></option>
-                                <?php endfor; ?>
+                            <label for="annee_end_cw">année</label>
+                            <select name="form_cw_range[annee_end]" id="annee_end_cw" class="form-control">
+                                <?php foreach($yearRange as $year): ?>
+                                    <option value="<?php echo $year; ?>" <?php if($year == $annee) { echo 'selected="selected"'; } ?>><?php echo $year; ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="col-md-4">
@@ -119,14 +119,29 @@ $yearRange = range($annee-4, $annee);
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label for="annee_end_cw">année</label>
-                            <select name="form_cw_range[annee_end]" id="annee_end_cw" class="form-control">
-                                <?php foreach($yearRange as $year): ?>
-                                    <option value="<?php echo $year; ?>" <?php if($year == $annee) { echo 'selected="selected"'; } ?>><?php echo $year; ?></option>
-                                <?php endforeach; ?>
+                            <label for="jour_end_cw">jour</label>
+                            <select name="form_cw_range[jour_end]" id="jour_end_cw" class="form-control">
+                                <?php for($i=0;$i<$joursDansMois; $i++): ?>
+                                    <option value="<?php echo $i+1; ?>" <?php if($i+1 == $jourEnd) { echo 'selected="selected"'; } ?>><?php echo $i+1; ?></option>
+                                <?php endfor; ?>
                             </select>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="spacer"></div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-hotel" id="cwSubmit">continuer &raquo;</button><span class="" id="cwSpinner"><span class="spinner" ></span>Vérification des dates en cours...</span>
+                </div>
+
+
+
+                <div class="col-md-12">
+                    <div class="spacer"></div>
+                    <div class="alert alert-success" id="cwSuccess"></div>
+                    <div class="alert alert-danger" id="cwError"></div>
                 </div>
             </div>
         </form>

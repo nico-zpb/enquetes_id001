@@ -82,11 +82,11 @@ $yearRange = range($annee-4, $annee);
 
                     <div class="row">
                         <div class="col-md-4">
-                            <label for="jour_start">jour</label>
-                            <select name="form_excel_range[jour_start]" id="jour_start" class="form-control">
-                                <?php for($i=0;$i<$joursDansMois; $i++): ?>
-                                    <option value="<?php echo $i+1; ?>" <?php if($i+1 == $jourStart) { echo 'selected="selected"'; } ?>><?php echo $i+1; ?></option>
-                                <?php endfor; ?>
+                            <label for="annee_start">année</label>
+                            <select name="form_excel_range[annee_start]" id="annee_start" class="form-control">
+                                <?php foreach($yearRange as $year): ?>
+                                    <option value="<?php echo $year; ?>" <?php if($year == $annee) { echo 'selected="selected"'; } ?>><?php echo $year; ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="col-md-4">
@@ -98,11 +98,11 @@ $yearRange = range($annee-4, $annee);
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label for="annee_start">année</label>
-                            <select name="form_excel_range[annee_start]" id="annee_start" class="form-control">
-                                <?php foreach($yearRange as $year): ?>
-                                    <option value="<?php echo $year; ?>" <?php if($year == $annee) { echo 'selected="selected"'; } ?>><?php echo $year; ?></option>
-                                <?php endforeach; ?>
+                            <label for="jour_start">jour</label>
+                            <select name="form_excel_range[jour_start]" id="jour_start" class="form-control">
+                                <?php for($i=0;$i<$joursDansMois; $i++): ?>
+                                    <option value="<?php echo $i+1; ?>" <?php if($i+1 == $jourStart) { echo 'selected="selected"'; } ?>><?php echo $i+1; ?></option>
+                                <?php endfor; ?>
                             </select>
                         </div>
                     </div>
@@ -114,11 +114,11 @@ $yearRange = range($annee-4, $annee);
 
                     <div class="row">
                         <div class="col-md-4">
-                            <label for="jour_end">jour</label>
-                            <select name="form_excel_range[jour_end]" id="jour_end" class="form-control">
-                                <?php for($i=0;$i<$joursDansMois; $i++): ?>
-                                    <option value="<?php echo $i+1; ?>" <?php if($i+1 == $jourEnd) { echo 'selected="selected"'; } ?>><?php echo $i+1; ?></option>
-                                <?php endfor; ?>
+                            <label for="annee_end">année</label>
+                            <select name="form_excel_range[annee_end]" id="annee_end" class="form-control">
+                                <?php foreach($yearRange as $year): ?>
+                                    <option value="<?php echo $year; ?>" <?php if($year == $annee) { echo 'selected="selected"'; } ?>><?php echo $year; ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="col-md-4">
@@ -130,11 +130,11 @@ $yearRange = range($annee-4, $annee);
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label for="annee_end">année</label>
-                            <select name="form_excel_range[annee_end]" id="annee_end" class="form-control">
-                                <?php foreach($yearRange as $year): ?>
-                                    <option value="<?php echo $year; ?>" <?php if($year == $annee) { echo 'selected="selected"'; } ?>><?php echo $year; ?></option>
-                                <?php endforeach; ?>
+                            <label for="jour_end">jour</label>
+                            <select name="form_excel_range[jour_end]" id="jour_end" class="form-control">
+                                <?php for($i=0;$i<$joursDansMois; $i++): ?>
+                                    <option value="<?php echo $i+1; ?>" <?php if($i+1 == $jourEnd) { echo 'selected="selected"'; } ?>><?php echo $i+1; ?></option>
+                                <?php endfor; ?>
                             </select>
                         </div>
                     </div>
