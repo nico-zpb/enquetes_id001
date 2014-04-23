@@ -21,6 +21,24 @@
 defined("ROOT") || define("ROOT", realpath(dirname(__DIR__)));
 defined("LIBS") || define("LIBS", ROOT . DIRECTORY_SEPARATOR . "libs");
 
+$debug = true;
+
+ini_set("date.timezone", "Europe/Paris");
+
+if($debug){
+    ini_set("xdebug.var_display_max_children", -1);
+    ini_set("xdebug.var_display_max_data", -1);
+    ini_set("xdebug.var_display_max_depth", -1);
+
+    ini_set('error_reporting', -1);
+    ini_set('display_errors', "On");
+    ini_set('display_startup_errors', "On");
+} else {
+    ini_set('error_reporting', 0);
+    ini_set('display_errors', "Off");
+    ini_set('display_startup_errors', "Off");
+}
+
 function autoload($classname){
 
     if($classname[0] == "\\"){

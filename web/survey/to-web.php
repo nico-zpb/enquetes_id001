@@ -103,7 +103,7 @@ $yearRange = range($annee-4, $annee);
             </div>
 
         </div>
-        <form action="" method="post" id="form_cwm">
+        <form action="/survey/web/classic-mois.php" method="post" id="form_cwm">
             <div class="row">
                 <div class="col-md-12">
                     <div class="row">
@@ -161,7 +161,7 @@ $yearRange = range($annee-4, $annee);
                 <p>Séléctionnez votre période</p>
             </div>
         </div>
-        <form action="/survey/web/classic.php" method="post" id="cwForm">
+        <form action="/survey/web/classic-filtre.php" method="post" id="cwForm">
             <div class="row">
                 <div class="col-md-6">
                     <h5>Date de début</h5>
@@ -250,10 +250,10 @@ $yearRange = range($annee-4, $annee);
         <p>&copy; ZooParc de Beauval 2014</p>
     </footer>
 </div>
-
+<?php if(!$debug): ?>
 <script src="/js/vendor/spin.min.js"></script>
 <script src="/js/vendor/jquery.spin.js"></script>
 <script src="/survey/js/apps/mainSurveyWeb.js"></script>
-
+<?php endif; ?>
 </body>
 </html>
