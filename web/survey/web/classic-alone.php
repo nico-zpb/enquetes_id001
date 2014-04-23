@@ -43,7 +43,7 @@ $numMalePercent = round(($numMale / $numEntry) * 100);
 $numFemalePercent = round(($numFemale / $numEntry) * 100);
 
 
-
+$clients = array_merge($clientResultMale, $clientResultFemale);
 
 
 
@@ -94,6 +94,48 @@ foreach ($datas_professions as $k => $v) {
 }
 
 
+// satisfaction
+$sql = "SELECT * FROM satisfaction WHERE client_id=:id";
+$stmt = $pdo->prepare($sql);
+$satisfaction = [];
+foreach($clients as $k=>$c){
+    $stmt->bindValue(":id", $c["id"]);
+    $stmt->execute();
+    $satisfaction[] = $stmt->fetch();
+}
+
+
+// satisfaction globale
+$globalSatisf = [0,0,0,0];
+
+foreach($satisfaction as $k=>$v){
+
+    // satisfaction globale
+    switch($v["globalement"]){
+        case 1:
+            $globalSatisf[0]++;
+            break;
+        case 2:
+            $globalSatisf[1]++;
+            break;
+        case 3:
+            $globalSatisf[2]++;
+            break;
+        case 4:
+        default :
+            $globalSatisf[3]++;
+            break;
+
+    }
+
+}
+
+
+
+
+
+
+
 include "mois/profil-alone.php";
 ?>
 
@@ -111,8 +153,33 @@ include "mois/profil-alone.php";
         <div class="row">
             <div class="col-md-12">
                 <div class="page-header-hotel page-header">
-                    <h2>Satisfaction globale</h2>
+                    <h3>Satisfaction globale</h3>
                 </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Effectif</th>
+                        <th>%</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach($datas_satisfaction as $k=>$v): ?>
+                        <tr>
+                            <td><?php echo $v["name"]; ?></td>
+                            <td><?php echo $globalSatisf[$k]; ?></td>
+                            <td><?php echo round(($globalSatisf[$k] / $numEntry) * 100); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
+
             </div>
         </div>
     </div>

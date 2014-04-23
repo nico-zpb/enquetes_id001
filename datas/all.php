@@ -63,3 +63,10 @@ $datas_professions = [
   ["num"=>7,"name"=>"retaité"],
   ["num"=>8,"name"=>"autres inactifs (au foyer, chômeur, étudiant)"],
 ];
+
+$datas_satisfaction = [
+    ["num"=>1,"name"=>"très satisfait"],
+    ["num"=>2,"name"=>"satisfait"],
+    ["num"=>3,"name"=>"peu satisfait"],
+    ["num"=>4,"name"=>"pas du tout satisfait"],
+];
