@@ -41,9 +41,9 @@ $form = getPost("form_cwm_range");
 $today = new DateTime("now");
 $todayMonth = $today->format("n");
 
-$annee = $form["annee"];
-$monthStart = $form["month_start"];
-$monthEnd = $form["month_end"];
+$annee = (int)$form["annee"];
+$monthStart = (int)$form["month_start"];
+$monthEnd = (int)$form["month_end"];
 
 // erreur sur mois
 if(!$debug){
@@ -61,19 +61,58 @@ if(!$debug){
     }
 }
 
+if(!$error){
+    include_once "../../../php/enquete-connexion.php";
 
-$monthStartName = $datas_mois[$monthStart - 1];
-$monthEndName = $datas_mois[$monthEnd - 1];
-$multiMonth = false;
+    $monthStartName = $datas_mois[$monthStart - 1];
+    $monthEndName = $datas_mois[$monthEnd - 1];
+    $multiMonth = false;
 //
-if($monthStart == $monthEnd && $monthStart != $todayMonth){
-    $period = ucfirst($monthStartName) . " " . $annee . ".";
-} elseif ($monthStart == $monthEnd && $monthStart == $todayMonth) {
-    $period = "Ce mois-ci.";
-} else {
-    $multiMonth = true;
-    $period = "de " . ucfirst($monthStartName) . " " . $annee . " à " . ucfirst($monthEndName) . " " . $annee . ".";
+    if($monthStart == $monthEnd && $monthStart != $todayMonth){
+        $period = ucfirst($monthStartName) . " " . $annee . ".";
+    } elseif ($monthStart == $monthEnd && $monthStart == $todayMonth) {
+        $period = "Ce mois-ci.";
+    } else {
+        $multiMonth = true;
+        $period = "de " . ucfirst($monthStartName) . " " . $annee . " à " . ucfirst($monthEndName) . " " . $annee . ".";
+    }
+
+
+// il y a t-il des résultats sur la periode demandée ?
+    if(!$multiMonth){
+        $sql = "SELECT COUNT(*) as num FROM clients WHERE arrive_mois=:arrive_mois AND arrive_annee=:arrive_annee";
+        $clientStmt = $pdo->prepare($sql);
+        $clientStmt->bindValue(":arrive_mois", $monthStart);
+        $clientStmt->bindValue(":arrive_annee", $annee);
+        $clientStmt->execute();
+        $countClients = $clientStmt->fetch();
+        if(!$countClients["num"]){
+            setFlash("Il n'y a pas de résultats sur la période demandée.");
+            header("Location: /survey/to-web.php");
+            die();
+        }
+    } else {
+        $num = 0;
+        for($i = $monthStart; $i<$monthEnd+1; $i++){
+            $sql = "SELECT COUNT(*) as num FROM clients WHERE arrive_mois=:arrive_mois AND arrive_annee=:arrive_annee";
+            $clientStmt = $pdo->prepare($sql);
+            $clientStmt->bindValue(":arrive_mois", $i);
+            $clientStmt->bindValue(":arrive_annee", $annee);
+            $clientStmt->execute();
+            $countClients = $clientStmt->fetch();
+            $num += $countClients["num"];
+        }
+        if(!$num){
+            setFlash("Il n'y a pas de résultats sur la période demandée.");
+            header("Location: /survey/to-web.php");
+            die();
+        }
+    }
 }
+
+
+
+//
 
 
 include_once "../../../php/header.php";

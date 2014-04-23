@@ -57,7 +57,15 @@ $yearRange = range($annee-4, $annee);
         </div>
     </div>
 </div>
-
+<?php if($msg = getFlash()): ?>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-danger"><p><strong>Erreur</strong> <?php echo $msg; ?></p></div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
 
 <div class="wrapper">
     <div class="container">
