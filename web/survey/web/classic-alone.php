@@ -155,9 +155,17 @@ include "mois/profil-alone.php";
                 <div class="page-header-hotel page-header">
                     <h3>Satisfaction globale</h3>
                 </div>
+                <?php
+                $tauxSatisfaitTres = round(($globalSatisf[0] / $numEntry) * 100);
+                $tauxSatisfait = round(($globalSatisf[1] / $numEntry) * 100)
+                ?>
+                <h4 class="text-success text-center">taux de satisfaits : <?php echo $tauxSatisfait + $tauxSatisfaitTres; ?>% dont <?php echo $tauxSatisfaitTres; ?>% de "très satisfaits".</h4>
             </div>
         </div>
         <div class="row">
+            <div class="col-md-6">
+
+            </div>
             <div class="col-md-6">
                 <table class="table">
                     <thead>
@@ -175,12 +183,15 @@ include "mois/profil-alone.php";
                             <td><?php echo round(($globalSatisf[$k] / $numEntry) * 100); ?></td>
                         </tr>
                     <?php endforeach; ?>
+                    <tr>
+                        <td>Total</td>
+                        <td><?php echo $numEntry; ?></td>
+                        <td>100%</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
-            <div class="col-md-6">
 
-            </div>
         </div>
     </div>
 </div>
