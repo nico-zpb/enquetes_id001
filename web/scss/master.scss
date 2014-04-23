@@ -52,10 +52,22 @@ body{
   background-color: $hotelColorDarkBrown;
   color: #fff;
 }
+
+hr {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 0;
+  border-top: 1px solid $hotelColorDarkBrown;
+}
+
 .wrapper{
   &:nth-child(2n){
     background-color: $hotelColorLightBrown;
   }
+}
+.spacer{
+  width: 100%;
+  height: 10px;
 }
 .btn-hotel{
   background-color: $hotelColorGreen;
