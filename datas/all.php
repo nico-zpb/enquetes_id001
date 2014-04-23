@@ -43,3 +43,23 @@ $datas_mois=[
 ];
 
 $profession = ["agriculteur exploitant", "artisan, commercant, chef d'entreprise", "cadre supérieur, profession intellectuelle supérieure, professeur", "cadre moyen, profession intermédiaire", "employé", "ouvrier", "retaité", "autres inactifs (au foyer, chômeur, étudiant)" ];
+
+$datas_trancheAge = [
+    ["num"=>1, "name"=>"moins de 25 ans"],
+    ["num"=>2, "name"=>"25 à 34 ans"],
+    ["num"=>3, "name"=>"35 à 44 ans"],
+    ["num"=>4, "name"=>"45 à 54 ans"],
+    ["num"=>5, "name"=>"55 à 64 ans"],
+    ["num"=>6, "name"=>"65 ans et plus"],
+];
+
+$datas_professions = [
+  ["num"=>1,"name"=>"agriculteur exploitant"],
+  ["num"=>2,"name"=>"artisan, commercant, chef d'entreprise"],
+  ["num"=>3,"name"=>"cadre supérieur, profession intellectuelle supérieure, professeur"],
+  ["num"=>4,"name"=>"cadre moyen, profession intermédiaire"],
+  ["num"=>5,"name"=>"employé"],
+  ["num"=>6,"name"=>"ouvrier"],
+  ["num"=>7,"name"=>"retaité"],
+  ["num"=>8,"name"=>"autres inactifs (au foyer, chômeur, étudiant)"],
+];

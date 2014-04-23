@@ -79,30 +79,31 @@ if(!$error){
 
 
 // il y a t-il des résultats sur la periode demandée ?
+    $numEntry = 0;
     if(!$multiMonth){
         $sql = "SELECT COUNT(*) as num FROM clients WHERE arrive_mois=:arrive_mois AND arrive_annee=:arrive_annee";
-        $clientStmt = $pdo->prepare($sql);
-        $clientStmt->bindValue(":arrive_mois", $monthStart);
-        $clientStmt->bindValue(":arrive_annee", $annee);
-        $clientStmt->execute();
-        $countClients = $clientStmt->fetch();
-        if(!$countClients["num"]){
+        $clientNumStmt = $pdo->prepare($sql);
+        $clientNumStmt->bindValue(":arrive_mois", $monthStart);
+        $clientNumStmt->bindValue(":arrive_annee", $annee);
+        $clientNumStmt->execute();
+        $countClients = $clientNumStmt->fetch();
+        $numEntry = $countClients["num"];
+        if(!$numEntry){
             setFlash("Il n'y a pas de résultats sur la période demandée.");
             header("Location: /survey/to-web.php");
             die();
         }
     } else {
-        $num = 0;
         for($i = $monthStart; $i<$monthEnd+1; $i++){
             $sql = "SELECT COUNT(*) as num FROM clients WHERE arrive_mois=:arrive_mois AND arrive_annee=:arrive_annee";
-            $clientStmt = $pdo->prepare($sql);
-            $clientStmt->bindValue(":arrive_mois", $i);
-            $clientStmt->bindValue(":arrive_annee", $annee);
-            $clientStmt->execute();
-            $countClients = $clientStmt->fetch();
-            $num += $countClients["num"];
+            $clientNumStmt = $pdo->prepare($sql);
+            $clientNumStmt->bindValue(":arrive_mois", $i);
+            $clientNumStmt->bindValue(":arrive_annee", $annee);
+            $clientNumStmt->execute();
+            $countClients = $clientNumStmt->fetch();
+            $numEntry += $countClients["num"];
         }
-        if(!$num){
+        if(!$numEntry){
             setFlash("Il n'y a pas de résultats sur la période demandée.");
             header("Location: /survey/to-web.php");
             die();
@@ -148,7 +149,10 @@ include_once "../../../php/navbar.php";
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h1><?php echo $period; ?></h1>
+                <div class="page-header page-header-hotel">
+                    <h1><?php echo $period; ?></h1>
+                </div>
+
             </div>
         </div>
     </div>
