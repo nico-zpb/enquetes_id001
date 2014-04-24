@@ -300,6 +300,49 @@ $perceptionPrixPercent = array_map($toPercent, $perceptionPrix);
 $revenirPercent = array_map($toPercent, $revenir);
 $recommanderPercent = array_map($toPercent, $recommander);
 
+/////////////////////////// Context du séjour
+
+$sql = "SELECT COUNT(*) as num FROM clients WHERE arrive_mois=:arrive_mois AND arrive_annee=:arrive_annee AND departement_num=:deptnum";
+$stmt = $pdo->prepare($sql);
+$effectifsParDept = [];
+$effectifsParDeptPercent = [];
+$selected = [];
+$countEffectifOtherDepts = 0;
+foreach($departements as $num=>$name){
+    $stmt->bindValue(":arrive_mois", $monthStart);
+    $stmt->bindValue(":arrive_annee", $annee);
+    $stmt->bindValue(":deptnum", $num);
+    $stmt->execute();
+    $tmp = $stmt->fetch();
+    if($tmp){
+        $effectifsParDept[$num] = $tmp["num"];
+        $effectifsParDeptPercent[$num] = round(($tmp["num"] / $numEntry) * 100);
+        // selection des departements les plus representatifs
+        if($effectifsParDeptPercent[$num] >= 1.5){
+            $selected[] = ["dept_num"=>$num, "dept_name"=>$name, "effectif"=>$tmp["num"], "percent"=>$effectifsParDeptPercent[$num]];
+        } else {
+            $countEffectifOtherDepts += $tmp["num"];
+        }
+    }
+}
+// rearragement des departements representatifs dans l'ordre decroissant du pourcentage
+usort($selected, function($a,$b){
+    if($a["percent"] == $b["percent"]){
+        return 0;
+    }
+    return ($a["percent"] < $b["percent"]) ? 1 : -1;
+});
+
+//////////////// temps de trajet
+$tpsTrajet = [0,0,0];
+foreach($clients as $c){
+    $tpsTrajet[$c["tps_trajet"] - 1]++;
+}
+$tpsTrajetPercent = array_map(function($it) use ($numEntry){
+    return round(($it/$numEntry) * 100);
+}, $tpsTrajet);
+////////////
+
 ?>
 <script src="/survey/js/vendor/globalize.min.js"></script>
 <script src="/survey/js/vendor/dx.chartjs.js"></script>
@@ -463,7 +506,7 @@ $recommanderPercent = array_map($toPercent, $recommander);
         series: {
             argumentField: 'category',
             valueField: 'value',
-            name: "Région Parisienne",
+            name: "Totalité échantillon",
             type: 'bar',
             label: {
                 visible: true,
@@ -513,7 +556,7 @@ include_once "mois/satif-global-alone.php";
 
 include_once "mois/origine-alone.php";
 
-
+include_once "mois/context-alone.php";
 ?>
 
 
