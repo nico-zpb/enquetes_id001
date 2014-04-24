@@ -138,11 +138,50 @@ $resultsConnaissancePercent = array_map(function ($it) use ($resultsConnaissance
 
 ////////////////////////////
 $clientsParisiens = [];
+$clientsParisiensParDeps = [
+    "75"=>[],
+    "77"=>[],
+    "78"=>[],
+    "91"=>[],
+    "92"=>[],
+    "93"=>[],
+    "94"=>[],
+    "95"=>[],
+];
 foreach($clients as $k=>$c){
     if(in_array($c["departement_num"], $deptParisNums)){
         $clientsParisiens[] = $c;
     }
+    switch($c["departement_num"]){
+        case "75":
+            $clientsParisiensParDeps["75"][] = $c;
+            break;
+        case "77":
+            $clientsParisiensParDeps["77"][] = $c;
+            break;
+        case "78":
+            $clientsParisiensParDeps["78"][] = $c;
+            break;
+        case "91":
+            $clientsParisiensParDeps["91"][] = $c;
+            break;
+        case "92":
+            $clientsParisiensParDeps["92"][] = $c;
+            break;
+        case "93":
+            $clientsParisiensParDeps["93"][] = $c;
+            break;
+        case "94":
+            $clientsParisiensParDeps["94"][] = $c;
+            break;
+        case "95":
+            $clientsParisiensParDeps["95"][] = $c;
+            break;
+        default:
+            break;
+    }
 }
+
 $sql = "SELECT type_id FROM client_connaissance_type WHERE client_id=:id";
 $stmt = $pdo->prepare($sql);
 $resultsConnaissanceParis = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -166,6 +205,39 @@ $resultsConnaissanceParisPercent = array_map(function ($it) use ($resultsConnais
 }, $resultsConnaissanceParis);
 
 ////////////////////////////
+$sql = "SELECT type_id FROM client_connaissance_type WHERE client_id=:id";
+$stmt = $pdo->prepare($sql);
+$resultsConnaissanceParisParDeptsTotal = [
+    "75"=>0, "77"=>0, "78"=>0, "91"=>0, "92"=>0, "93"=>0, "94"=>0, "95"=>0,
+];
+$resultsConnaissanceParisParDepts = [
+    "75"=>[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    "77"=>[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    "78"=>[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    "91"=>[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    "92"=>[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    "93"=>[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    "94"=>[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    "95"=>[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+];
+foreach($clientsParisiensParDeps as $k=>$deptParis){
+    foreach($deptParis as $l=>$c){
+        $stmt->bindValue(":id", $c["id"]);
+        $stmt->execute();
+        $tmp = $stmt->fetchAll();
+        if ($tmp) {
+            foreach ($tmp as $m => $t) {
+                $resultsConnaissanceParisParDepts[$k][$t["type_id"] - 1]++;
+
+            }
+        }
+    }
+    for($i=0;$i<count($resultsConnaissanceParisParDepts[$k]);$i++){
+        $resultsConnaissanceParisParDeptsTotal[$k] += $resultsConnaissanceParisParDepts[$k][$i];
+    }
+}
+
+/////////////////////////////
 
 
 // satisfaction globale
@@ -391,6 +463,7 @@ $recommanderPercent = array_map($toPercent, $recommander);
         series: {
             argumentField: 'category',
             valueField: 'value',
+            name: "Région Parisienne",
             type: 'bar',
             label: {
                 visible: true,
@@ -405,7 +478,33 @@ $recommanderPercent = array_map($toPercent, $recommander);
                 return this.valueText + "%";
             }
         }
-    }
+    };
+    var barChartConnaissanceParis = {
+        rotated: true,
+        dataSource: [
+            <?php foreach($connaissance_types as $k=>$v): ?>
+            {category: "<?php echo $v; ?>", value: <?php echo $resultsConnaissanceParisPercent[$k]; ?>},
+            <?php endforeach; ?>
+        ],
+        series: {
+            argumentField: 'category',
+            valueField: 'value',
+            name: "Région Parisienne",
+            type: 'bar',
+            label: {
+                visible: true,
+                customizeText: function () {
+                    return this.valueText + "%";
+                }
+            }
+        },
+        tooltip: {
+            enabled: true,
+            customizeText: function () {
+                return this.valueText + "%";
+            }
+        }
+    };
 </script>
 <?php
 include_once "mois/profil-alone.php";

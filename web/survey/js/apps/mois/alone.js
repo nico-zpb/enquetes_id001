@@ -30,4 +30,6 @@ $(function(){
 
     $("#barChartConnaissanceTotal").dxChart(barChartConnaissanceTotal);
 
+    $("#barChartConnaissanceParis").dxChart(barChartConnaissanceParis);
+
 });
