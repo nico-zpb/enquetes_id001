@@ -116,7 +116,6 @@ $resultsConnaissanceTotal = 0;
 foreach ($clients as $k => $c) {
     $stmt->bindValue(":id", $c["id"]);
     $stmt->execute();
-    //$resultsConnaissance[] = $stmt->fetchAll();
     $tmp = $stmt->fetchAll();
     if ($tmp) {
         foreach ($tmp as $l => $t) {
@@ -132,8 +131,41 @@ for ($i = 0; $i < count($resultsConnaissance); $i++) {
 $resultsConnaissancePercent = array_map(function ($it) use ($resultsConnaissanceTotal) {
     return round(($it / $resultsConnaissanceTotal) * 100);
 }, $resultsConnaissance);
-var_dump($resultsConnaissancePercent);
+
+
 ////////////////////////////////////////////////
+
+
+////////////////////////////
+$clientsParisiens = [];
+foreach($clients as $k=>$c){
+    if(in_array($c["departement_num"], $deptParisNums)){
+        $clientsParisiens[] = $c;
+    }
+}
+$sql = "SELECT type_id FROM client_connaissance_type WHERE client_id=:id";
+$stmt = $pdo->prepare($sql);
+$resultsConnaissanceParis = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+$resultsConnaissanceParisTotal = 0;
+foreach($clientsParisiens as $k=>$cp){
+    $stmt->bindValue(":id", $cp["id"]);
+    $stmt->execute();
+    $tmp = $stmt->fetchAll();
+    if ($tmp) {
+        foreach ($tmp as $l => $t) {
+            $resultsConnaissanceParis[$t["type_id"] - 1]++;
+
+        }
+    }
+}
+for ($i = 0; $i < count($resultsConnaissanceParis); $i++) {
+    $resultsConnaissanceParisTotal += $resultsConnaissanceParis[$i];
+}
+$resultsConnaissanceParisPercent = array_map(function ($it) use ($resultsConnaissanceParisTotal) {
+    return round(($it / $resultsConnaissanceParisTotal) * 100);
+}, $resultsConnaissanceParis);
+
+////////////////////////////
 
 
 // satisfaction globale

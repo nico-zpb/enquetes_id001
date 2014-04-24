@@ -106,6 +106,8 @@ $region_paris = [
     "95"=>"Val-d'Oise",
 ];
 
+$deptParisNums = array_keys($region_paris);
+
 $connaissance_types = [
   "un article dans la presse","une affiche","le prospectus de l'hôtel","le prospectus du ZooParc de Beauval","le bouche à oreille (amis, relations...)","votre comité d'entreprise","lors d'un séminaire","internet","un guide touristique","une émission de TV","autre",
 ];
