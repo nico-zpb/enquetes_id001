@@ -113,3 +113,6 @@ $connaissance_types = [
 ];
 
 $datas_tps_trajet = ["moins d'une heure","de 1 à 2 heures","plus de 2 heures"];
+
+
+$datas_nbr_personnes = ["1","2","3","4","5 et plus","aucun"];

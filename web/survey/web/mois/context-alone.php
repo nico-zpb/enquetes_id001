@@ -111,3 +111,85 @@
         </div>
     </div>
 </div>
+<div class="wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header page-header-hotel">
+                    <h3>Nombres de personnes</h3>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <h4>Nombre moyen de personnes (base <?php echo $counterPersons; ?> réponses)</h4>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Nombre moyen</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Adultes et enfants de 11 ans et plus</td>
+                        <td><?php echo $moyenAdulte = round(($nbrAdultes[0] + ($nbrAdultes[1]*2) +  ($nbrAdultes[2]*3) + ($nbrAdultes[3]*4) + ($nbrAdultes[4]*5)) / $counterPersons, 1);?></td>
+                    </tr>
+                    <tr>
+                        <td>Enfants de moins de 11 ans</td>
+                        <td><?php echo $moyenEnfant = round(($nbrEnfants[0] + ($nbrEnfants[1]*2) +  ($nbrEnfants[2]*3) + ($nbrEnfants[3]*4) + ($nbrEnfants[4]*5)) / $counterPersons, 1);?></td>
+                    </tr>
+                    <tr>
+                        <td>Total</td>
+                        <td><?php echo $moyenAdulte + $moyenEnfant; ?></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="col-md-6">
+            <h4>Adultes et enfants de 11 ans et plus</h4>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Effecfifs</th>
+                    <th>%</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach($datas_nbr_personnes as $k=>$v): ?>
+                    <tr>
+                        <td><?php echo $v; ?></td>
+                        <td><?php echo $nbrAdultes[$k]; ?></td>
+                        <td><?php echo $nbrAdultesPercent[$k]; ?>%</td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h4>Enfants de moins de 11 ans</h4>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Effecfifs</th>
+                    <th>%</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($datas_nbr_personnes as $k=>$v): ?>
+                        <tr>
+                            <td><?php echo $v; ?></td>
+                            <td><?php echo $nbrEnfants[$k]; ?></td>
+                            <td><?php echo $nbrEnfantsPercent[$k]; ?>%</td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

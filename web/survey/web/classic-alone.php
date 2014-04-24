@@ -23,8 +23,11 @@
 $toPercent = function ($it) use ($numEntry) {
     return round(($it / $numEntry) * 100);
 };
-
-
+$dateStart = DateTime::createFromFormat("j-n-Y","1-" . $monthStart . "-" . $annee);
+$dateStartTs = $dateStart->getTimestamp();
+$lastDay = $dateStart->format("t");
+$dateEnd = DateTime::createFromFormat("j-n-Y",$lastDay . "-" . $monthStart . "-" . $annee);
+$dateEndTs = $dateEnd->getTimestamp();
 // rappel $numEntry
 
 $sql = "SELECT * FROM clients WHERE arrive_mois=:arrive_mois AND arrive_annee=:arrive_annee AND sexe=:sexe";
@@ -342,6 +345,84 @@ $tpsTrajetPercent = array_map(function($it) use ($numEntry){
     return round(($it/$numEntry) * 100);
 }, $tpsTrajet);
 ////////////
+
+
+
+///////////////////// sejour
+/////////// nbre personnes
+///// adultes
+$sql = "SELECT nbre_adulte as ad, nbre_enfant as en FROM sejours WHERE arrive_timestamp >=:datestartts AND arrive_timestamp <=:dateendts";
+$stmt = $pdo->prepare($sql);
+
+$stmt->bindValue(":datestartts",$dateStartTs);
+$stmt->bindValue(":dateendts",$dateEndTs);
+$stmt->execute();
+
+$result = $stmt->fetchAll();
+$nbrAdultes = [0,0,0,0,0,0];
+$nbrEnfants = [0,0,0,0,0,0];
+$counterPersons = 0;
+if($result){
+    foreach($result as $k=>$v){
+        if(($v["ad"] == 6 && $v["ad"] == 6) || ($v["ad"] == 0 && $v["ad"] == 0) || ($v["ad"] == 6 && ($v["en"] == 6 || $v["en"] == 0)) || ($v["ad"] == 0 && ($v["en"] == 6 || $v["en"] == 0))){
+            continue;
+        }
+        $counterPersons++;
+        switch($v["ad"]){
+            case 0:
+            case 6:
+            default:
+                $nbrAdultes[5]++;
+                break;
+            case 1:
+                $nbrAdultes[0]++;
+                break;
+            case 2:
+                $nbrAdultes[1]++;
+                break;
+            case 3:
+                $nbrAdultes[2]++;
+                break;
+            case 4:
+                $nbrAdultes[3]++;
+                break;
+            case 5:
+                $nbrAdultes[4]++;
+                break;
+        }
+        switch($v["en"]){
+            case 0:
+            case 6:
+            default:
+                $nbrEnfants[5]++;
+                break;
+            case 1:
+                $nbrEnfants[0]++;
+                break;
+            case 2:
+                $nbrEnfants[1]++;
+                break;
+            case 3:
+                $nbrEnfants[2]++;
+                break;
+            case 4:
+                $nbrEnfants[3]++;
+                break;
+            case 5:
+                $nbrEnfants[4]++;
+                break;
+        }
+    }
+}
+$nbrAdultesPercent = array_map(function($it) use($counterPersons){
+    return round(($it / $counterPersons) * 100);
+}, $nbrAdultes);
+$nbrEnfantsPercent = array_map(function($it) use($counterPersons){
+    return round(($it / $counterPersons) * 100);
+}, $nbrEnfants);
+
+
+
 
 ?>
 <script src="/survey/js/vendor/globalize.min.js"></script>
