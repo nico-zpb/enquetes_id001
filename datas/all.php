@@ -94,3 +94,18 @@ $datas_resto = [
 $datas_perception_prix = [
     "trop cher","approprié","pas très cher"
 ];
+
+$region_paris = [
+    "75"=>"Paris",
+    "77"=>"Seine et Marne",
+    "78"=>"Yvelines",
+    "91"=>"Essonne",
+    "92"=>"Hauts-de-Seine",
+    "93"=>"Seine-Saint-Denis",
+    "94"=>"Val-de-Marne",
+    "95"=>"Val-d'Oise",
+];
+
+$connaissance_types = [
+  "un article dans la presse","une affiche","le prospectus de l'hôtel","le prospectus du ZooParc de Beauval","le bouche à oreille (amis, relations...)","votre comité d'entreprise","lors d'un séminaire","internet","un guide touristique","une émission de TV","autre",
+];

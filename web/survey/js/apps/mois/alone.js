@@ -28,4 +28,6 @@ $(function(){
 
     $("#pieChartRecommander").dxPieChart(pieChartRecommander);
 
+    $("#barChartConnaissanceTotal").dxChart(barChartConnaissanceTotal);
+
 });
