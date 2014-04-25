@@ -18,7 +18,7 @@ $(function(){
 
     $("#pieChartGlobalSatisf").dxPieChart(pieChartGlobalSatisf);
 
- /*    $("#fullStackedBarServicesSatif").dxChart(fullStackedBarServicesSatif);
+    $("#fullStackedBarServicesSatif").dxChart(fullStackedBarServicesSatif);
 
     $("#pieChartPerceptionPrix").dxPieChart(pieChartPerceptionPrix);
 
@@ -26,12 +26,12 @@ $(function(){
 
     $("#pieChartRevenir").dxPieChart(pieChartRevenir);
 
-    $("#pieChartRecommander").dxPieChart(pieChartRecommander);
+     $("#pieChartRecommander").dxPieChart(pieChartRecommander);
 
-    $("#barChartConnaissanceTotal").dxChart(barChartConnaissanceTotal);
+      $("#barChartConnaissanceTotal").dxChart(barChartConnaissanceTotal);
 
     $("#barChartConnaissanceParis").dxChart(barChartConnaissanceParis);
 
-    $("#barChartTypeRooms").dxChart(barChartTypeRooms);*/
+    $("#barChartTypeRooms").dxChart(barChartTypeRooms);
 
 });

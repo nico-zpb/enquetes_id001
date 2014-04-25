@@ -108,6 +108,71 @@ foreach ($clients as $k => $c) {
     $stmt->execute();
     $satisfaction[] = $stmt->fetch();
 }
+/////////////////////////////
+$toPercent = function ($it) use ($numEntry) {
+    return round(($it / $numEntry) * 100);
+};
+
+// satisfaction globale
+$globalSatisf = [0, 0, 0, 0];
+$satifChambre = [0, 0, 0, 0];
+$satifRestauration = [0, 0, 0, 0];
+$satifBar = [0, 0, 0, 0];
+$satifAccueil = [0, 0, 0, 0];
+$satifEnvironement = [0, 0, 0, 0];
+$satifRapport = [0, 0, 0, 0];
+$perceptionPrix = [0, 0, 0];
+$satifAmabilite = [0, 0, 0, 0];
+$satifService = [0, 0, 0, 0];
+$satifDiversite = [0, 0, 0, 0];
+$satifPlats = [0, 0, 0, 0];
+$satifVins = [0, 0, 0, 0];
+$satifPrix = [0, 0, 0, 0];
+$revenir = [0, 0, 0, 0,];
+$recommander = [0, 0, 0, 0];
+
+foreach ($satisfaction as $k => $v) {
+    // satisfaction globale
+    $globalSatisf[$v["globalement"] - 1]++;
+    $satifChambre[$v["chambres"] - 1]++;
+    $satifRestauration[$v["restauration"] - 1]++;
+    $satifBar[$v["bar"] - 1]++;
+    $satifAccueil[$v["accueil"] - 1]++;
+    $satifEnvironement[$v["environnement"] - 1]++;
+    $satifRapport[$v["rapport"] - 1]++;
+    $perceptionPrix[$v["prix"] - 1]++;
+    $satifAmabilite[$v["resto_amabilite"] - 1]++;
+    $satifService[$v["resto_service"] - 1]++;
+    $satifDiversite[$v["resto_diversite"] - 1]++;
+    $satifPlats[$v["resto_plats"] - 1]++;
+    $satifVins[$v["resto_vins"] - 1]++;
+    $satifPrix[$v["resto_prix"] - 1]++;
+    $revenir[$v["revenir"] - 1]++;
+    $recommander[$v["recommander"] - 1]++;
+}
+
+$allServicesSatif = [
+    array_map($toPercent, $satifChambre),
+    array_map($toPercent, $satifRestauration),
+    array_map($toPercent, $satifBar),
+    array_map($toPercent, $satifAccueil),
+    array_map($toPercent, $satifEnvironement),
+    array_map($toPercent, $satifRapport)
+];
+
+$allRestoSatif = [
+    array_map($toPercent, $satifAmabilite),
+    array_map($toPercent, $satifService),
+    array_map($toPercent, $satifDiversite),
+    array_map($toPercent, $satifPlats),
+    array_map($toPercent, $satifVins),
+    array_map($toPercent, $satifPrix),
+];
+
+$perceptionPrixPercent = array_map($toPercent, $perceptionPrix);
+$revenirPercent = array_map($toPercent, $revenir);
+$recommanderPercent = array_map($toPercent, $recommander);
+
 
 /////////////////////////////////////////
 $sql = "SELECT type_id FROM client_connaissance_type WHERE client_id=:id";
@@ -238,70 +303,7 @@ foreach($clientsParisiensParDeps as $k=>$deptParis){
     }
 }
 
-/////////////////////////////
-$toPercent = function ($it) use ($numEntry) {
-    return round(($it / $numEntry) * 100);
-};
 
-// satisfaction globale
-$globalSatisf = [0, 0, 0, 0];
-$satifChambre = [0, 0, 0, 0];
-$satifRestauration = [0, 0, 0, 0];
-$satifBar = [0, 0, 0, 0];
-$satifAccueil = [0, 0, 0, 0];
-$satifEnvironement = [0, 0, 0, 0];
-$satifRapport = [0, 0, 0, 0];
-$perceptionPrix = [0, 0, 0];
-$satifAmabilite = [0, 0, 0, 0];
-$satifService = [0, 0, 0, 0];
-$satifDiversite = [0, 0, 0, 0];
-$satifPlats = [0, 0, 0, 0];
-$satifVins = [0, 0, 0, 0];
-$satifPrix = [0, 0, 0, 0];
-$revenir = [0, 0, 0, 0,];
-$recommander = [0, 0, 0, 0];
-
-foreach ($satisfaction as $k => $v) {
-    // satisfaction globale
-    $globalSatisf[$v["globalement"] - 1]++;
-    $satifChambre[$v["chambres"] - 1]++;
-    $satifRestauration[$v["restauration"] - 1]++;
-    $satifBar[$v["bar"] - 1]++;
-    $satifAccueil[$v["accueil"] - 1]++;
-    $satifEnvironement[$v["environnement"] - 1]++;
-    $satifRapport[$v["rapport"] - 1]++;
-    $perceptionPrix[$v["prix"] - 1]++;
-    $satifAmabilite[$v["resto_amabilite"] - 1]++;
-    $satifService[$v["resto_service"] - 1]++;
-    $satifDiversite[$v["resto_diversite"] - 1]++;
-    $satifPlats[$v["resto_plats"] - 1]++;
-    $satifVins[$v["resto_vins"] - 1]++;
-    $satifPrix[$v["resto_prix"] - 1]++;
-    $revenir[$v["revenir"] - 1]++;
-    $recommander[$v["recommander"] - 1]++;
-}
-
-$allServicesSatif = [
-    array_map($toPercent, $satifChambre),
-    array_map($toPercent, $satifRestauration),
-    array_map($toPercent, $satifBar),
-    array_map($toPercent, $satifAccueil),
-    array_map($toPercent, $satifEnvironement),
-    array_map($toPercent, $satifRapport)
-];
-
-$allRestoSatif = [
-    array_map($toPercent, $satifAmabilite),
-    array_map($toPercent, $satifService),
-    array_map($toPercent, $satifDiversite),
-    array_map($toPercent, $satifPlats),
-    array_map($toPercent, $satifVins),
-    array_map($toPercent, $satifPrix),
-];
-
-$perceptionPrixPercent = array_map($toPercent, $perceptionPrix);
-$revenirPercent = array_map($toPercent, $revenir);
-$recommanderPercent = array_map($toPercent, $recommander);
 
 /////////////////////////// Context du séjour
 
@@ -579,7 +581,6 @@ $wifiPercent = array_map(function($it) use ($wifiCounter){
         }
     };
 
-
     var pieChartPerceptionPrix = {
         dataSource: [
             <?php foreach($datas_perception_prix as $k=>$v): ?>
@@ -705,6 +706,7 @@ $wifiPercent = array_map(function($it) use ($wifiCounter){
             }
         }
     };
+
     var barChartConnaissanceParis = {
         rotated: true,
         dataSource: [

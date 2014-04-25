@@ -43,8 +43,8 @@ $clientMaleStmt->execute();
 $clientResultMale = $clientMaleStmt->fetchAll();
 $sql = "SELECT * FROM clients WHERE arrive_timestamp>=:arrivestartts AND arrive_timestamp<=:arriveendts AND sexe=:sexe";
 $clientFemaleStmt = $pdo->prepare($sql);
-$clientMaleStmt->bindValue(":arrivestartts", $dateStartTs);
-$clientMaleStmt->bindValue(":arriveendts", $dateEndTs);
+$clientFemaleStmt->bindValue(":arrivestartts", $dateStartTs);
+$clientFemaleStmt->bindValue(":arriveendts", $dateEndTs);
 $clientFemaleStmt->bindValue(":sexe", 2);
 $clientFemaleStmt->execute();
 $clientResultFemale = $clientFemaleStmt->fetchAll();
@@ -176,6 +176,350 @@ $allRestoSatif = [
 $perceptionPrixPercent = array_map($toPercent, $perceptionPrix);
 $revenirPercent = array_map($toPercent, $revenir);
 $recommanderPercent = array_map($toPercent, $recommander);
+
+////////////////// connaissance
+$sql = "SELECT type_id FROM client_connaissance_type WHERE client_id=:id";
+$stmt = $pdo->prepare($sql);
+$resultsConnaissance = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+$resultsConnaissanceTotal = 0;
+foreach ($clients as $k => $c) {
+    $stmt->bindValue(":id", $c["id"]);
+    $stmt->execute();
+    $tmp = $stmt->fetchAll();
+    if ($tmp) {
+        foreach ($tmp as $l => $t) {
+            $resultsConnaissance[$t["type_id"] - 1]++;
+
+        }
+    }
+}
+
+for ($i = 0; $i < count($resultsConnaissance); $i++) {
+    $resultsConnaissanceTotal += $resultsConnaissance[$i];
+}
+$resultsConnaissancePercent = array_map(function ($it) use ($resultsConnaissanceTotal) {
+    return round(($it / $resultsConnaissanceTotal) * 100);
+}, $resultsConnaissance);
+
+////////////////////////////
+$clientsParisiens = [];
+$clientsParisiensParDeps = [
+    "75"=>[],
+    "77"=>[],
+    "78"=>[],
+    "91"=>[],
+    "92"=>[],
+    "93"=>[],
+    "94"=>[],
+    "95"=>[],
+];
+foreach($clients as $k=>$c){
+    if(in_array($c["departement_num"], $deptParisNums)){
+        $clientsParisiens[] = $c;
+    }
+    switch($c["departement_num"]){
+        case "75":
+            $clientsParisiensParDeps["75"][] = $c;
+            break;
+        case "77":
+            $clientsParisiensParDeps["77"][] = $c;
+            break;
+        case "78":
+            $clientsParisiensParDeps["78"][] = $c;
+            break;
+        case "91":
+            $clientsParisiensParDeps["91"][] = $c;
+            break;
+        case "92":
+            $clientsParisiensParDeps["92"][] = $c;
+            break;
+        case "93":
+            $clientsParisiensParDeps["93"][] = $c;
+            break;
+        case "94":
+            $clientsParisiensParDeps["94"][] = $c;
+            break;
+        case "95":
+            $clientsParisiensParDeps["95"][] = $c;
+            break;
+        default:
+            break;
+    }
+}
+
+$sql = "SELECT type_id FROM client_connaissance_type WHERE client_id=:id";
+$stmt = $pdo->prepare($sql);
+$resultsConnaissanceParis = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+$resultsConnaissanceParisTotal = 0;
+foreach($clientsParisiens as $k=>$cp){
+    $stmt->bindValue(":id", $cp["id"]);
+    $stmt->execute();
+    $tmp = $stmt->fetchAll();
+    if ($tmp) {
+        foreach ($tmp as $l => $t) {
+            $resultsConnaissanceParis[$t["type_id"] - 1]++;
+
+        }
+    }
+}
+for ($i = 0; $i < count($resultsConnaissanceParis); $i++) {
+    $resultsConnaissanceParisTotal += $resultsConnaissanceParis[$i];
+}
+$resultsConnaissanceParisPercent = array_map(function ($it) use ($resultsConnaissanceParisTotal) {
+    return round(($it / $resultsConnaissanceParisTotal) * 100);
+}, $resultsConnaissanceParis);
+
+////////////////////////////
+$sql = "SELECT type_id FROM client_connaissance_type WHERE client_id=:id";
+$stmt = $pdo->prepare($sql);
+$resultsConnaissanceParisParDeptsTotal = [
+    "75"=>0, "77"=>0, "78"=>0, "91"=>0, "92"=>0, "93"=>0, "94"=>0, "95"=>0,
+];
+$resultsConnaissanceParisParDepts = [
+    "75"=>[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    "77"=>[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    "78"=>[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    "91"=>[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    "92"=>[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    "93"=>[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    "94"=>[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    "95"=>[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+];
+foreach($clientsParisiensParDeps as $k=>$deptParis){
+    foreach($deptParis as $l=>$c){
+        $stmt->bindValue(":id", $c["id"]);
+        $stmt->execute();
+        $tmp = $stmt->fetchAll();
+        if ($tmp) {
+            foreach ($tmp as $m => $t) {
+                $resultsConnaissanceParisParDepts[$k][$t["type_id"] - 1]++;
+
+            }
+        }
+    }
+    for($i=0;$i<count($resultsConnaissanceParisParDepts[$k]);$i++){
+        $resultsConnaissanceParisParDeptsTotal[$k] += $resultsConnaissanceParisParDepts[$k][$i];
+    }
+}
+/////////////////////////// Context du séjour
+
+$sql = "SELECT COUNT(*) as num FROM clients WHERE arrive_timestamp>=:arrivestartts AND arrive_timestamp<=:arriveendts AND departement_num=:deptnum";
+$stmt = $pdo->prepare($sql);
+$effectifsParDept = [];
+$effectifsParDeptPercent = [];
+$selected = [];
+$countEffectifOtherDepts = 0;
+foreach($departements as $num=>$name){
+    $stmt->bindValue(":arrivestartts", $dateStartTs);
+    $stmt->bindValue(":arriveendts", $dateEndTs);
+    $stmt->bindValue(":deptnum", $num);
+    $stmt->execute();
+    $tmp = $stmt->fetch();
+    if($tmp){
+        $effectifsParDept[$num] = $tmp["num"];
+        $effectifsParDeptPercent[$num] = round(($tmp["num"] / $numEntry) * 100);
+        // selection des departements les plus representatifs
+        if($effectifsParDeptPercent[$num] >= 1.5){
+            $selected[] = ["dept_num"=>$num, "dept_name"=>$name, "effectif"=>$tmp["num"], "percent"=>$effectifsParDeptPercent[$num]];
+        } else {
+            $countEffectifOtherDepts += $tmp["num"];
+        }
+    }
+}
+// rearragement des departements representatifs dans l'ordre decroissant du pourcentage
+usort($selected, function($a,$b){
+    if($a["percent"] == $b["percent"]){
+        return 0;
+    }
+    return ($a["percent"] < $b["percent"]) ? 1 : -1;
+});
+
+//////////////// temps de trajet
+$tpsTrajet = [0,0,0];
+foreach($clients as $c){
+    $tpsTrajet[$c["tps_trajet"] - 1]++;
+}
+$tpsTrajetPercent = array_map(function($it) use ($numEntry){
+    return round(($it/$numEntry) * 100);
+}, $tpsTrajet);
+////////////
+///////////////////// sejour
+/////////// nbre personnes
+///// adultes
+$sql = "SELECT nbre_adulte as ad, nbre_enfant as en FROM sejours WHERE arrive_timestamp >=:datestartts AND arrive_timestamp <=:dateendts";
+$stmt = $pdo->prepare($sql);
+
+$stmt->bindValue(":datestartts",$dateStartTs);
+$stmt->bindValue(":dateendts",$dateEndTs);
+$stmt->execute();
+
+$result = $stmt->fetchAll();
+$nbrAdultes = [0,0,0,0,0,0];
+$nbrEnfants = [0,0,0,0,0,0];
+$counterPersons = 0;
+if($result){
+    foreach($result as $k=>$v){
+        if(($v["ad"] == 6 && $v["ad"] == 6) || ($v["ad"] == 0 && $v["ad"] == 0) || ($v["ad"] == 6 && ($v["en"] == 6 || $v["en"] == 0)) || ($v["ad"] == 0 && ($v["en"] == 6 || $v["en"] == 0))){
+            continue;
+        }
+        $counterPersons++;
+        switch($v["ad"]){
+            case 0:
+            case 6:
+            default:
+                $nbrAdultes[5]++;
+                break;
+            case 1:
+                $nbrAdultes[0]++;
+                break;
+            case 2:
+                $nbrAdultes[1]++;
+                break;
+            case 3:
+                $nbrAdultes[2]++;
+                break;
+            case 4:
+                $nbrAdultes[3]++;
+                break;
+            case 5:
+                $nbrAdultes[4]++;
+                break;
+        }
+        switch($v["en"]){
+            case 0:
+            case 6:
+            default:
+                $nbrEnfants[5]++;
+                break;
+            case 1:
+                $nbrEnfants[0]++;
+                break;
+            case 2:
+                $nbrEnfants[1]++;
+                break;
+            case 3:
+                $nbrEnfants[2]++;
+                break;
+            case 4:
+                $nbrEnfants[3]++;
+                break;
+            case 5:
+                $nbrEnfants[4]++;
+                break;
+        }
+    }
+}
+$nbrAdultesPercent = array_map(function($it) use($counterPersons){
+    return round(($it / $counterPersons) * 100);
+}, $nbrAdultes);
+$nbrEnfantsPercent = array_map(function($it) use($counterPersons){
+    return round(($it / $counterPersons) * 100);
+}, $nbrEnfants);
+//////// chambres /////
+$sql = "SELECT type_chambre as room FROM sejours WHERE arrive_timestamp >=:datestartts AND arrive_timestamp <=:dateendts";
+$stmt = $pdo->prepare($sql);
+
+$stmt->bindValue(":datestartts",$dateStartTs);
+$stmt->bindValue(":dateendts",$dateEndTs);
+$stmt->execute();
+$result = $stmt->fetchAll();
+$countRooms = count($result);
+$rooms = [0,0,0,0];
+if($result){
+    foreach($result as $k=>$v){
+        $rooms[$v["room"] - 1]++;
+    }
+}
+$roomsPercent = array_map(function($it) use ($countRooms){
+    return round( ($it/$countRooms) * 100);
+}, $rooms);
+//////// combien de nuits
+$sql = "SELECT nbre_nuit as nuites FROM sejours WHERE arrive_timestamp >=:datestartts AND arrive_timestamp <=:dateendts";
+$stmt = $pdo->prepare($sql);
+$stmt->bindValue(":datestartts",$dateStartTs);
+$stmt->bindValue(":dateendts",$dateEndTs);
+$stmt->execute();
+$result = $stmt->fetchAll();
+$countNuites = count($result);
+$nuites = [0,0,0,0];
+if($result){
+    foreach($result as $k=>$v){
+        if($v["nuites"] == 1){
+            $nuites[0]++;
+        }
+        if($v["nuites"] == 2){
+            $nuites[1]++;
+        }
+        if($v["nuites"] == 3){
+            $nuites[2]++;
+        }
+        if($v["nuites"] >= 4){
+            $nuites[3]++;
+        }
+    }
+}
+$nuitesPercent = array_map(function($it) use($countNuites){
+    return round(($it/$countNuites) * 100);
+}, $nuites);
+///////// visite zoo
+$sql = "SELECT visite_zoo as visite FROM sejours WHERE arrive_timestamp >=:datestartts AND arrive_timestamp <=:dateendts";
+$stmt = $pdo->prepare($sql);
+$stmt->bindValue(":datestartts",$dateStartTs);
+$stmt->bindValue(":dateendts",$dateEndTs);
+$stmt->execute();
+$result = $stmt->fetchAll();
+$countVisite = count($result);
+$visiteZoo = [0,0];
+if($result){
+    foreach($result as $k=>$v){
+        if($v["visite"] == 1){
+            $visiteZoo[0]++;
+        }
+        if($v["visite"] == 2){
+            $visiteZoo[1]++;
+        }
+    }
+}
+$visiteZooPercent = array_map(function($it) use ($countVisite) {
+    return round(($it/$countVisite) * 100);
+}, $visiteZoo);
+////////// spa
+$sql = "SELECT spa FROM satisfaction WHERE client_id=:id";
+$stmt = $pdo->prepare($sql);
+$spa = [0,0,0,0];
+$spaCounter = 0;
+foreach($clients as $k=>$c){
+    $stmt->bindValue(":id", $c["id"]);
+    $stmt->execute();
+    $tmp = $stmt->fetch();
+    if($tmp){
+        $spaCounter++;
+        $spa[$tmp["spa"] - 1]++;
+
+    }
+}
+$spaPercent = array_map(function($it) use ($spaCounter){
+    return round(($it/$spaCounter) *100);
+}, $spa);
+///////// wifi
+$sql = "SELECT wifi FROM sejours WHERE arrive_timestamp >=:datestartts AND arrive_timestamp <=:dateendts";
+$stmt = $pdo->prepare($sql);
+$stmt->bindValue(":datestartts",$dateStartTs);
+$stmt->bindValue(":dateendts",$dateEndTs);
+$stmt->execute();
+$stmt->execute();
+$result = $stmt->fetchAll();
+$wifi = [0,0,0];
+$wifiCounter = 0;
+if($result){
+    foreach($result as $k=>$v){
+        $wifiCounter++;
+        $wifi[$v["wifi"] - 1]++;
+    }
+}
+$wifiPercent = array_map(function($it) use ($wifiCounter){
+    return round(($it/$wifiCounter) * 100);
+}, $wifi);
 ?>
 
 <script src="/survey/js/vendor/globalize.min.js"></script>
@@ -206,6 +550,210 @@ $recommanderPercent = array_map($toPercent, $recommander);
             }
         }
     };
+
+    var fullStackedBarServicesSatif = {
+        dataSource: [
+            <?php foreach($datas_services as $k=>$v): ?>
+            {category: "<?php echo $v; ?>", satifTres: <?php echo $allServicesSatif[$k][0]; ?>, satif: <?php echo $allServicesSatif[$k][1]; ?>, satifpeu: <?php echo $allServicesSatif[$k][2]; ?>, satifpas: <?php echo $allServicesSatif[$k][3]; ?>},
+            <?php endforeach; ?>
+        ],
+        commonSeriesSettings: {
+            argumentField: 'category',
+            type: 'stackedBar'
+        },
+        series: [
+            { valueField: "satifTres", name: "très satisfait"},
+            { valueField: "satif", name: "satisfait"},
+            { valueField: "satifpeu", name: "peu satisfait"},
+            { valueField: "satifpas", name: "pas du tout satisfait"}
+        ],
+        tooltip: {
+            enabled: true,
+            customizeText: function () {
+                return this.seriesName + " " + this.valueText + "%";
+            }
+        }
+    };
+
+    var pieChartPerceptionPrix = {
+        dataSource: [
+            <?php foreach($datas_perception_prix as $k=>$v): ?>
+            {category: "<?php echo $v; ?>", value: <?php echo $perceptionPrixPercent[$k]; ?>},
+            <?php endforeach; ?>
+        ],
+        series: {
+            argumentField: 'category',
+            valueField: 'value',
+            label: {
+                visible: true,
+                connector: {
+                    visible: true
+                }
+            }
+        },
+        tooltip: {
+            enabled: true,
+            percentPrecision: 2,
+            customizeText: function (value) {
+                return value.percentText;
+            }
+        }
+    };
+
+     var fullStackedBarRestoSatif = {
+        dataSource: [
+            <?php foreach($datas_resto as $k=>$v): ?>
+            {category: "<?php echo $v; ?>", satifTres: <?php echo $allRestoSatif[$k][0]; ?>, satif: <?php echo $allRestoSatif[$k][1]; ?>, satifpeu: <?php echo $allRestoSatif[$k][2]; ?>, satifpas: <?php echo $allRestoSatif[$k][3]; ?>},
+            <?php endforeach; ?>
+        ],
+        commonSeriesSettings: {
+            argumentField: 'category',
+            type: 'stackedBar'
+        },
+        series: [
+            { valueField: "satifTres", name: "très satisfait"},
+            { valueField: "satif", name: "satisfait"},
+            { valueField: "satifpeu", name: "peu satisfait"},
+            { valueField: "satifpas", name: "pas du tout satisfait"}
+        ],
+        tooltip: {
+            enabled: true,
+            customizeText: function () {
+                return this.seriesName + " " + this.valueText + "%";
+            }
+        }
+    };
+
+     var pieChartRevenir = {
+        dataSource: [
+            <?php foreach($datas_intentions as $k=>$v): ?>
+            {category: "<?php echo $v; ?>", value: <?php echo $revenirPercent[$k]; ?>},
+            <?php endforeach; ?>
+        ],
+        series: {
+            argumentField: 'category',
+            valueField: 'value',
+            label: {
+                visible: true,
+                connector: {
+                    visible: true
+                }
+            }
+        },
+        tooltip: {
+            enabled: true,
+            percentPrecision: 2,
+            customizeText: function (value) {
+                return value.percentText;
+            }
+        }
+    };
+
+     var pieChartRecommander = {
+        dataSource: [
+            <?php foreach($datas_intentions as $k=>$v): ?>
+            {category: "<?php echo $v; ?>", value: <?php echo $recommanderPercent[$k]; ?>},
+            <?php endforeach; ?>
+        ],
+        series: {
+            argumentField: 'category',
+            valueField: 'value',
+            label: {
+                visible: true,
+                connector: {
+                    visible: true
+                }
+            }
+        },
+        tooltip: {
+            enabled: true,
+            percentPrecision: 2,
+            customizeText: function (value) {
+                return value.percentText;
+            }
+        }
+    };
+
+     var barChartConnaissanceTotal = {
+        rotated: true,
+        dataSource: [
+            <?php foreach($connaissance_types as $k=>$v): ?>
+            {category: "<?php echo $v; ?>", value: <?php echo $resultsConnaissancePercent[$k]; ?>},
+            <?php endforeach; ?>
+        ],
+        series: {
+            argumentField: 'category',
+            valueField: 'value',
+            name: "Totalité échantillon",
+            type: 'bar',
+            label: {
+                visible: true,
+                customizeText: function () {
+                    return this.valueText + "%";
+                }
+            }
+        },
+        tooltip: {
+            enabled: true,
+            customizeText: function () {
+                return this.valueText + "%";
+            }
+        }
+    };
+
+    var barChartConnaissanceParis = {
+        rotated: true,
+        dataSource: [
+            <?php foreach($connaissance_types as $k=>$v): ?>
+            {category: "<?php echo $v; ?>", value: <?php echo $resultsConnaissanceParisPercent[$k]; ?>},
+            <?php endforeach; ?>
+        ],
+        series: {
+            argumentField: 'category',
+            valueField: 'value',
+            name: "Région Parisienne",
+            type: 'bar',
+            label: {
+                visible: true,
+                customizeText: function () {
+                    return this.valueText + "%";
+                }
+            }
+        },
+        tooltip: {
+            enabled: true,
+            customizeText: function () {
+                return this.valueText + "%";
+            }
+        }
+    };
+
+     var barChartTypeRooms = {
+        rotated: true,
+        dataSource: [
+            <?php foreach($datas_type_chambre as $k=>$v): ?>
+            {category: "<?php echo $v; ?>", value: <?php echo $roomsPercent[$k]; ?>},
+            <?php endforeach; ?>
+        ],
+        series: {
+            argumentField: 'category',
+            valueField: 'value',
+            name: "Types de chambre",
+            type: 'bar',
+            label: {
+                visible: true,
+                customizeText: function () {
+                    return this.valueText + "%";
+                }
+            }
+        },
+        tooltip: {
+            enabled: true,
+            customizeText: function () {
+                return this.valueText + "%";
+            }
+        }
+    };
 </script>
 
 
@@ -213,4 +761,10 @@ $recommanderPercent = array_map($toPercent, $recommander);
     include_once "mois/profil-multi.php";
 
     include_once "mois/satif-global-multi.php";
+
+    include_once "mois/origine-multi.php";
+
+    include_once "mois/context-multi.php";
+
+    include_once "mois/autres-multi.php";
 ?>
