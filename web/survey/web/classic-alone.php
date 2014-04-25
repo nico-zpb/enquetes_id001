@@ -20,9 +20,7 @@
 
 // closure
 
-$toPercent = function ($it) use ($numEntry) {
-    return round(($it / $numEntry) * 100);
-};
+
 $dateStart = DateTime::createFromFormat("j-n-Y","1-" . $monthStart . "-" . $annee);
 $dateStartTs = $dateStart->getTimestamp();
 $lastDay = $dateStart->format("t");
@@ -241,7 +239,9 @@ foreach($clientsParisiensParDeps as $k=>$deptParis){
 }
 
 /////////////////////////////
-
+$toPercent = function ($it) use ($numEntry) {
+    return round(($it / $numEntry) * 100);
+};
 
 // satisfaction globale
 $globalSatisf = [0, 0, 0, 0];

@@ -13,3 +13,25 @@
     (_ (_   |   |   |  |   |   |
       (__<  |mm_|mm_|  |mm_|mm_|
 */
+$(function(){
+
+
+    $("#pieChartGlobalSatisf").dxPieChart(pieChartGlobalSatisf);
+
+ /*    $("#fullStackedBarServicesSatif").dxChart(fullStackedBarServicesSatif);
+
+    $("#pieChartPerceptionPrix").dxPieChart(pieChartPerceptionPrix);
+
+    $("#fullStackedBarRestoSatif").dxChart(fullStackedBarRestoSatif);
+
+    $("#pieChartRevenir").dxPieChart(pieChartRevenir);
+
+    $("#pieChartRecommander").dxPieChart(pieChartRecommander);
+
+    $("#barChartConnaissanceTotal").dxChart(barChartConnaissanceTotal);
+
+    $("#barChartConnaissanceParis").dxChart(barChartConnaissanceParis);
+
+    $("#barChartTypeRooms").dxChart(barChartTypeRooms);*/
+
+});
