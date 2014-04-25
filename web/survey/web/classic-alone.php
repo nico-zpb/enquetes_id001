@@ -506,6 +506,26 @@ foreach($clients as $k=>$c){
 $spaPercent = array_map(function($it) use ($spaCounter){
     return round(($it/$spaCounter) *100);
 }, $spa);
+
+///////// wifi
+$sql = "SELECT wifi FROM sejours WHERE arrive_timestamp >=:datestartts AND arrive_timestamp <=:dateendts";
+$stmt = $pdo->prepare($sql);
+$stmt->bindValue(":datestartts",$dateStartTs);
+$stmt->bindValue(":dateendts",$dateEndTs);
+$stmt->execute();
+$stmt->execute();
+$result = $stmt->fetchAll();
+$wifi = [0,0,0];
+$wifiCounter = 0;
+if($result){
+    foreach($result as $k=>$v){
+        $wifiCounter++;
+        $wifi[$v["wifi"] - 1]++;
+    }
+}
+$wifiPercent = array_map(function($it) use ($wifiCounter){
+    return round(($it/$wifiCounter) * 100);
+}, $wifi);
 ?>
 <script src="/survey/js/vendor/globalize.min.js"></script>
 <script src="/survey/js/vendor/dx.chartjs.js"></script>

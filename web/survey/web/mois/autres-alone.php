@@ -79,5 +79,34 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12">
+                <p>Question : &laquo; Pendant votre séjour, avez-vous utilisé la connexion internet wifi de l'hôtel ? &raquo;</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Effectifs</th>
+                        <th>%</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach($datas_wifi as $k=>$v): ?>
+                            <tr>
+                                <td><?php echo $v; ?></td>
+                                <td><?php echo $wifi[$k]; ?></td>
+                                <td><?php echo $wifiPercent[$k]; ?>%</td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
     </div>
 </div>
