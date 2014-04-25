@@ -140,7 +140,7 @@
                         <td>Enfants de moins de 11 ans</td>
                         <td><?php echo $moyenEnfant = round(($nbrEnfants[0] + ($nbrEnfants[1]*2) +  ($nbrEnfants[2]*3) + ($nbrEnfants[3]*4) + ($nbrEnfants[4]*5)) / $counterPersons, 1);?></td>
                     </tr>
-                    <tr>
+                    <tr class="success">
                         <td>Total</td>
                         <td><?php echo $moyenAdulte + $moyenEnfant; ?></td>
                     </tr>
@@ -190,6 +190,48 @@
                     <?php endforeach; ?>
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+<div class="wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header page-header-hotel">
+                    <h3>Type de chambre occupé et nombre de nuits</h3>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <p>Question : &laquo; Quel type de chambre avez-vous occupé pendant votre séjour à l'hôtel ? &raquo;</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+            <!-- chart -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <p>Question : &laquo; Combien de nuits y avez-vous dormis ? &raquo;</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Effectifs</th>
+                        <th>%</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
