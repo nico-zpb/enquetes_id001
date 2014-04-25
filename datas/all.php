@@ -124,3 +124,7 @@ $datas_type_chambre = [
 $datas_nbr_nuits = [
     "1 nuit","2 nuits","3 nuits","4 nuits et plus"
 ];
+
+$datas_wifi = [
+    "Oui, sans difficulté","J'ai cherché à me connecter mais j'ai eu des difficultés","Non, je n'ai pas cherché à me connecter",
+];

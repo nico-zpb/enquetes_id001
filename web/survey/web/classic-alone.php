@@ -747,6 +747,8 @@ include_once "mois/satif-global-alone.php";
 include_once "mois/origine-alone.php";
 
 include_once "mois/context-alone.php";
+
+include_once "mois/autres-alone.php";
 ?>
 
 
