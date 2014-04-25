@@ -78,7 +78,7 @@ $yearRange = range($annee-4, $annee);
             </div>
 
         </div>
-        <form action="" method="post" id="form_cwg">
+        <form action="/survey/web/classic-annee.php" method="post" id="form_cwg">
             <div class="row">
                 <div class="col-md-12">
                     <div class="row">
