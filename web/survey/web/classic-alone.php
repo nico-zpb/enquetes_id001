@@ -420,10 +420,92 @@ $nbrAdultesPercent = array_map(function($it) use($counterPersons){
 $nbrEnfantsPercent = array_map(function($it) use($counterPersons){
     return round(($it / $counterPersons) * 100);
 }, $nbrEnfants);
+//////// chambres /////
+$sql = "SELECT type_chambre as room FROM sejours WHERE arrive_timestamp >=:datestartts AND arrive_timestamp <=:dateendts";
+$stmt = $pdo->prepare($sql);
 
+$stmt->bindValue(":datestartts",$dateStartTs);
+$stmt->bindValue(":dateendts",$dateEndTs);
+$stmt->execute();
+$result = $stmt->fetchAll();
+$countRooms = count($result);
+$rooms = [0,0,0,0];
+if($result){
+    foreach($result as $k=>$v){
+        $rooms[$v["room"] - 1]++;
+    }
+}
+$roomsPercent = array_map(function($it) use ($countRooms){
+    return round( ($it/$countRooms) * 100);
+}, $rooms);
+//////// combien de nuits
+$sql = "SELECT nbre_nuit as nuites FROM sejours WHERE arrive_timestamp >=:datestartts AND arrive_timestamp <=:dateendts";
+$stmt = $pdo->prepare($sql);
+$stmt->bindValue(":datestartts",$dateStartTs);
+$stmt->bindValue(":dateendts",$dateEndTs);
+$stmt->execute();
+$result = $stmt->fetchAll();
+$countNuites = count($result);
+$nuites = [0,0,0,0];
+if($result){
+    foreach($result as $k=>$v){
+        if($v["nuites"] == 1){
+            $nuites[0]++;
+        }
+        if($v["nuites"] == 2){
+            $nuites[1]++;
+        }
+        if($v["nuites"] == 3){
+            $nuites[2]++;
+        }
+        if($v["nuites"] >= 4){
+            $nuites[3]++;
+        }
+    }
+}
+$nuitesPercent = array_map(function($it) use($countNuites){
+    return round(($it/$countNuites) * 100);
+}, $nuites);
+///////// visite zoo
+$sql = "SELECT visite_zoo as visite FROM sejours WHERE arrive_timestamp >=:datestartts AND arrive_timestamp <=:dateendts";
+$stmt = $pdo->prepare($sql);
+$stmt->bindValue(":datestartts",$dateStartTs);
+$stmt->bindValue(":dateendts",$dateEndTs);
+$stmt->execute();
+$result = $stmt->fetchAll();
+$countVisite = count($result);
+$visiteZoo = [0,0];
+if($result){
+    foreach($result as $k=>$v){
+        if($v["visite"] == 1){
+            $visiteZoo[0]++;
+        }
+        if($v["visite"] == 2){
+            $visiteZoo[1]++;
+        }
+    }
+}
+$visiteZooPercent = array_map(function($it) use ($countVisite) {
+    return round(($it/$countVisite) * 100);
+}, $visiteZoo);
+////////// spa
+$sql = "SELECT spa FROM satisfaction WHERE client_id=:id";
+$stmt = $pdo->prepare($sql);
+$spa = [0,0,0,0];
+$spaCounter = 0;
+foreach($clients as $k=>$c){
+    $stmt->bindValue(":id", $c["id"]);
+    $stmt->execute();
+    $tmp = $stmt->fetch();
+    if($tmp){
+        $spaCounter++;
+        $spa[$tmp["spa"] - 1]++;
 
-
-
+    }
+}
+$spaPercent = array_map(function($it) use ($spaCounter){
+    return round(($it/$spaCounter) *100);
+}, $spa);
 ?>
 <script src="/survey/js/vendor/globalize.min.js"></script>
 <script src="/survey/js/vendor/dx.chartjs.js"></script>
@@ -614,6 +696,33 @@ $nbrEnfantsPercent = array_map(function($it) use($counterPersons){
             argumentField: 'category',
             valueField: 'value',
             name: "Région Parisienne",
+            type: 'bar',
+            label: {
+                visible: true,
+                customizeText: function () {
+                    return this.valueText + "%";
+                }
+            }
+        },
+        tooltip: {
+            enabled: true,
+            customizeText: function () {
+                return this.valueText + "%";
+            }
+        }
+    };
+
+    var barChartTypeRooms = {
+        rotated: true,
+        dataSource: [
+            <?php foreach($datas_type_chambre as $k=>$v): ?>
+            {category: "<?php echo $v; ?>", value: <?php echo $roomsPercent[$k]; ?>},
+            <?php endforeach; ?>
+        ],
+        series: {
+            argumentField: 'category',
+            valueField: 'value',
+            name: "Types de chambre",
             type: 'bar',
             label: {
                 visible: true,

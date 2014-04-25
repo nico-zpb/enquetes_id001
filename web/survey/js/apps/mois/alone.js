@@ -32,4 +32,6 @@ $(function(){
 
     $("#barChartConnaissanceParis").dxChart(barChartConnaissanceParis);
 
+    $("#barChartTypeRooms").dxChart(barChartTypeRooms);
+
 });

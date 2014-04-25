@@ -116,3 +116,11 @@ $datas_tps_trajet = ["moins d'une heure","de 1 à 2 heures","plus de 2 heures"];
 
 
 $datas_nbr_personnes = ["1","2","3","4","5 et plus","aucun"];
+
+$datas_type_chambre = [
+    "Familiale","Club","Junior Suite","Chambre pour personnes à mobilité réduite",
+];
+
+$datas_nbr_nuits = [
+    "1 nuit","2 nuits","3 nuits","4 nuits et plus"
+];
