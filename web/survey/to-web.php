@@ -72,6 +72,39 @@ $yearRange = range($annee-4, $annee);
         <div class="row">
             <div class="col-md-12">
                 <div class="page-header page-header-hotel">
+                    <h3>Evolution des résultats mensuels</h3>
+                </div>
+                <p>Séléctionnez l'année</p>
+            </div>
+
+        </div>
+        <form action="/survey/web/evolution.php" method="post" id="form_cwe">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <select name="form_cwe_range[annee]" id="form_cwe_range_annee" class="form-control">
+                                <?php foreach($yearRange as $year): ?>
+                                    <option value="<?php echo $year; ?>" <?php if($year == $annee) { echo 'selected="selected"'; } ?>><?php echo $year; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" id="submit_cwe" class="btn btn-hotel">continuer &raquo;</button>
+                        </div>
+                        <div class="col-md-6"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header page-header-hotel">
                     <h3>Données globales - sur l'année</h3>
                 </div>
                 <p>Séléctionnez l'année</p>

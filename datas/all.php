@@ -41,7 +41,9 @@ $pays = [
 $datas_mois=[
     "janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"
 ];
-
+$datas_mois_short=[
+    "jan","fev","mar","avr","mai","jui","juil","aou","sep","oct","nov","dec"
+];
 $profession = ["agriculteur exploitant", "artisan, commercant, chef d'entreprise", "cadre supérieur, profession intellectuelle supérieure, professeur", "cadre moyen, profession intermédiaire", "employé", "ouvrier", "retaité", "autres inactifs (au foyer, chômeur, étudiant)" ];
 
 $datas_trancheAge = [
@@ -95,6 +97,11 @@ $datas_perception_prix = [
     "trop cher","approprié","pas très cher"
 ];
 
+$depsCentre = ["18","28","36","37","41","45"];
+$depsParis = ["75","77","78","91","92","93","94","95"];
+$depsLimit = ["03","23","49","58","72","86","87","89"];
+
+
 $region_paris = [
     "75"=>"Paris",
     "77"=>"Seine et Marne",
@@ -105,6 +112,17 @@ $region_paris = [
     "94"=>"Val-de-Marne",
     "95"=>"Val-d'Oise",
 ];
+
+$region_centre = [
+    "18"=>"Cher",
+    "28"=>"Eure-et-Loir",
+    "36"=>"Indre",
+    "37"=>"Indre-et-Loire",
+    "41"=>"Loir-et-Cher",
+    "45"=>"Loiret"
+];
+
+
 
 $deptParisNums = array_keys($region_paris);
 
