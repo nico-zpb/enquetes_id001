@@ -18,9 +18,9 @@
      (__<  |mm_|mm_|  |mm_|mm_|
 */
 
-// closure
 
 
+/////////////////////////
 $dateStart = DateTime::createFromFormat("j-n-Y","1-" . $monthStart . "-" . $annee);
 $dateStartTs = $dateStart->getTimestamp();
 $lastDay = $dateStart->format("t");
@@ -74,7 +74,7 @@ foreach ($datas_trancheAge as $k => $v) {
         $tranchesAge[] = ["name" => $v["name"], "num" => $result["num"], "percent" => round(($result["num"] / $numEntry) * 100)];
     }
 }
-
+//
 
 // profession
 $max = 0;
@@ -106,7 +106,10 @@ $satisfaction = [];
 foreach ($clients as $k => $c) {
     $stmt->bindValue(":id", $c["id"]);
     $stmt->execute();
-    $satisfaction[] = $stmt->fetch();
+    $result = $stmt->fetch();
+    if($result){
+        $satisfaction[] = $result;
+    }
 }
 /////////////////////////////
 $toPercent = function ($it) use ($numEntry) {
@@ -132,7 +135,7 @@ $revenir = [0, 0, 0, 0,];
 $recommander = [0, 0, 0, 0];
 
 foreach ($satisfaction as $k => $v) {
-    // satisfaction globale
+
     $globalSatisf[$v["globalement"] - 1]++;
     $satifChambre[$v["chambres"] - 1]++;
     $satifRestauration[$v["restauration"] - 1]++;

@@ -72,7 +72,7 @@ $yearRange = range($annee-4, $annee);
         <div class="row">
             <div class="col-md-12">
                 <div class="page-header page-header-hotel">
-                    <h3>Données globales</h3>
+                    <h3>Données globales - sur l'année</h3>
                 </div>
                 <p>Séléctionnez l'année</p>
             </div>
@@ -105,9 +105,9 @@ $yearRange = range($annee-4, $annee);
         <div class="row">
             <div class="col-md-12">
                 <div class="page-header page-header-hotel">
-                    <h3>Données globales - par mois</h3>
+                    <h3>Données globales - sur plusieurs mois</h3>
                 </div>
-                <p>Séléctionnez les mois à comparer</p>
+                <p>Séléctionnez la périoder</p>
             </div>
 
         </div>

@@ -19,7 +19,7 @@
 */
 
 
-$debug = true;
+$debug = false;
 
 if($debug){
     ini_set("xdebug.var_display_max_children", -1);

@@ -35,19 +35,35 @@ $error = false;
 $errorMsg = "<strong>Erreur</strong> ";
 
 $form = getPost("form_cwg_range");
-
+$dateForTodayMonth = new DateTime();
 $annee = (int)$form["annee"];
 $monthStart = 1;
-$monthEnd = 12;
+$monthEnd = $dateForTodayMonth->format("n");
+
+if($debug){
+    $monthEnd = 12;
+}
 
 $period = "Pour l'année " . $annee;
 
 $numEntry = 0;
 include_once "../../../php/enquete-connexion.php";
 
-$sql = "SELECT COUNT(*) as num FROM clients WHERE arrive_annee=:arrive_annee";
+$tmpDateStart = DateTime::createFromFormat("j-n-Y", "1-1-".$annee);
+$tmpDateStartTs = $tmpDateStart->getTimestamp();
+
+$tmpLastDayVal = DateTime::createFromFormat("j-n-Y", "1-". $monthEnd . "-" .$annee);
+$tmpLastDay = $tmpLastDayVal->format("t");
+
+
+$tmpDateEnd = DateTime::createFromFormat("j-n-Y",$tmpLastDay . "-". $monthEnd . "-" .$annee);
+$tmpDateEndTs = $tmpDateEnd->getTimestamp();
+
+
+$sql = "SELECT COUNT(*) as num FROM clients WHERE arrive_timestamp>=:datestartts AND arrive_timestamp<=:dateendts";
 $stmt = $pdo->prepare($sql);
-$stmt->bindValue(":arrive_annee", $annee);
+$stmt->bindValue(":datestartts", $tmpDateStartTs);
+$stmt->bindValue(":dateendts", $tmpDateEndTs);
 $stmt->execute();
 $numEntry = $stmt->fetch()["num"];
 if(!$numEntry){

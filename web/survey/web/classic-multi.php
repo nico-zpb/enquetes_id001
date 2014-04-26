@@ -110,7 +110,10 @@ $satisfaction = [];
 foreach ($clients as $k => $c) {
     $stmt->bindValue(":id", $c["id"]);
     $stmt->execute();
-    $satisfaction[] = $stmt->fetch();
+    $result = $stmt->fetch();
+    if($result){
+        $satisfaction[] = $result;
+    }
 }
 /////////////////////////////
 $toPercent = function ($it) use ($numEntry) {
