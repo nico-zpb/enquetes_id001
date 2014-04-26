@@ -54,12 +54,9 @@
                         <?php endforeach; ?>
                         <th>Total</th>
                     </tr>
-
-
                     </thead>
                     <tbody>
                     <?php foreach($connaissance_types as $k=>$v): ?>
-
                         <tr>
                             <td><?php echo $v; ?></td>
                             <?php foreach($monthes as $l=>$w): ?>
@@ -67,9 +64,6 @@
                             <?php endforeach; ?>
                             <td><?php echo $connaissancePercentTotal[$k]; ?>%</td>
                         </tr>
-
-
-
                     <?php endforeach; ?>
                     <tr>
                         <td>Total</td>
@@ -80,6 +74,14 @@
                     </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="spacer"></div>
+                <div>
+                    <!-- TODO chart evolution/page-1 -->
+                </div>
             </div>
         </div>
     </div>
