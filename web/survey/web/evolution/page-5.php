@@ -86,6 +86,7 @@
                                 ?>
                                 <td <?php echo $class; ?>><?php echo $sum; ?>%</td><!-- !pourcentage -->
                             <?php endforeach; ?>
+                            <td><!-- todo total--></td>
                         </tr>
                     <?php endforeach; ?>
                     </tbody>
@@ -125,6 +126,7 @@
                             <?php foreach($monthes as $l=>$w): ?>
                                 <td><?php echo round(($satisfactionByMonth[$w][$name][0] / $satisfactionByMonthTotal[$w]) * 100); ?>%</td><!-- !pourcentage -->
                             <?php endforeach; ?>
+                            <td><!-- todo total--></td>
                         </tr>
                     <?php endforeach; ?>
                     </tbody>
