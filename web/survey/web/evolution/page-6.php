@@ -60,12 +60,14 @@
                     </thead>
                     <tbody>
                     <?php foreach($datas_perception_prix as $k=>$name): ?>
+                        <?php $totalProp = 0; ?>
                         <tr>
                             <td><?php echo $name; ?></td>
                             <?php foreach($monthes as $l=>$w): ?>
+                                <?php $totalProp += $satisfactionByMonth[$w]["prix"][$k]; ?>
                                 <td><?php echo round(($satisfactionByMonth[$w]["prix"][$k]/$satisfactionByMonthTotal[$w]) * 100); ?>%</td>
                             <?php endforeach; ?>
-                            <td></td>
+                            <td><?php echo round(($totalProp / $totalSatisfaction ) * 100); ?>%</td>
                         </tr>
                     <?php endforeach; ?>
                         <tr>
@@ -73,7 +75,7 @@
                             <?php foreach($monthes as $l=>$w): ?>
                                 <td><?php echo $satisfactionByMonthTotal[$w]; ?></td>
                             <?php endforeach; ?>
-                            <td></td>
+                            <td><?php echo $totalSatisfaction; ?></td>
                         </tr>
                     </tbody>
                 </table>
@@ -124,12 +126,14 @@
                     </thead>
                     <tbody>
                         <?php foreach($datas_satisfaction_bis as $k=>$name): ?>
+                            <?php $totalProp = 0; ?>
                             <tr>
                                 <td><?php echo $name; ?></td>
                                 <?php foreach($monthes as $l=>$w): ?>
+                                    <?php $totalProp += $satisfactionByMonth[$w]["spa"][$k]; ?>
                                     <td><?php echo round(($satisfactionByMonth[$w]["spa"][$k]/$satisfactionByMonthTotal[$w]) * 100); ?>%</td>
                                 <?php endforeach; ?>
-                                <td></td>
+                                <td><?php echo round(($totalProp / $totalSatisfaction ) * 100); ?>%</td>
                             </tr>
                         <?php endforeach; ?>
                         <tr>
@@ -137,7 +141,7 @@
                             <?php foreach($monthes as $l=>$w): ?>
                                 <td><?php echo $satisfactionByMonthTotal[$w]; ?></td>
                             <?php endforeach; ?>
-                            <td></td>
+                            <td><?php echo $totalSatisfaction; ?></td>
                         </tr>
                     </tbody>
                 </table>
@@ -188,12 +192,14 @@
                     </thead>
                     <tbody>
                     <?php foreach($datas_intentions as $k=>$name): ?>
+                        <?php $totalProp = 0; ?>
                         <tr>
                             <td><?php echo $name; ?></td>
                             <?php foreach($monthes as $l=>$w): ?>
+                                <?php $totalProp += $satisfactionByMonth[$w]["revenir"][$k]; ?>
                                 <td><?php echo round(($satisfactionByMonth[$w]["revenir"][$k]/$satisfactionByMonthTotal[$w]) * 100); ?>%</td>
                             <?php endforeach; ?>
-                            <td></td>
+                            <td><?php echo round(($totalProp / $totalSatisfaction ) * 100); ?>%</td>
                         </tr>
                     <?php endforeach; ?>
                     <tr>
@@ -201,7 +207,7 @@
                         <?php foreach($monthes as $l=>$w): ?>
                             <td><?php echo $satisfactionByMonthTotal[$w]; ?></td>
                         <?php endforeach; ?>
-                        <td></td>
+                        <td><?php echo $totalSatisfaction; ?></td>
                     </tr>
                     </tbody>
                 </table>
@@ -251,13 +257,17 @@
                     </tr>
                     </thead>
                     <tbody>
+
+
                     <?php foreach($datas_intentions as $k=>$name): ?>
+                        <?php $totalProp = 0; ?>
                         <tr>
                             <td><?php echo $name; ?></td>
                             <?php foreach($monthes as $l=>$w): ?>
+                                <?php $totalProp += $satisfactionByMonth[$w]["recommander"][$k]; ?>
                                 <td><?php echo round(($satisfactionByMonth[$w]["recommander"][$k]/$satisfactionByMonthTotal[$w]) * 100); ?>%</td>
                             <?php endforeach; ?>
-                            <td></td>
+                            <td><?php echo round(($totalProp / $totalSatisfaction ) * 100); ?>%</td>
                         </tr>
                     <?php endforeach; ?>
                     <tr>
@@ -265,7 +275,7 @@
                         <?php foreach($monthes as $l=>$w): ?>
                             <td><?php echo $satisfactionByMonthTotal[$w]; ?></td>
                         <?php endforeach; ?>
-                        <td></td>
+                        <td><?php echo $totalSatisfaction; ?></td>
                     </tr>
                     </tbody>
                 </table>

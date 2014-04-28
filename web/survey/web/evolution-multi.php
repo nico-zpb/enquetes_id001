@@ -238,6 +238,7 @@ $sql = "SELECT * FROM satisfaction WHERE client_id=:id";
 $stmt = $pdo->prepare($sql);
 $satisfactionByMonth = [];
 $satisfactionByMonthTotal = [];
+$totalSatisfaction = 0;
 foreach($ClientsByMonth as $month=>$client){
     if(empty($satisfactionByMonth[$month])){
         $satisfactionByMonth[$month] = [];
@@ -306,6 +307,7 @@ foreach($ClientsByMonth as $month=>$client){
 
         if($r){
             $satisfactionByMonthTotal[$month]++;
+            $totalSatisfaction++;
             /////////////// globale
             if((int)$r["globalement"] === 1){
                 $satisfactionByMonth[$month]["globalement"][0]++;
