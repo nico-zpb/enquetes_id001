@@ -180,5 +180,6 @@ $numEtrangerByMonthPercent = array_map(function ($it, $to) {
 <?php
 include_once "evolution/page-1.php";
 include_once "evolution/page-2.php";
+include_once "evolution/page-3.php";
 
 ?>

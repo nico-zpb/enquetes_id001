@@ -25,7 +25,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="page-header page-header-hotel">
-                    <h2>Origine de la connaissance de l'hôtel</h2>
+                    <h2>Origine de la connaissance de l'hôtel - Globale</h2>
                 </div>
             </div>
         </div>
