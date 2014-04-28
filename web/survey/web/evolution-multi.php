@@ -409,7 +409,33 @@ foreach($ClientsByMonth as $month=>$client){
         }
     }
 
-}////// le zoo
+}
+////// le zoo
+
+$sql = "SELECT visite_zoo FROM sejours WHERE client_id=:id";
+$stmt = $pdo->prepare($sql);
+$visiteZooByMonth = [];
+$visiteZooTotalByMonth = [];
+foreach($ClientsByMonth as $month=>$client){
+    if(empty($visiteZooByMonth[$month])){
+        $visiteZooByMonth[$month] = [0,0];
+    }
+    if(empty($visiteZooTotalByMonth[$month])){
+        $visiteZooTotalByMonth[$month] = 0;
+    }
+
+    foreach($client as $k=>$c){
+        $stmt->bindValue(":id", $c["id"]);
+        $stmt->execute();
+        $r = $stmt->fetch();
+        if($r){
+            $visiteZooTotalByMonth[$month]++;
+            $visiteZooByMonth[$month][(int)$r["visite_zoo"]-1]++;
+        }
+    }
+}
+
+
 ?>
 
 
