@@ -36,7 +36,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="page-header page-header-hotel">
-                    <h4>Question : &laquo; Comment avez-vous connu l'Hôtel Les Jardins de Beauval ? Etait-ce...</h4>
+                    <h4>Question : &laquo; Comment avez-vous connu l'Hôtel Les Jardins de Beauval ? Etait-ce...&raquo;</h4>
                 </div>
             </div>
         </div>
@@ -55,7 +55,7 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <table class="table table-striped">
+                <table class="table table-striped table-hover">
                     <thead>
                     <tr>
                         <th></th>
@@ -102,7 +102,7 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <table class="table table-striped">
+                <table class="table table-striped table-hover">
                     <thead>
                     <tr>
                         <th></th>
@@ -149,7 +149,7 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <table class="table table-striped">
+                <table class="table table-striped table-hover">
                     <thead>
                     <tr>
                         <th></th>

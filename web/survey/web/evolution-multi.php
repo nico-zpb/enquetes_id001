@@ -106,7 +106,7 @@ $connaissancePercentTotal = array_map(function ($it) use ($connaissanceEntries) 
 }, $connaissanceTotal);
 
 
-//////////// regions d'habitation
+//////////// regions d'habitation page-2
 
 $numCentreByMonth = [];
 $numParisByMonth = [];
@@ -172,7 +172,7 @@ $numEtrangerByMonthPercent = array_map(function ($it, $to) {
     return round(($it / $to) * 100);
 }, $numEtrangerByMonth, $totalByMonth);
 
-
+///////// connaissance par zone page-3
 $connaissanceRegionCentreByMonth = [];
 $connaissanceRegionCentreByMonthTotal = [];
 $connaissanceRegionParisByMonth = [];
@@ -233,9 +233,186 @@ foreach($ClientsByMonth as $month=>$clients){
     }
 }
 
+//////////// satisfaction globale page-4
+$sql = "SELECT * FROM satisfaction WHERE client_id=:id";
+$stmt = $pdo->prepare($sql);
+$satisfactionByMonth = [];
+$satisfactionByMonthTotal = [];
+foreach($ClientsByMonth as $month=>$client){
+    if(empty($satisfactionByMonth[$month])){
+        $satisfactionByMonth[$month] = [];
+    }
+    if(empty($satisfactionByMonthTotal[$month])){
+        $satisfactionByMonthTotal[$month] = 0;
+    }
+    if(empty($satisfactionByMonth[$month]["globalement"])){
+        $satisfactionByMonth[$month]["globalement"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["chambres"])){
+        $satisfactionByMonth[$month]["chambres"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["restauration"])){
+        $satisfactionByMonth[$month]["restauration"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["bar"])){
+        $satisfactionByMonth[$month]["bar"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["accueil"])){
+        $satisfactionByMonth[$month]["accueil"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["environnement"])){
+        $satisfactionByMonth[$month]["environnement"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["rapport"])){
+        $satisfactionByMonth[$month]["rapport"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["resto_amabilite"])){
+        $satisfactionByMonth[$month]["resto_amabilite"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["resto_service"])){
+        $satisfactionByMonth[$month]["resto_service"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["resto_diversite"])){
+        $satisfactionByMonth[$month]["resto_diversite"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["resto_plats"])){
+        $satisfactionByMonth[$month]["resto_plats"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["resto_vins"])){
+        $satisfactionByMonth[$month]["resto_vins"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["resto_prix"])){
+        $satisfactionByMonth[$month]["resto_prix"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["spa"])){
+        $satisfactionByMonth[$month]["spa"] = [0,0,0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["revenir"])){
+        $satisfactionByMonth[$month]["revenir"] = [0,0,0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["recommander"])){
+        $satisfactionByMonth[$month]["recommander"] = [0,0,0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["prix"])){
+        $satisfactionByMonth[$month]["prix"] = [0,0,0,0];
+    }
 
 
 
+    foreach($clients as $k=>$c){
+        $stmt->bindValue(":id", $c["id"]);
+        $stmt->execute();
+        $r = $stmt->fetch();
+        if($r){
+            $satisfactionByMonthTotal[$month]++;
+            /////////////// globale
+            if($r["globalement"] == 1){
+                $satisfactionByMonth[$month]["globalement"][0]++;
+            }
+            if($r["globalement"] == 2){
+                $satisfactionByMonth[$month]["globalement"][1]++;
+            }
+            if($r["chambres"] == 1){
+                $satisfactionByMonth[$month]["chambres"][0]++;
+            }
+            if($r["chambres"] == 2){
+                $satisfactionByMonth[$month]["chambres"][1]++;
+            }
+            if($r["restauration"] == 1){
+                $satisfactionByMonth[$month]["restauration"][0]++;
+            }
+            if($r["restauration"] == 2){
+                $satisfactionByMonth[$month]["restauration"][1]++;
+            }
+            if($r["bar"] == 1){
+                $satisfactionByMonth[$month]["bar"][0]++;
+            }
+            if($r["bar"] == 2){
+                $satisfactionByMonth[$month]["bar"][1]++;
+            }
+            if($r["accueil"] == 1){
+                $satisfactionByMonth[$month]["accueil"][0]++;
+            }
+            if($r["accueil"] == 2){
+                $satisfactionByMonth[$month]["accueil"][1]++;
+            }
+            if($r["environnement"] == 1){
+                $satisfactionByMonth[$month]["environnement"][0]++;
+            }
+            if($r["environnement"] == 2){
+                $satisfactionByMonth[$month]["environnement"][1]++;
+            }
+            if($r["rapport"] == 1){
+                $satisfactionByMonth[$month]["rapport"][0]++;
+            }
+            if($r["rapport"] == 2){
+                $satisfactionByMonth[$month]["rapport"][1]++;
+            }
+
+            //////////// resto
+            if($r["resto_amabilite"] == 1){
+                $satisfactionByMonth[$month]["resto_amabilite"][0]++;
+            }
+            if($r["resto_amabilite"] == 2){
+                $satisfactionByMonth[$month]["resto_amabilite"][1]++;
+            }
+            if($r["resto_service"] == 1){
+                $satisfactionByMonth[$month]["resto_service"][0]++;
+            }
+            if($r["resto_service"] == 2){
+                $satisfactionByMonth[$month]["resto_service"][1]++;
+            }
+            if($r["resto_diversite"] == 1){
+                $satisfactionByMonth[$month]["resto_diversite"][0]++;
+            }
+            if($r["resto_diversite"] == 2){
+                $satisfactionByMonth[$month]["resto_diversite"][1]++;
+            }
+            if($r["resto_plats"] == 1){
+                $satisfactionByMonth[$month]["resto_plats"][0]++;
+            }
+            if($r["resto_plats"] == 2){
+                $satisfactionByMonth[$month]["resto_plats"][1]++;
+            }
+            if($r["resto_vins"] == 1){
+                $satisfactionByMonth[$month]["resto_vins"][0]++;
+            }
+            if($r["resto_vins"] == 2){
+                $satisfactionByMonth[$month]["resto_vins"][1]++;
+            }
+            if($r["resto_prix"] == 1){
+                $satisfactionByMonth[$month]["resto_prix"][0]++;
+            }
+            if($r["resto_prix"] == 2){
+                $satisfactionByMonth[$month]["resto_prix"][1]++;
+            }
+
+
+            ///// perception prix
+
+
+            ////// spa
+
+
+            ////// le zoo
+
+
+
+            //// revenir
+
+
+            ///// recommander
+
+
+
+
+
+
+
+        }
+    }
+
+}
 
 ?>
 
@@ -246,5 +423,8 @@ foreach($ClientsByMonth as $month=>$clients){
 include_once "evolution/page-1.php";
 include_once "evolution/page-2.php";
 include_once "evolution/page-3.php";
+include_once "evolution/page-4.php";
+include_once "evolution/page-5.php";
+
 
 ?>

@@ -84,6 +84,26 @@ $datas_services = [
     "le rapport qualité/prix"
 ];
 
+$datas_services_bis = [
+    "globalement",
+    "les chambres",
+    "la restauration",
+    "le bar",
+    "l'accueil",
+    "l'environnement",
+    "le rapport qualité/prix"
+];
+
+
+$datas_services_bis_shorts = [
+    "globalement",
+    "chambres",
+    "restauration",
+    "bar",
+    "accueil",
+    "environnement",
+    "rapport"
+];
 $datas_resto = [
     "l'amabilité du personnel",
     "la qualité du service",
@@ -92,6 +112,19 @@ $datas_resto = [
     "les vins",
     "les prix",
 ];
+
+$datas_resto_shorts = [
+    "resto_amabilite",
+    "resto_service",
+    "resto_diversite",
+    "resto_plats",
+    "resto_vins",
+    "resto_prix",
+];
+
+
+
+
 
 $datas_perception_prix = [
     "trop cher","approprié","pas très cher"
