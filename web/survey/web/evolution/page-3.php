@@ -57,10 +57,33 @@
             <div class="col-md-12">
                 <table class="table table-striped">
                     <thead>
-
+                    <tr>
+                        <th></th>
+                        <?php $monthes = []; $totalByType=0;?>
+                        <?php foreach($connaissancePercentByMonth as $name=>$v): ?>
+                            <?php $monthes[] = $name; $totalByType += $connaissanceRegionParisByMonthTotal[$name];?>
+                            <th><?php echo $name; ?></th>
+                        <?php endforeach; ?>
+                        <th>Total</th>
+                    </tr>
                     </thead>
                     <tbody>
-
+                    <?php foreach($connaissance_types as $k=>$v): ?>
+                        <tr>
+                            <td><?php echo $v; ?></td>
+                            <?php foreach($monthes as $l=>$w): ?>
+                                <td><?php echo round(($connaissanceRegionParisByMonth[$w][$k]/$connaissanceRegionParisByMonthTotal[$w]) * 100); ?>%</td>
+                            <?php endforeach; ?>
+                            <?php
+                            $sum = 0;
+                            foreach($monthes as $l=>$w){
+                                $sum += $connaissanceRegionParisByMonth[$w][$k];
+                            }
+                            $percent = round(($sum / $totalByType) * 100);
+                            ?>
+                            <td><?php echo $percent; ?>%</td>
+                        </tr>
+                    <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
@@ -81,10 +104,33 @@
             <div class="col-md-12">
                 <table class="table table-striped">
                     <thead>
-
+                    <tr>
+                        <th></th>
+                        <?php $monthes = []; $totalByType=0;?>
+                        <?php foreach($connaissancePercentByMonth as $name=>$v): ?>
+                            <?php $monthes[] = $name; $totalByType += $connaissanceRegionCentreByMonthTotal[$name];?>
+                            <th><?php echo $name; ?></th>
+                        <?php endforeach; ?>
+                        <th>Total</th>
+                    </tr>
                     </thead>
                     <tbody>
-
+                    <?php foreach($connaissance_types as $k=>$v): ?>
+                        <tr>
+                            <td><?php echo $v; ?></td>
+                            <?php foreach($monthes as $l=>$w): ?>
+                                <td><?php echo round(($connaissanceRegionCentreByMonth[$w][$k]/$connaissanceRegionCentreByMonthTotal[$w]) * 100); ?>%</td>
+                            <?php endforeach; ?>
+                            <?php
+                            $sum = 0;
+                            foreach($monthes as $l=>$w){
+                                $sum += $connaissanceRegionCentreByMonth[$w][$k];
+                            }
+                            $percent = round(($sum / $totalByType) * 100);
+                            ?>
+                            <td><?php echo $percent; ?>%</td>
+                        </tr>
+                    <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
@@ -105,14 +151,39 @@
             <div class="col-md-12">
                 <table class="table table-striped">
                     <thead>
-
+                    <tr>
+                        <th></th>
+                        <?php $monthes = []; $totalByType=0;?>
+                        <?php foreach($connaissancePercentByMonth as $name=>$v): ?>
+                            <?php $monthes[] = $name; $totalByType += $connaissanceRegionAutresByMonthTotal[$name];?>
+                            <th><?php echo $name; ?></th>
+                        <?php endforeach; ?>
+                        <th>Total</th>
+                    </tr>
                     </thead>
                     <tbody>
+                    <?php foreach($connaissance_types as $k=>$v): ?>
+                        <tr>
+                            <td><?php echo $v; ?></td>
+                            <?php foreach($monthes as $l=>$w): ?>
+                                <td><?php echo round(($connaissanceRegionAutresByMonth[$w][$k]/$connaissanceRegionAutresByMonthTotal[$w]) * 100); ?>%</td>
+                            <?php endforeach; ?>
 
+
+                            <?php
+                            $sum = 0;
+                            foreach($monthes as $l=>$w){
+                                $sum += $connaissanceRegionAutresByMonth[$w][$k];
+                            }
+                            $percent = round(($sum / $totalByType) * 100);
+                            ?>
+                            <td><?php echo $percent; ?>%</td>
+                        </tr>
+                    <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
-
+<!-- todo Charts-->

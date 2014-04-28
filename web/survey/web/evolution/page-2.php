@@ -75,7 +75,7 @@
                         <?php foreach($numOtherByMonthPercent as $k=>$v): ?>
                             <td><?php echo $v; ?>%</td>
                         <?php endforeach; ?>
-                        <td><?php echo round(($totalOther/$totalOriginEntry) * 100);  ?>%/td>
+                        <td><?php echo round(($totalOther/$totalOriginEntry) * 100);  ?>%</td>
                     </tr>
                     <tr>
                         <td>Pays étrangers</td>

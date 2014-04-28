@@ -172,6 +172,71 @@ $numEtrangerByMonthPercent = array_map(function ($it, $to) {
     return round(($it / $to) * 100);
 }, $numEtrangerByMonth, $totalByMonth);
 
+
+$connaissanceRegionCentreByMonth = [];
+$connaissanceRegionCentreByMonthTotal = [];
+$connaissanceRegionParisByMonth = [];
+$connaissanceRegionParisByMonthTotal = [];
+$connaissanceRegionAutresByMonth = [];
+$connaissanceRegionAutresByMonthTotal = [];
+
+$sql = "SELECT type_id FROM client_connaissance_type WHERE client_id=:id";
+$stmt = $pdo->prepare($sql);
+foreach($ClientsByMonth as $month=>$clients){
+
+    if(empty($connaissanceRegionCentreByMonth[$month])){
+        $connaissanceRegionCentreByMonth[$month] = getEmptyConnaissanceArr();
+    }
+    if(empty($connaissanceRegionParisByMonth[$month])){
+        $connaissanceRegionParisByMonth[$month] = getEmptyConnaissanceArr();
+    }
+    if(empty($connaissanceRegionAutresByMonth[$month])){
+        $connaissanceRegionAutresByMonth[$month] = getEmptyConnaissanceArr();
+    }
+    if(empty($connaissanceRegionCentreByMonthTotal[$month])){
+        $connaissanceRegionCentreByMonthTotal[$month] = 0;
+    }
+    if(empty($connaissanceRegionParisByMonthTotal[$month])){
+        $connaissanceRegionParisByMonthTotal[$month] = 0;
+    }
+    if(empty($connaissanceRegionAutresByMonthTotal[$month])){
+        $connaissanceRegionAutresByMonthTotal[$month] = 0;
+    }
+
+
+
+    foreach($clients as $k=>$c){
+        $stmt->bindValue(":id", $c["id"]);
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+        if($result){
+            if (in_array($c["departement_num"], $depsCentre)) {
+                foreach($result as $key=>$type){
+                    $connaissanceRegionCentreByMonthTotal[$month]++;
+                    $connaissanceRegionCentreByMonth[$month][$type["type_id"] - 1]++;
+                }
+            } elseif (in_array($c["departement_num"], $depsParis)) {
+                foreach($result as $key=>$type){
+                    $connaissanceRegionParisByMonthTotal[$month]++;
+                    $connaissanceRegionParisByMonth[$month][$type["type_id"] - 1]++;
+                }
+            } else {
+                if ($c["departement_num"] != 100) {
+                    foreach($result as $key=>$type){
+                        $connaissanceRegionAutresByMonthTotal[$month]++;
+                        $connaissanceRegionAutresByMonth[$month][$type["type_id"] - 1]++;
+                    }
+                }
+            }
+        }
+
+    }
+}
+
+
+
+
+
 ?>
 
 
