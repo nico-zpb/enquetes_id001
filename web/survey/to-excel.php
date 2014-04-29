@@ -73,7 +73,7 @@ $yearRange = range($annee-4, $annee);
         <div class="row">
             <div class="col-md-12">
                 <div class="page-header page-header-hotel">
-                    <h3>Données globales - sur l'année</h3>
+                    <h3>Evolution des résultats mensuels</h3>
                 </div>
                 <p>Séléctionnez l'année</p>
             </div>

@@ -41,13 +41,21 @@ if($debug){
 
 function autoload($classname){
 
+    if(class_exists($classname, false)){
+        return false;
+    }
+
     if($classname[0] == "\\"){
         $classname = substr($classname, 1);
     }
 
     $path = LIBS . DIRECTORY_SEPARATOR . str_replace("\\", DIRECTORY_SEPARATOR, $classname) . ".php";
 
-    include_once $path;
+    if((file_exists($path) === false) || (is_readable($path)===false)){
+        return false;
+    }
+
+    require($path);
 }
 
 spl_autoload_register("autoload");

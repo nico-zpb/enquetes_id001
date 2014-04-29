@@ -46,15 +46,15 @@ for ($i = $monthStart; $i < $monthEnd + 1; $i++) {
     $stmt->bindValue(":annee", $annee);
     $stmt->bindValue(":mois", $i);
     $stmt->execute();
-    $stmt->execute();
     $result = $stmt->fetchAll();
     if (!$result) {
         $ClientsByMonth[$datas_mois[$i - 1]] = [];
         $numEntryByMonth[$datas_mois[$i - 1]] = 0;
     }
+    $count = count($result);
     $ClientsByMonth[$datas_mois[$i - 1]] = $result;
-    $numEntryByMonth[$datas_mois[$i - 1]] = count($result);
-    $numEntriesTotal += count($result);
+    $numEntryByMonth[$datas_mois[$i - 1]] = $count;
+    $numEntriesTotal += $count;
 }
 
 /////////// connaissance /////////
@@ -89,7 +89,7 @@ foreach ($ClientsByMonth as $monthShortName => $clientsInMonth) {
         }
     }
 
-    for ($i = 0; $i < 11; $i++) {
+    for ($i = 0; $i < count($connaissanceTotal); $i++) {
         $connaissanceNumByMonth[$monthShortName] += $connaissanceByMonth[$monthShortName][$i];
     }
 
