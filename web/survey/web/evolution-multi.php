@@ -439,8 +439,45 @@ foreach($ClientsByMonth as $month=>$client){
 
 
 ?>
+<script src="/survey/js/vendor/globalize.min.js"></script>
+<script src="/survey/js/vendor/dx.chartjs.js"></script>
+<script>
+    <?php
+        $datas = "";
+        foreach($connaissancePercentByMonth as $month=>$d){
+            $datas .= '{month:"'.$month.'", ';
+            foreach($d as $k=>$v){
+                $datas .= 'type'.$k.':'.$v.', ';
+            }
+            $datas = rtrim($datas, ", ");
+            $datas .= '},';
+        }
+        $datas = rtrim($datas,", ");
+        $series = "";
+        foreach($connaissance_types as $k=>$v){
+            $series .='{valueField:"type'.$k.'",name:"'.$v.'"},';
+        }
+        $series = rtrim($series,",");
 
 
+
+     ?>
+    var originConnaissanceHotel = {
+        dataSource : [<?php echo $datas; ?>],
+        commonSeriesSettings:{
+            type: "bar",
+            argumentField: "month"
+
+        },
+        series: [<?php echo $series; ?>],
+        tooltip: {
+            enabled: true,
+            customizeText: function () {
+                return this.valueText + "%";
+            }
+        }
+    };
+</script>
 
 
 <?php
@@ -450,6 +487,4 @@ include_once "evolution/page-3.php";
 include_once "evolution/page-4.php";
 include_once "evolution/page-5.php";
 include_once "evolution/page-6.php";
-
-
 ?>

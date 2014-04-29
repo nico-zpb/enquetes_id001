@@ -161,7 +161,6 @@ include_once "../../../php/navbar.php";
 
 <?php
     if($multiMonth){
-        // TODO classic-multi
         include_once "classic-multi.php";
     } else {
         include_once "classic-alone.php";

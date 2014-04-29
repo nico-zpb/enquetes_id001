@@ -46,30 +46,31 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <table class="table table-striped table-hover">
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <?php $monthes = [];?>
-                        <?php foreach($connaissancePercentByMonth as $name=>$v): ?>
-                            <?php $monthes[] = $name;?>
-                            <th><?php echo $name; ?></th>
-                        <?php endforeach; ?>
-                        <th>Total</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach($datas_perception_prix as $k=>$name): ?>
-                        <?php $totalProp = 0; ?>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
                         <tr>
-                            <td><?php echo $name; ?></td>
-                            <?php foreach($monthes as $l=>$w): ?>
-                                <?php $totalProp += $satisfactionByMonth[$w]["prix"][$k]; ?>
-                                <td><?php echo round(($satisfactionByMonth[$w]["prix"][$k]/$satisfactionByMonthTotal[$w]) * 100); ?>%</td>
+                            <th></th>
+                            <?php $monthes = [];?>
+                            <?php foreach($connaissancePercentByMonth as $name=>$v): ?>
+                                <?php $monthes[] = $name;?>
+                                <th><?php echo $name; ?></th>
                             <?php endforeach; ?>
-                            <td><?php echo round(($totalProp / $totalSatisfaction ) * 100); ?>%</td>
+                            <th>Total</th>
                         </tr>
-                    <?php endforeach; ?>
+                        </thead>
+                        <tbody>
+                        <?php foreach($datas_perception_prix as $k=>$name): ?>
+                            <?php $totalProp = 0; ?>
+                            <tr>
+                                <td><?php echo $name; ?></td>
+                                <?php foreach($monthes as $l=>$w): ?>
+                                    <?php $totalProp += $satisfactionByMonth[$w]["prix"][$k]; ?>
+                                    <td><?php echo round(($satisfactionByMonth[$w]["prix"][$k]/$satisfactionByMonthTotal[$w]) * 100); ?>%</td>
+                                <?php endforeach; ?>
+                                <td><?php echo round(($totalProp / $totalSatisfaction ) * 100); ?>%</td>
+                            </tr>
+                        <?php endforeach; ?>
                         <tr>
                             <td>Total</td>
                             <?php foreach($monthes as $l=>$w): ?>
@@ -77,8 +78,10 @@
                             <?php endforeach; ?>
                             <td><?php echo $totalSatisfaction; ?></td>
                         </tr>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         </div>
     </div>
@@ -112,19 +115,20 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <table class="table table-striped table-hover">
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <?php $monthes = [];?>
-                        <?php foreach($connaissancePercentByMonth as $name=>$v): ?>
-                            <?php $monthes[] = $name;?>
-                            <th><?php echo $name; ?></th>
-                        <?php endforeach; ?>
-                        <th>Total</th>
-                    </tr>
-                    </thead>
-                    <tbody>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <?php $monthes = [];?>
+                            <?php foreach($connaissancePercentByMonth as $name=>$v): ?>
+                                <?php $monthes[] = $name;?>
+                                <th><?php echo $name; ?></th>
+                            <?php endforeach; ?>
+                            <th>Total</th>
+                        </tr>
+                        </thead>
+                        <tbody>
                         <?php foreach($datas_satisfaction_bis as $k=>$name): ?>
                             <?php $totalProp = 0; ?>
                             <tr>
@@ -143,8 +147,10 @@
                             <?php endforeach; ?>
                             <td><?php echo $totalSatisfaction; ?></td>
                         </tr>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         </div>
     </div>
@@ -178,39 +184,42 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <table class="table table-striped table-hover">
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <?php $monthes = [];?>
-                        <?php foreach($connaissancePercentByMonth as $name=>$v): ?>
-                            <?php $monthes[] = $name;?>
-                            <th><?php echo $name; ?></th>
-                        <?php endforeach; ?>
-                        <th>Total</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach($datas_intentions as $k=>$name): ?>
-                        <?php $totalProp = 0; ?>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
                         <tr>
-                            <td><?php echo $name; ?></td>
-                            <?php foreach($monthes as $l=>$w): ?>
-                                <?php $totalProp += $satisfactionByMonth[$w]["revenir"][$k]; ?>
-                                <td><?php echo round(($satisfactionByMonth[$w]["revenir"][$k]/$satisfactionByMonthTotal[$w]) * 100); ?>%</td>
+                            <th></th>
+                            <?php $monthes = [];?>
+                            <?php foreach($connaissancePercentByMonth as $name=>$v): ?>
+                                <?php $monthes[] = $name;?>
+                                <th><?php echo $name; ?></th>
                             <?php endforeach; ?>
-                            <td><?php echo round(($totalProp / $totalSatisfaction ) * 100); ?>%</td>
+                            <th>Total</th>
                         </tr>
-                    <?php endforeach; ?>
-                    <tr>
-                        <td>Total</td>
-                        <?php foreach($monthes as $l=>$w): ?>
-                            <td><?php echo $satisfactionByMonthTotal[$w]; ?></td>
+                        </thead>
+                        <tbody>
+                        <?php foreach($datas_intentions as $k=>$name): ?>
+                            <?php $totalProp = 0; ?>
+                            <tr>
+                                <td><?php echo $name; ?></td>
+                                <?php foreach($monthes as $l=>$w): ?>
+                                    <?php $totalProp += $satisfactionByMonth[$w]["revenir"][$k]; ?>
+                                    <td><?php echo round(($satisfactionByMonth[$w]["revenir"][$k]/$satisfactionByMonthTotal[$w]) * 100); ?>%</td>
+                                <?php endforeach; ?>
+                                <td><?php echo round(($totalProp / $totalSatisfaction ) * 100); ?>%</td>
+                            </tr>
                         <?php endforeach; ?>
-                        <td><?php echo $totalSatisfaction; ?></td>
-                    </tr>
-                    </tbody>
-                </table>
+                        <tr>
+                            <td>Total</td>
+                            <?php foreach($monthes as $l=>$w): ?>
+                                <td><?php echo $satisfactionByMonthTotal[$w]; ?></td>
+                            <?php endforeach; ?>
+                            <td><?php echo $totalSatisfaction; ?></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         </div>
     </div>
@@ -244,6 +253,43 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <?php $monthes = [];?>
+                            <?php foreach($connaissancePercentByMonth as $name=>$v): ?>
+                                <?php $monthes[] = $name;?>
+                                <th><?php echo $name; ?></th>
+                            <?php endforeach; ?>
+                            <th>Total</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+
+                        <?php foreach($datas_intentions as $k=>$name): ?>
+                            <?php $totalProp = 0; ?>
+                            <tr>
+                                <td><?php echo $name; ?></td>
+                                <?php foreach($monthes as $l=>$w): ?>
+                                    <?php $totalProp += $satisfactionByMonth[$w]["recommander"][$k]; ?>
+                                    <td><?php echo round(($satisfactionByMonth[$w]["recommander"][$k]/$satisfactionByMonthTotal[$w]) * 100); ?>%</td>
+                                <?php endforeach; ?>
+                                <td><?php echo round(($totalProp / $totalSatisfaction ) * 100); ?>%</td>
+                            </tr>
+                        <?php endforeach; ?>
+                        <tr>
+                            <td>Total</td>
+                            <?php foreach($monthes as $l=>$w): ?>
+                                <td><?php echo $satisfactionByMonthTotal[$w]; ?></td>
+                            <?php endforeach; ?>
+                            <td><?php echo $totalSatisfaction; ?></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
                 <table class="table table-striped table-hover">
                     <thead>
                     <tr>
@@ -312,26 +358,27 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <table class="table table-striped table-hover">
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <?php $monthes = [];?>
-                        <?php foreach($connaissancePercentByMonth as $name=>$v): ?>
-                            <?php $monthes[] = $name;?>
-                            <th><?php echo $name; ?></th>
-                        <?php endforeach; ?>
-                        <th>Total</th>
-                    </tr>
-                    </thead>
-                    <tbody>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <?php $monthes = [];?>
+                            <?php foreach($connaissancePercentByMonth as $name=>$v): ?>
+                                <?php $monthes[] = $name;?>
+                                <th><?php echo $name; ?></th>
+                            <?php endforeach; ?>
+                            <th>Total</th>
+                        </tr>
+                        </thead>
+                        <tbody>
                         <tr>
                             <td>Oui</td>
                             <?php $totalOui = 0; $totalNon = 0; $totalAll=0; ?>
                             <?php foreach($monthes as $l=>$w): ?>
                                 <?php
-                                    $totalOui += $visiteZooByMonth[$w][0];
-                                    $totalAll += $visiteZooTotalByMonth[$w];
+                                $totalOui += $visiteZooByMonth[$w][0];
+                                $totalAll += $visiteZooTotalByMonth[$w];
                                 ?>
                                 <td><?php echo round(($visiteZooByMonth[$w][0] / $visiteZooTotalByMonth[$w]) * 100); ?>%</td>
                             <?php endforeach; ?>
@@ -352,8 +399,10 @@
                             <?php endforeach; ?>
                             <td><?php echo $totalAll; ?></td>
                         </tr>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         </div>
     </div>
