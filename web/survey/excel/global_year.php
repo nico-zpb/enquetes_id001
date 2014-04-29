@@ -145,7 +145,91 @@ foreach($clientsByMonth as $month=>$clients){
     }, $connaissanceByMonthByType[$month]);
 }
 
-//var_dump($connaissanceByMonthByType, $connaissanceTotalByType, $connaissanceTotal, $connaissanceTotalByMonth, $connaissancePercentByMonthByType);
+
+
+
+//// repartition par region
+$numCentreByMonth = [];
+$numParisByMonth = [];
+$numOtherByMonth = [];
+$numEtrangerByMonth = [];
+$totalCentre = 0;
+$totalParis = 0;
+$totalOther = 0;
+$totalEtranger = 0;
+$totalOriginEntry = 0;
+foreach($clientsByMonth as $month=>$clients){
+    if (empty($numCentreByMonth[$month])) {
+        $numCentreByMonth[$month] = 0;
+    }
+    if (empty($numParisByMonth[$month])) {
+        $numParisByMonth[$month] = 0;
+    }
+    if (empty($numOtherByMonth[$month])) {
+        $numOtherByMonth[$month] = 0;
+    }
+    if (empty($numEtrangerByMonth[$month])) {
+        $numEtrangerByMonth[$month] = 0;
+    }
+    if (empty($totalByMonth[$month])) {
+        $totalByMonth[$month] = 0;
+    }
+    foreach($clients as $key=>$client){
+        $totalOriginEntry++;
+        if (in_array($client["departement_num"], $depsCentre)) {
+            $numCentreByMonth[$month]++;
+            $totalCentre++;
+        } elseif (in_array($client["departement_num"], $depsParis)) {
+            $numParisByMonth[$month]++;
+            $totalParis++;
+        } else {
+            if ($client["departement_num"] != 100) {
+                $numOtherByMonth[$month]++;
+                $totalOther++;
+            } else {
+                $numEtrangerByMonth[$month]++;
+                $totalEtranger++;
+            }
+        }
+        $totalByMonth[$month]++;
+    }
+        
+}
+$numCentreByMonthPercent = array_map(function ($it, $to) {
+    return round(($it / $to) * 100);
+}, $numCentreByMonth, $totalByMonth);
+$numParisByMonthPercent = array_map(function ($it, $to) {
+    return round(($it / $to) * 100);
+}, $numParisByMonth, $totalByMonth);
+$numOtherByMonthPercent = array_map(function ($it, $to) {
+    return round(($it / $to) * 100);
+}, $numOtherByMonth, $totalByMonth);
+$numEtrangerByMonthPercent = array_map(function ($it, $to) {
+    return round(($it / $to) * 100);
+}, $numEtrangerByMonth, $totalByMonth);
+
+
+//// repartition par departement
+$allDeptsNums = array_keys($departements);
+$clientsByDeptsByMonth = [];
+foreach($clientsByMonth as $month=>$clients){
+
+    foreach($clients as $key=>$client){
+
+        if(empty($clientsByDeptsByMonth[$client["departement_num"]])){
+            $clientsByDeptsByMonth[$client["departement_num"]] = [];
+        }
+        if(empty($clientsByDeptsByMonth[$client["departement_num"]][$month])){
+            $clientsByDeptsByMonth[$client["departement_num"]][$month] = 0;
+        }
+        $clientsByDeptsByMonth[$client["departement_num"]][$month]++;
+    }
+}
+var_dump($clientsByDeptsByMonth);die(); /// non pas comme ça il manque des départements dans chanque tableau ///
+
+
+
+
 
 $workbook = new PHPExcel();
 PHPExcel_Settings::setLocale("fr_FR");
@@ -239,8 +323,10 @@ foreach($connaissance_types as $key=>$type){
     $start++;
 }
 
+//// repartition par region
 
 
+//// repartition par departement
 
 
 

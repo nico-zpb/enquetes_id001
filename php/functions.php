@@ -24,6 +24,7 @@ defined("LIBS") || define("LIBS", ROOT . DIRECTORY_SEPARATOR . "libs");
 $debug = true;
 
 ini_set("date.timezone", "Europe/Paris");
+ini_set("max_execution_time", 60);
 
 if($debug){
     ini_set("xdebug.var_display_max_children", -1);
