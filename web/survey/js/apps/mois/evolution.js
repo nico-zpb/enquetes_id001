@@ -16,6 +16,9 @@
 $(function(){
 
     $("#originConnaissanceHotel").dxChart(originConnaissanceHotel);
+    $("#originConnaissanceHotelParis").dxChart(originConnaissanceHotelParis);
+    $("#originConnaissanceHotelCentre").dxChart(originConnaissanceHotelCentre);
+    $("#originConnaissanceHotelAutres").dxChart(originConnaissanceHotelAutres);
 
 
 });

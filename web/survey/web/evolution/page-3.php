@@ -91,6 +91,11 @@
 
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="originConnaissanceHotelParis"></div>
+            </div>
+        </div>
     </div>
 </div>
 <!-- ################### Région Centre ################### -->
@@ -139,6 +144,11 @@
                     </table>
                 </div>
 
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="originConnaissanceHotelCentre"></div>
             </div>
         </div>
     </div>
@@ -193,6 +203,10 @@
 
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="originConnaissanceHotelAutres"></div>
+            </div>
+        </div>
     </div>
 </div>
-<!-- todo Charts-->

@@ -443,7 +443,12 @@ foreach($ClientsByMonth as $month=>$client){
 <script src="/survey/js/vendor/dx.chartjs.js"></script>
 <script>
     <?php
-        $datas = "";
+        $datas = "";$series = "";
+        foreach($connaissance_types as $k=>$v){
+            $series .='{valueField:"type'.$k.'",name:"'.$v.'"},';
+        }
+        $series = rtrim($series,",");
+
         foreach($connaissancePercentByMonth as $month=>$d){
             $datas .= '{month:"'.$month.'", ';
             foreach($d as $k=>$v){
@@ -453,16 +458,99 @@ foreach($ClientsByMonth as $month=>$client){
             $datas .= '},';
         }
         $datas = rtrim($datas,", ");
-        $series = "";
-        foreach($connaissance_types as $k=>$v){
-            $series .='{valueField:"type'.$k.'",name:"'.$v.'"},';
-        }
-        $series = rtrim($series,",");
+
 
 
 
      ?>
     var originConnaissanceHotel = {
+        dataSource : [<?php echo $datas; ?>],
+        commonSeriesSettings:{
+            type: "bar",
+            argumentField: "month"
+
+        },
+        series: [<?php echo $series; ?>],
+        tooltip: {
+            enabled: true,
+            customizeText: function () {
+                return this.valueText + "%";
+            }
+        }
+    };
+
+    <?php
+        $datas = "";
+        foreach($connaissanceRegionParisByMonth as $month=>$d){
+            $datas .= '{month:"'.$month.'", ';
+            foreach($d as $k=>$v){
+                $percent = round(($v / $connaissanceRegionParisByMonthTotal[$month]) * 100);
+                $datas .= 'type'.$k.':'.$percent.', ';
+            }
+            $datas = rtrim($datas, ", ");
+            $datas .= '},';
+        }
+     ?>
+
+    var originConnaissanceHotelParis = {
+        dataSource : [<?php echo $datas; ?>],
+        commonSeriesSettings:{
+            type: "bar",
+            argumentField: "month"
+
+        },
+        series: [<?php echo $series; ?>],
+        tooltip: {
+            enabled: true,
+            customizeText: function () {
+                return this.valueText + "%";
+            }
+        }
+    };
+
+    <?php
+        $datas = "";
+        foreach($connaissanceRegionCentreByMonth as $month=>$d){
+            $datas .= '{month:"'.$month.'", ';
+            foreach($d as $k=>$v){
+                $percent = round(($v / $connaissanceRegionCentreByMonthTotal[$month]) * 100);
+                $datas .= 'type'.$k.':'.$percent.', ';
+            }
+            $datas = rtrim($datas, ", ");
+            $datas .= '},';
+        }
+    ?>
+
+    var originConnaissanceHotelCentre = {
+        dataSource : [<?php echo $datas; ?>],
+        commonSeriesSettings:{
+            type: "bar",
+            argumentField: "month"
+
+        },
+        series: [<?php echo $series; ?>],
+        tooltip: {
+            enabled: true,
+            customizeText: function () {
+                return this.valueText + "%";
+            }
+        }
+    };
+
+    <?php
+        $datas = "";
+        foreach($connaissanceRegionAutresByMonth as $month=>$d){
+            $datas .= '{month:"'.$month.'", ';
+            foreach($d as $k=>$v){
+                $percent = round(($v / $connaissanceRegionAutresByMonthTotal[$month]) * 100);
+                $datas .= 'type'.$k.':'.$percent.', ';
+            }
+            $datas = rtrim($datas, ", ");
+            $datas .= '},';
+        }
+    ?>
+
+    var originConnaissanceHotelAutres = {
         dataSource : [<?php echo $datas; ?>],
         commonSeriesSettings:{
             type: "bar",
