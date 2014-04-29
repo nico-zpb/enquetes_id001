@@ -115,7 +115,9 @@ $connaissanceTotalByType = getEmptyConnaissanceArr();
 $connaissanceTotal = 0;
 $connaissanceTotalByMonth = [];
 $connaissancePercentByMonthByType = [];
+$monthes = [];
 foreach($clientsByMonth as $month=>$clients){
+    $monthes[] = $month;
     $connaissanceByMonthByType[$month] = getEmptyConnaissanceArr();
 
     foreach($clients as $key=>$client){
@@ -150,7 +152,7 @@ PHPExcel_Settings::setLocale("fr_FR");
 $workbook->getProperties()->setTitle("Les Jardins de Beauval");
 $activeSheet = $workbook->getActiveSheet();
 $activeSheet->setTitle("année " . $annee);
-
+$activeSheet->getColumnDimension("B")->setAutoSize(true);
 /// tableau des effectifs
 
 
@@ -167,12 +169,15 @@ $activeSheet->getStyle('B7:D20')->applyFromArray(
                 ]
             ]
         ],
+    ]
+);
+$activeSheet->getStyle('C7:D20')->applyFromArray(
+    [
         "alignment"=>[
             "horizontal"=>PHPExcel_Style_Alignment::HORIZONTAL_CENTER
         ],
     ]
 );
-$activeSheet->getColumnDimension("B")->setAutoSize(true);
 
 
 
@@ -190,8 +195,56 @@ $activeSheet->setCellValueByColumnAndRow(1, $start, "Total");
 $activeSheet->setCellValueByColumnAndRow(2, $start, $effectifTotal);
 $activeSheet->setCellValueByColumnAndRow(3, $start, "100%");
 
+//// connaissance globale
 
 
+$activeSheet->getStyle('C25:N25')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+$activeSheet->getStyle('C25:N25')->getFill()->getStartColor()->setRGB('ffff00');
+$activeSheet->getStyle('B25:N36')->applyFromArray(
+    [
+        "borders"=>[
+            "allborders"=>[
+                "style"=>PHPExcel_Style_Border::BORDER_THIN,
+                "color"=>[
+                    "rgb"=>"000000"
+                ]
+            ]
+        ]
+    ]
+);
+$activeSheet->getStyle('C25:N36')->applyFromArray(
+    [
+        "alignment"=>[
+            "horizontal"=>PHPExcel_Style_Alignment::HORIZONTAL_CENTER
+        ],
+    ]
+);
+
+
+
+
+$activeSheet->setCellValue('B25', ' ');
+for($i=0; $i<count($monthes); $i++){
+    $activeSheet->setCellValueByColumnAndRow(2+$i, 25, $monthes[$i]);
+}
+$start = 26;
+foreach($connaissance_types as $key=>$type){
+
+    $activeSheet->setCellValueByColumnAndRow(1, $start, $type);
+    $startCol = 2;
+    foreach($monthes as $l=>$month){
+        $activeSheet->setCellValueByColumnAndRow($startCol, $start, $connaissancePercentByMonthByType[$month][$key]."%");
+        $startCol++;
+    }
+    $start++;
+}
+
+
+
+
+
+
+/// sauvegarde
 $excelWriter = new PHPExcel_Writer_Excel2007($workbook);
 $excelWriter->save($savePath . DIRECTORY_SEPARATOR . "test.xlsx");
 
