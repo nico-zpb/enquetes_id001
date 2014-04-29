@@ -58,106 +58,124 @@ $yearRange = range($annee-4, $annee);
         </div>
     </div>
 </div>
+<?php if($msg = getFlash()): ?>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-danger"><p><strong>Erreur</strong> <?php echo $msg; ?></p></div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
 
 <div class="wrapper">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-
                 <div class="page-header page-header-hotel">
-                    <h3>Obtenir toutes les données sous forme de fichier Excel</h3>
+                    <h3>Données globales - sur l'année</h3>
                 </div>
-
-                <p>Séléctionnez votre période</p>
-
+                <p>Séléctionnez l'année</p>
             </div>
-
-
         </div>
-        <form action="/survey/processing/excel.php" method="post" id="excelForm">
+        <form action="/survey/excel/global_year.php" method="post" id="form_excel_global">
             <div class="row">
-
-                <div class="col-md-6">
-                    <h5>Date de début</h5>
-
+                <div class="col-md-12">
                     <div class="row">
-                        <div class="col-md-4">
-                            <label for="annee_start">année</label>
-                            <select name="form_excel_range[annee_start]" id="annee_start" class="form-control">
+                        <div class="col-md-2">
+                            <select name="form_excel_global[annee]" id="form_excel_global_annee"  class="form-control">
                                 <?php foreach($yearRange as $year): ?>
                                     <option value="<?php echo $year; ?>" <?php if($year == $annee) { echo 'selected="selected"'; } ?>><?php echo $year; ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label for="mois_start">mois</label>
-                            <select name="form_excel_range[mois_start]" id="mois_start" class="form-control">
-                                <?php foreach($datas_mois as $k=>$v): ?>
-                                    <option value="<?php echo $k+1; ?>" <?php if($k+1 == $mois) { echo 'selected="selected"'; } ?>><?php echo $v; ?></option>
-                                <?php endforeach; ?>
-                            </select>
+                            <button type="submit" id="submit_excel_global" class="btn btn-hotel">continuer &raquo;</button>
                         </div>
-                        <div class="col-md-4">
-                            <label for="jour_start">jour</label>
-                            <select name="form_excel_range[jour_start]" id="jour_start" class="form-control">
-                                <?php for($i=0;$i<$joursDansMois; $i++): ?>
-                                    <option value="<?php echo $i+1; ?>" <?php if($i+1 == $jourStart) { echo 'selected="selected"'; } ?>><?php echo $i+1; ?></option>
-                                <?php endfor; ?>
-                            </select>
-                        </div>
+                        <div class="col-md-6"></div>
                     </div>
-
-                </div>
-
-                <div class="col-md-6">
-                    <h5>Date de fin</h5>
-
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label for="annee_end">année</label>
-                            <select name="form_excel_range[annee_end]" id="annee_end" class="form-control">
-                                <?php foreach($yearRange as $year): ?>
-                                    <option value="<?php echo $year; ?>" <?php if($year == $annee) { echo 'selected="selected"'; } ?>><?php echo $year; ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="mois_end">mois</label>
-                            <select name="form_excel_range[mois_end]" id="mois_end" class="form-control">
-                                <?php foreach($datas_mois as $k=>$v): ?>
-                                    <option value="<?php echo $k+1; ?>" <?php if($k+1 == $mois) { echo 'selected="selected"'; } ?>><?php echo $v; ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="jour_end">jour</label>
-                            <select name="form_excel_range[jour_end]" id="jour_end" class="form-control">
-                                <?php for($i=0;$i<$joursDansMois; $i++): ?>
-                                    <option value="<?php echo $i+1; ?>" <?php if($i+1 == $jourEnd) { echo 'selected="selected"'; } ?>><?php echo $i+1; ?></option>
-                                <?php endfor; ?>
-                            </select>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-            <div class="spacer"></div>
-            <div class="row">
-
-                <div class="col-md-12">
-                    <button type="submit" id="excelSubmit" class="btn btn-hotel">Générer le fichier excel</button><span class="" id="excelSpinner"><span class="spinner" ></span>Récupération de vos données en cours...</span>
-                </div>
-
-                <div class="col-md-12">
-                    <div class="alert alert-success" id="excelSuccess"></div>
-                    <div class="alert alert-danger" id="excelError"></div>
                 </div>
             </div>
         </form>
+    </div>
+</div>
 
+<div class="wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header page-header-hotel">
+                    <h3>Données globales - sur un ou plusieurs mois</h3>
+                </div>
+                <p>Séléctionnez l'année</p>
+            </div>
+        </div>
+        <form action="/survey/excel/global_month.php" method="post" id="form_excel_global_mensuel">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label for="form_excel_global_mensuel_annee">année</label>
+                            <select class="form-control" name="form_excel_global_mensuel[annee]" id="form_excel_global_mensuel_annee">
+                                <?php foreach($yearRange as $year): ?>
+                                    <option value="<?php echo $year; ?>" <?php if($year == $annee) { echo 'selected="selected"'; } ?>><?php echo $year; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="form_excel_global_mensuel_month_start">début</label>
+                            <select class="form-control" name="form_excel_global_mensuel[month_start]" id="form_excel_global_mensuel_month_start">
+                                <?php for($i=0; $i<12;$i++): ?>
+                                    <option value="<?php echo $i+1; ?>" <?php if($i+1 == $mois) { echo 'selected="selected"'; } ?>><?php echo ucfirst($datas_mois[$i]); ?></option>
+                                <?php endfor; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="form_excel_global_mensuel_month_end">fin</label>
+                            <select class="form-control" name="form_excel_global_mensuel[month_end]" id="form_excel_global_mensuel_month_end">
+                                <?php for($i=0; $i<12;$i++): ?>
+                                    <option value="<?php echo $i+1; ?>" <?php if($i+1 == $mois) { echo 'selected="selected"'; } ?>><?php echo ucfirst($datas_mois[$i]); ?></option>
+                                <?php endfor; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-6"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
-    </div> <!-- /container -->
+<div class="wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header page-header-hotel">
+                    <h3>Données brutes - sur l'année</h3>
+                </div>
+                <p>Séléctionnez l'année</p>
+            </div>
+        </div>
+        <form action="/survey/excel/brutes.php" method="post" id="form_excel_brutes">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <select name="form_excel_brutes[annee]" id="form_excel_global_brutes"  class="form-control">
+                                <?php foreach($yearRange as $year): ?>
+                                    <option value="<?php echo $year; ?>" <?php if($year == $annee) { echo 'selected="selected"'; } ?>><?php echo $year; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" id="submit_excel_brutes" class="btn btn-hotel">continuer &raquo;</button>
+                        </div>
+                        <div class="col-md-6"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
 

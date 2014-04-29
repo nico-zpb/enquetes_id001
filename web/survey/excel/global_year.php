@@ -1,11 +1,11 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: Nicolas Canfrere
- * Date: 26/04/2014
- * Time: 10:20
+ * User: Nicolas Canfrère
+ * Date: 29/04/14
+ * Time: 12:49
  */
- /*
+  /*
            ____________________
   __      /     ______         \
  {  \ ___/___ /       }         \
@@ -27,40 +27,31 @@ if(!isConnected()){
     header("Location: /index.php");
     die();
 }
-// verif arrive par post
-if(!isPost() || !postExists("form_cwe_range")){
+
+if(!isPost() || !postExists("form_excel_global")){
     header("Location: /index.php");
     die();
 }
-$error = false;
-$errorMsg = "<strong>Erreur</strong> ";
 
-$form = getPost("form_cwe_range");
-$dateForTodayMonth = new DateTime();
+$form = getPost("form_excel_global");
 $annee = (int)$form["annee"];
 $monthStart = 1;
+
+$dateForTodayMonth = new DateTime();
 $monthEnd = $dateForTodayMonth->format("n");
 
 if($debug){
     $monthEnd = 12;
 }
 
-$period = "Pour l'année " . $annee;
-
-$numEntry = 0;
 include_once "../../../php/enquete-connexion.php";
-
+// verif enregistrements pour la periode.
 $tmpDateStart = DateTime::createFromFormat("j-n-Y", "1-1-".$annee);
 $tmpDateStartTs = $tmpDateStart->getTimestamp();
-
 $tmpLastDayVal = DateTime::createFromFormat("j-n-Y", "1-". $monthEnd . "-" .$annee);
 $tmpLastDay = $tmpLastDayVal->format("t");
-
-
 $tmpDateEnd = DateTime::createFromFormat("j-n-Y",$tmpLastDay . "-". $monthEnd . "-" .$annee);
 $tmpDateEndTs = $tmpDateEnd->getTimestamp();
-
-
 $sql = "SELECT COUNT(*) as num FROM clients WHERE arrive_timestamp>=:datestartts AND arrive_timestamp<=:dateendts";
 $stmt = $pdo->prepare($sql);
 $stmt->bindValue(":datestartts", $tmpDateStartTs);
@@ -69,51 +60,26 @@ $stmt->execute();
 $numEntry = $stmt->fetch()["num"];
 if(!$numEntry){
     setFlash("Il n'y a pas de résultats sur la période demandée.");
-    header("Location: /survey/to-web.php");
+    header("Location: /survey/to-excel.php");
     die();
 }
 
 
-include_once "../../../php/header.php";
-include_once "../../../php/navbar.php";
+// effectifs par mois en nombre et pourcentage
+// effectif total de la periode
 
-?>
+$sql = "SELECT * FROM clients WHERE arrive_mois=:mois AND arrive_annee=:annee";
 
-<div class="jumbotron">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-2">
-                <img src="/img/logo3.png" alt="Les Jardins de Beauval"/>
-            </div>
-            <div class="col-md-10">
-                <h1>Statistiques</h1>
-                <h2>Format Internet - Evolution des résultats mensuels</h2>
-            </div>
-            <div class="col-md-10 col-md-offset-2"></div>
-        </div>
-    </div>
-</div>
-<div class="wrapper">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="page-header page-header-hotel">
-                    <h1><?php echo $period; ?></h1>
-                </div>
+$stmt = $pdo->prepare($sql);
+$stmt->bindValue(":annee", (int)$annee);
+$clientsByMonth = [];
 
-            </div>
-        </div>
-    </div>
-</div>
+for($i=$monthStart; $i<$monthEnd+1; $i++){
+    $clientsByMonth[$datas_mois[$i-1]] = [];
 
-<?php include_once "evolution-multi.php" ?>
-<div class="container">
-    <hr/>
-    <footer>
-        <p>&copy; ZooParc de Beauval 2014</p>
-    </footer>
-</div>
+    $stmt->bindValue(":mois", $i);
+    $stmt->execute();
 
-<script src="/survey/js/apps/mois/evolution.js"></script>
-</body>
-</html>
+    $r = $stmt->fetchAll();
+    if($r){}
+}
