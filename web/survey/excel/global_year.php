@@ -5,31 +5,31 @@
  * Date: 29/04/14
  * Time: 12:49
  */
-  /*
-           ____________________
-  __      /     ______         \
- {  \ ___/___ /       }         \
-  {  /       / #      }          |
-   {/ ô ô  ;       __}           |
-   /          \__}    /  \       /\
+/*
+         ____________________
+__      /     ______         \
+{  \ ___/___ /       }         \
+{  /       / #      }          |
+ {/ ô ô  ;       __}           |
+ /          \__}    /  \       /\
 <=(_    __<==/  |    /\___\     |  \
-   (_ _(    |   |   |  |   |   /    #
-    (_ (_   |   |   |  |   |   |
-      (__<  |mm_|mm_|  |mm_|mm_|
+ (_ _(    |   |   |  |   |   /    #
+  (_ (_   |   |   |  |   |   |
+    (__<  |mm_|mm_|  |mm_|mm_|
 */
 
 session_start();
 
 include_once "../../../datas/all.php";
 include_once "../../../php/functions.php";
-include_once LIBS."/PHPExcel.php";
+include_once LIBS . "/PHPExcel.php";
 
-if(!isConnected()){
+if (!isConnected()) {
     header("Location: /index.php");
     die();
 }
 
-if(!isPost() || !postExists("form_excel_global")){
+if (!isPost() || !postExists("form_excel_global")) {
     header("Location: /index.php");
     die();
 }
@@ -43,17 +43,17 @@ $monthStart = 1;
 $dateForTodayMonth = new DateTime();
 $monthEnd = $dateForTodayMonth->format("n");
 
-if($debug){
+if ($debug) {
     $monthEnd = 12;
 }
 
 include_once "../../../php/enquete-connexion.php";
 // verif enregistrements pour la periode.
-$tmpDateStart = DateTime::createFromFormat("j-n-Y", "1-1-".$annee);
+$tmpDateStart = DateTime::createFromFormat("j-n-Y", "1-1-" . $annee);
 $tmpDateStartTs = $tmpDateStart->getTimestamp();
-$tmpLastDayVal = DateTime::createFromFormat("j-n-Y", "1-". $monthEnd . "-" .$annee);
+$tmpLastDayVal = DateTime::createFromFormat("j-n-Y", "1-" . $monthEnd . "-" . $annee);
 $tmpLastDay = $tmpLastDayVal->format("t");
-$tmpDateEnd = DateTime::createFromFormat("j-n-Y",$tmpLastDay . "-". $monthEnd . "-" .$annee);
+$tmpDateEnd = DateTime::createFromFormat("j-n-Y", $tmpLastDay . "-" . $monthEnd . "-" . $annee);
 $tmpDateEndTs = $tmpDateEnd->getTimestamp();
 $sql = "SELECT COUNT(*) as num FROM clients WHERE arrive_timestamp>=:datestartts AND arrive_timestamp<=:dateendts";
 $stmt = $pdo->prepare($sql);
@@ -61,7 +61,7 @@ $stmt->bindValue(":datestartts", $tmpDateStartTs);
 $stmt->bindValue(":dateendts", $tmpDateEndTs);
 $stmt->execute();
 $numEntry = $stmt->fetch()["num"];
-if(!$numEntry){
+if (!$numEntry) {
     setFlash("Il n'y a pas de résultats sur la période demandée.");
     header("Location: /survey/to-excel.php");
     die();
@@ -79,26 +79,26 @@ $clientsByMonth = [];
 $effectifsByMonth = [];
 $effectifTotal = 0;
 
-for($i=$monthStart; $i<$monthEnd+1; $i++){
+for ($i = $monthStart; $i < $monthEnd + 1; $i++) {
 
 
     $stmt->bindValue(":mois", $i);
     $stmt->execute();
 
     $r = $stmt->fetchAll();
-    if($r){
-        $clientsByMonth[$datas_mois[$i-1]] = $r;
+    if ($r) {
+        $clientsByMonth[$datas_mois[$i - 1]] = $r;
         $count = count($r);
-        $effectifsByMonth[$datas_mois[$i-1]] = $count;
+        $effectifsByMonth[$datas_mois[$i - 1]] = $count;
         $effectifTotal += $count;
     } else {
-        $clientsByMonth[$datas_mois[$i-1]] = [];
-        $effectifsByMonth[$datas_mois[$i-1]] = 0;
+        $clientsByMonth[$datas_mois[$i - 1]] = [];
+        $effectifsByMonth[$datas_mois[$i - 1]] = 0;
     }
 }
 
-$percentByMonth = array_map(function($it) use($effectifTotal){
-    return round(($it/$effectifTotal) * 100);
+$percentByMonth = array_map(function ($it) use ($effectifTotal) {
+    return round(($it / $effectifTotal) * 100);
 }, $effectifsByMonth);
 
 
@@ -130,19 +130,24 @@ $totalOriginEntry = 0;
 
 /// par departements
 $clientsByDeptsByMonth = $departements;
-foreach($clientsByDeptsByMonth as $num=>$name){
+foreach ($clientsByDeptsByMonth as $num => $name) {
     $clientsByDeptsByMonth[$num] = [];
-    foreach($datas_mois as $mois){
+    foreach ($datas_mois as $mois) {
         $clientsByDeptsByMonth[$num][$mois] = 0;
     }
 }
 
+///////// connaissance par zone
+$connaissanceRegionCentreByMonthByType = [];
+$connaissanceRegionCentreByMonthTotal = [];
+$connaissanceRegionParisByMonthByType = [];
+$connaissanceRegionParisByMonthTotal = [];
+$connaissanceRegionAutresByMonthByType = [];
+$connaissanceRegionAutresByMonthTotal = [];
 
 
-
-foreach($clientsByMonth as $month=>$clients){
+foreach ($clientsByMonth as $month => $clients) {
     $monthes[] = $month;
-
 
 
     $connaissanceByMonthByType[$month] = getEmptyConnaissanceArr();
@@ -163,19 +168,57 @@ foreach($clientsByMonth as $month=>$clients){
         $totalByMonth[$month] = 0;
     }
 
+    if(empty($connaissanceRegionCentreByMonth[$month])){
+        $connaissanceRegionCentreByMonthByType[$month] = getEmptyConnaissanceArr();
+    }
+    if(empty($connaissanceRegionParisByMonth[$month])){
+        $connaissanceRegionParisByMonthByType[$month] = getEmptyConnaissanceArr();
+    }
+    if(empty($connaissanceRegionAutresByMonth[$month])){
+        $connaissanceRegionAutresByMonthByType[$month] = getEmptyConnaissanceArr();
+    }
+    if(empty($connaissanceRegionCentreByMonthTotal[$month])){
+        $connaissanceRegionCentreByMonthTotal[$month] = 0;
+    }
+    if(empty($connaissanceRegionParisByMonthTotal[$month])){
+        $connaissanceRegionParisByMonthTotal[$month] = 0;
+    }
+    if(empty($connaissanceRegionAutresByMonthTotal[$month])){
+        $connaissanceRegionAutresByMonthTotal[$month] = 0;
+    }
 
 
-    foreach($clients as $key=>$client){
+    foreach ($clients as $key => $client) {
         //// connaissance de d l'hôtel global/mois
         $stmt->bindValue(":id", $client["id"]);
         $stmt->execute();
-        $r= $stmt->fetchAll();
+        $r = $stmt->fetchAll();
 
-        if($r){
-            foreach($r as $k=>$v){
+        //// connaissance de d l'hôtel par zone/mois
+        if ($r) {
+            foreach ($r as $k => $v) {
                 $connaissanceByMonthByType[$month][$v["type_id"] - 1]++;
                 $connaissanceTotalByType[$v["type_id"] - 1]++;
                 $connaissanceTotal++;
+            }
+
+            if (in_array($client["departement_num"], $depsCentre)) {
+                foreach($r as $l=>$type){
+                    $connaissanceRegionCentreByMonthTotal[$month]++;
+                    $connaissanceRegionCentreByMonthByType[$month][$type["type_id"] - 1]++;
+                }
+            } elseif (in_array($client["departement_num"], $depsParis)) {
+                foreach($r as $l=>$type){
+                    $connaissanceRegionParisByMonthTotal[$month]++;
+                    $connaissanceRegionParisByMonthByType[$month][$type["type_id"] - 1]++;
+                }
+            } else {
+                if ($client["departement_num"] != 100) {
+                    foreach($r as $l=>$type){
+                        $connaissanceRegionAutresByMonthTotal[$month]++;
+                        $connaissanceRegionAutresByMonthByType[$month][$type["type_id"] - 1]++;
+                    }
+                }
             }
         }
         //// repartition par region
@@ -211,10 +254,10 @@ foreach($clientsByMonth as $month=>$clients){
 
     $all = $connaissanceTotalByMonth[$month];
 
-    $connaissancePercentByMonthByType[$month] = array_map(function($it) use ($all){
+    $connaissancePercentByMonthByType[$month] = array_map(function ($it) use ($all) {
         return round(($it / $all) * 100);
     }, $connaissanceByMonthByType[$month]);
-        
+
 }
 
 
@@ -231,19 +274,15 @@ $numEtrangerByMonthPercent = array_map(function ($it, $to) {
     return round(($it / $to) * 100, 1);
 }, $numEtrangerByMonth, $totalByMonth);
 $numAllDeptsByMonthPercent = [];
-foreach($clientsByDeptsByMonth as $k=>$v){
+foreach ($clientsByDeptsByMonth as $k => $v) {
     //$k=>num dep, $v=>tableau effectif/mois
-    if(empty($numAllDeptsByMonthPercent[$k])){
+    if (empty($numAllDeptsByMonthPercent[$k])) {
         $numAllDeptsByMonthPercent[$k] = [];
     }
-    foreach($v as $m=>$e){
+    foreach ($v as $m => $e) {
         $numAllDeptsByMonthPercent[$k][$m] = round(($clientsByDeptsByMonth[$k][$m] / $totalByMonth[$m]) * 100, 1) . "%";
     }
 }
-
-
-
-
 
 
 $workbook = new PHPExcel();
@@ -266,11 +305,11 @@ $activeSheet->getStyle('C7:D7')->getFill()->setFillType(PHPExcel_Style_Fill::FIL
 $activeSheet->getStyle('C7:D7')->getFill()->getStartColor()->setRGB('ffff00');
 $activeSheet->getStyle('B7:D20')->applyFromArray(
     [
-        "borders"=>[
-            "allborders"=>[
-                "style"=>PHPExcel_Style_Border::BORDER_THIN,
-                "color"=>[
-                    "rgb"=>"000000"
+        "borders" => [
+            "allborders" => [
+                "style" => PHPExcel_Style_Border::BORDER_THIN,
+                "color" => [
+                    "rgb" => "000000"
                 ]
             ]
         ],
@@ -278,8 +317,8 @@ $activeSheet->getStyle('B7:D20')->applyFromArray(
 );
 $activeSheet->getStyle('C7:D20')->applyFromArray(
     [
-        "alignment"=>[
-            "horizontal"=>PHPExcel_Style_Alignment::HORIZONTAL_CENTER
+        "alignment" => [
+            "horizontal" => PHPExcel_Style_Alignment::HORIZONTAL_CENTER
         ],
     ]
 );
@@ -288,7 +327,7 @@ $activeSheet->setCellValue('B7', 'Mois');
 $activeSheet->setCellValue('C7', 'Effectifs');
 $activeSheet->setCellValue('D7', '%');
 $start = 8;
-foreach($effectifsByMonth as $month=>$effectif){
+foreach ($effectifsByMonth as $month => $effectif) {
     $activeSheet->setCellValueByColumnAndRow(1, $start, $month);
     $activeSheet->setCellValueByColumnAndRow(2, $start, $effectif);
     $activeSheet->setCellValueByColumnAndRow(3, $start, "$percentByMonth[$month]%");
@@ -308,44 +347,44 @@ $activeSheet->setCellValueByColumnAndRow(3, $start, "100%");
 //TODO total
 
 $startRow = 25;
-for($i=0; $i<count($monthes); $i++){
-    $activeSheet->setCellValueByColumnAndRow(2+$i, $startRow, $monthes[$i]);
+for ($i = 0; $i < count($monthes); $i++) {
+    $activeSheet->setCellValueByColumnAndRow(2 + $i, $startRow, $monthes[$i]);
 }
-$activeSheet->setCellValueByColumnAndRow(2+$i,$startRow,"Total");
+$activeSheet->setCellValueByColumnAndRow(2 + $i, $startRow, "Total");
 
 $startRow += 1;
 $startCol = 1;
 $endRow = $startRow;
-foreach($connaissance_types as $key=>$type){
+foreach ($connaissance_types as $key => $type) {
 
-    $activeSheet->setCellValueByColumnAndRow($startCol, $startRow+$key, $type);
+    $activeSheet->setCellValueByColumnAndRow($startCol, $startRow + $key, $type);
 
-    foreach($monthes as $l=>$month){
-        $activeSheet->setCellValueByColumnAndRow($startCol+$l+1, $startRow+$key, $connaissancePercentByMonthByType[$month][$key]."%");
+    foreach ($monthes as $l => $month) {
+        $activeSheet->setCellValueByColumnAndRow($startCol + $l + 1, $startRow + $key, $connaissancePercentByMonthByType[$month][$key] . "%");
 
     }
     $endRow++;
 }
 
 
-$activeSheet->getStyle($columnNames[$startCol+1].($startRow-1).":".$columnNames[$startCol+2+11].($startRow-1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
-$activeSheet->getStyle($columnNames[$startCol+1].($startRow-1).":".$columnNames[$startCol+2+11].($startRow-1))->getFill()->getStartColor()->setRGB('ffff00');
-$activeSheet->getStyle($columnNames[$startCol].($startRow-1).":".$columnNames[$startCol+2+11].($endRow-1))->applyFromArray(
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$startCol + 2 + 11] . ($startRow - 1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$startCol + 2 + 11] . ($startRow - 1))->getFill()->getStartColor()->setRGB('ffff00');
+$activeSheet->getStyle($columnNames[$startCol] . ($startRow - 1) . ":" . $columnNames[$startCol + 2 + 11] . ($endRow - 1))->applyFromArray(
     [
-        "borders"=>[
-            "allborders"=>[
-                "style"=>PHPExcel_Style_Border::BORDER_THIN,
-                "color"=>[
-                    "rgb"=>"000000"
+        "borders" => [
+            "allborders" => [
+                "style" => PHPExcel_Style_Border::BORDER_THIN,
+                "color" => [
+                    "rgb" => "000000"
                 ]
             ]
         ]
     ]
 );
-$activeSheet->getStyle($columnNames[$startCol+1].($startRow-1).":".$columnNames[$startCol+2+11].($endRow-1))->applyFromArray(
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$startCol + 2 + 11] . ($endRow - 1))->applyFromArray(
     [
-        "alignment"=>[
-            "horizontal"=>PHPExcel_Style_Alignment::HORIZONTAL_CENTER
+        "alignment" => [
+            "horizontal" => PHPExcel_Style_Alignment::HORIZONTAL_CENTER
         ],
     ]
 );
@@ -364,51 +403,51 @@ $endRow = $startRow;
 $endCol = $startCol;
 
 
-foreach($monthes as $k=>$v){
-    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow, $v);
-    $endCol = $startCol+1+$k +1;
+foreach ($monthes as $k => $v) {
+    $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
+    $endCol = $startCol + 1 + $k + 1;
 }
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
-$startRow +=1;
+$startRow += 1;
 
 $activeSheet->setCellValueByColumnAndRow(1, $startRow, "Région Centre");
-$activeSheet->setCellValueByColumnAndRow(1, $startRow+1, "Région Parisienne");
-$activeSheet->setCellValueByColumnAndRow(1, $startRow+2, "Autres Départements");
-$activeSheet->setCellValueByColumnAndRow(1, $startRow+3, "Total");
+$activeSheet->setCellValueByColumnAndRow(1, $startRow + 1, "Région Parisienne");
+$activeSheet->setCellValueByColumnAndRow(1, $startRow + 2, "Autres Départements");
+$activeSheet->setCellValueByColumnAndRow(1, $startRow + 3, "Total");
 
 
-foreach($numCentreByMonthPercent as $k=>$v){
-    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow, "$v%");
+foreach ($numCentreByMonthPercent as $k => $v) {
+    $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, "$v%");
 }
-foreach($numParisByMonthPercent as $k=>$v){
-    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+1, "$v%");
+foreach ($numParisByMonthPercent as $k => $v) {
+    $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow + 1, "$v%");
 }
-foreach($numOtherByMonthPercent as $k=>$v){
-    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+2, "$v%");
+foreach ($numOtherByMonthPercent as $k => $v) {
+    $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow + 2, "$v%");
 }
-foreach($monthes as $k=>$v){
-    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+3, $totalByMonth[$v]);
+foreach ($monthes as $k => $v) {
+    $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow + 3, $totalByMonth[$v]);
 }
-$endRow = $startRow+3;
+$endRow = $startRow + 3;
 
-$activeSheet->getStyle($columnNames[$startCol+1].($startRow-1).":".$columnNames[$endCol].($startRow-1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
-$activeSheet->getStyle($columnNames[$startCol+1].($startRow-1).":".$columnNames[$endCol].($startRow-1))->getFill()->getStartColor()->setRGB('ffff00');
-$activeSheet->getStyle($columnNames[$startCol].($startRow-1).":".$columnNames[$endCol].($endRow))->applyFromArray(
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->getStartColor()->setRGB('ffff00');
+$activeSheet->getStyle($columnNames[$startCol] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($endRow))->applyFromArray(
     [
-        "borders"=>[
-            "allborders"=>[
-                "style"=>PHPExcel_Style_Border::BORDER_THIN,
-                "color"=>[
-                    "rgb"=>"000000"
+        "borders" => [
+            "allborders" => [
+                "style" => PHPExcel_Style_Border::BORDER_THIN,
+                "color" => [
+                    "rgb" => "000000"
                 ]
             ]
         ]
     ]
 );
-$activeSheet->getStyle($columnNames[$startCol+1].($startRow-1).":".$columnNames[$endCol].($endRow))->applyFromArray(
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($endRow))->applyFromArray(
     [
-        "alignment"=>[
-            "horizontal"=>PHPExcel_Style_Alignment::HORIZONTAL_CENTER
+        "alignment" => [
+            "horizontal" => PHPExcel_Style_Alignment::HORIZONTAL_CENTER
         ],
     ]
 );
@@ -423,47 +462,47 @@ $activeSheet->getStyle($columnNames[$startCol+1].($startRow-1).":".$columnNames[
 
 
 $startCol = 1;
-$startRow = $endRow + 5;
+$startRow = $endRow + 6;
 
 $endCol = $startCol;
-foreach($monthes as $k=>$v){
-    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow, $v);
-    $endCol = $startCol+1+$k;
+foreach ($monthes as $k => $v) {
+    $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
+    $endCol = $startCol + 1 + $k;
 }
 $endCol += 1;
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
-$startRow +=1;
+$startRow += 1;
 $endRow = $startRow;
 $counter = 0;
-foreach($numAllDeptsByMonthPercent as $dep=>$mois){
+foreach ($numAllDeptsByMonthPercent as $dep => $mois) {
     $activeSheet->setCellValueByColumnAndRow($startCol, $endRow, $dep . " - " . $departements[$dep]);
     $monthCounter = 0;
-    foreach($mois as $k=>$v){
-        $activeSheet->setCellValueByColumnAndRow($startCol+1+$monthCounter, $endRow, $numAllDeptsByMonthPercent[$dep][$k]);
+    foreach ($mois as $k => $v) {
+        $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $monthCounter, $endRow, $numAllDeptsByMonthPercent[$dep][$k]);
         $monthCounter++;
     }
 
     $endRow++;
 }
-$endRow-=1;
-$activeSheet->getStyle($columnNames[$startCol+1].($startRow-1).":".$columnNames[$endCol].($startRow-1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
-$activeSheet->getStyle($columnNames[$startCol+1].($startRow-1).":".$columnNames[$endCol].($startRow-1))->getFill()->getStartColor()->setRGB('ffff00');
-$activeSheet->getStyle($columnNames[$startCol].($startRow-1).":".$columnNames[$endCol].($endRow))->applyFromArray(
+$endRow -= 1;
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->getStartColor()->setRGB('ffff00');
+$activeSheet->getStyle($columnNames[$startCol] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($endRow))->applyFromArray(
     [
-        "borders"=>[
-            "allborders"=>[
-                "style"=>PHPExcel_Style_Border::BORDER_THIN,
-                "color"=>[
-                    "rgb"=>"000000"
+        "borders" => [
+            "allborders" => [
+                "style" => PHPExcel_Style_Border::BORDER_THIN,
+                "color" => [
+                    "rgb" => "000000"
                 ]
             ]
         ]
     ]
 );
-$activeSheet->getStyle($columnNames[$startCol+1].($startRow-1).":".$columnNames[$endCol].($endRow))->applyFromArray(
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($endRow))->applyFromArray(
     [
-        "alignment"=>[
-            "horizontal"=>PHPExcel_Style_Alignment::HORIZONTAL_CENTER
+        "alignment" => [
+            "horizontal" => PHPExcel_Style_Alignment::HORIZONTAL_CENTER
         ],
     ]
 );
@@ -472,13 +511,46 @@ $activeSheet->getStyle($columnNames[$startCol+1].($startRow-1).":".$columnNames[
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// connaissance region paris // $connaissanceRegionCentreByMonthByType
 
-
-
-$startRow = $endRow+5;
+$startRow = $endRow + 5;
 $endRow = $startRow;
 $startCol = 1;
 $endCol = $startCol;
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// connaissance region centre
+
+
+$startRow = $endRow + 5;
+$endRow = $startRow;
+$startCol = 1;
+$endCol = $startCol;
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// connaissance region autres
+
+
+$startRow = $endRow + 5;
+$endRow = $startRow;
+$startCol = 1;
+$endCol = $startCol;
+
+
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
