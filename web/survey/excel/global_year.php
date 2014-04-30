@@ -298,13 +298,21 @@ $activeSheet = $workbook->getActiveSheet();
 $activeSheet->setTitle("année " . $annee);
 $activeSheet->getColumnDimension("B")->setAutoSize(true);
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+$activeSheet->getStyle('B2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+$activeSheet->getStyle('B2')->getFill()->getStartColor()->setRGB('ffff00');
+$activeSheet->setCellValueByColumnAndRow(1,2, "Résultats année " .$annee);
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// tableau des effectifs
 
-//TODO descriptif
 
 $activeSheet->getStyle('C7:D7')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
 $activeSheet->getStyle('C7:D7')->getFill()->getStartColor()->setRGB('ffff00');
@@ -328,6 +336,10 @@ $activeSheet->getStyle('C7:D20')->applyFromArray(
     ]
 );
 
+$activeSheet->getStyle("B4")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
+$activeSheet->setCellValueByColumnAndRow(1,4, "Filtre: Cumul depuis le début de l'année.");
+$activeSheet->setCellValueByColumnAndRow(1,5, "Merci d'indiquer votre date d'arrivée à l'hôtel (saisir le mois ci-dessous)");
+
 $activeSheet->setCellValue('B7', 'Mois');
 $activeSheet->setCellValue('C7', 'Effectifs');
 $activeSheet->setCellValue('D7', '%');
@@ -348,10 +360,16 @@ $activeSheet->setCellValueByColumnAndRow(3, $start, "100%");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// connaissance globale
 
-//TODO descriptif
+
 //TODO total
 
-$startRow = 25;
+$activeSheet->getStyle("B24")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
+$activeSheet->setCellValueByColumnAndRow(1,24, "Filtre: Cumul depuis le début de l'année.");
+$activeSheet->setCellValueByColumnAndRow(1,25, "Merci d'indiquer votre date d'arrivée à l'hôtel (saisir le mois ci-dessous)");
+$activeSheet->setCellValueByColumnAndRow(1,26, "Comment avez-vous connu l'Hôtel Les Jardins de Beauval ? Etait-ce par...");
+
+
+$startRow = 28;
 for ($i = 0; $i < count($monthes); $i++) {
     $activeSheet->setCellValueByColumnAndRow(2 + $i, $startRow, $monthes[$i]);
 }
@@ -400,12 +418,18 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// repartition par region
 
-//TODO descriptif
+
 //TODO total
 
-$startRow = $endRow + 5;
+
+$startRow = $endRow + 7;
 $endRow = $startRow;
 $endCol = $startCol;
+
+$activeSheet->getStyle("B".($startRow-4))->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-4, "Filtre: Cumul depuis le début de l'année.");
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Merci d'indiquer votre date d'arrivée à l'hôtel (saisir le mois ci-dessous)");
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "Merci de noter le numéro de votre département d'habitation (2 chiffres; 100 pour pays étranger) :");
 
 
 foreach ($monthes as $k => $v) {
@@ -462,14 +486,21 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// repartition par departement
 
-//TODO descriptif
+
 //TODO total
 
 
 $startCol = 1;
-$startRow = $endRow + 6;
+$startRow = $endRow + 7;
 
 $endCol = $startCol;
+
+$activeSheet->getStyle("B".($startRow-4))->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-4, "Filtre: Cumul depuis le début de l'année.");
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Merci d'indiquer votre date d'arrivée à l'hôtel (saisir le mois ci-dessous)");
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "Merci de noter le numéro de votre département d'habitation (2 chiffres; 100 pour pays étranger) :");
+
+
 foreach ($monthes as $k => $v) {
     $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
     $endCol = $startCol + 1 + $k;
