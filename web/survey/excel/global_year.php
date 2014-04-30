@@ -116,37 +116,6 @@ $connaissanceTotal = 0;
 $connaissanceTotalByMonth = [];
 $connaissancePercentByMonthByType = [];
 $monthes = [];
-foreach($clientsByMonth as $month=>$clients){
-    $monthes[] = $month;
-    $connaissanceByMonthByType[$month] = getEmptyConnaissanceArr();
-
-    foreach($clients as $key=>$client){
-        $stmt->bindValue(":id", $client["id"]);
-        $stmt->execute();
-        $r= $stmt->fetchAll();
-
-        if($r){
-            foreach($r as $k=>$v){
-                $connaissanceByMonthByType[$month][$v["type_id"] - 1]++;
-                $connaissanceTotalByType[$v["type_id"] - 1]++;
-                $connaissanceTotal++;
-            }
-        }
-    }
-    $connaissanceTotalByMonth[$month] = 0;
-    for ($i = 0; $i < count($connaissanceTotalByType); $i++) {
-        $connaissanceTotalByMonth[$month] += $connaissanceByMonthByType[$month][$i];
-    }
-
-    $all = $connaissanceTotalByMonth[$month];
-
-    $connaissancePercentByMonthByType[$month] = array_map(function($it) use ($all){
-        return round(($it / $all) * 100);
-    }, $connaissanceByMonthByType[$month]);
-}
-
-
-
 
 //// repartition par region
 $numCentreByMonth = [];
@@ -158,7 +127,26 @@ $totalParis = 0;
 $totalOther = 0;
 $totalEtranger = 0;
 $totalOriginEntry = 0;
+
+/// par departements
+$clientsByDeptsByMonth = $departements;
+foreach($clientsByDeptsByMonth as $num=>$name){
+    $clientsByDeptsByMonth[$num] = [];
+    foreach($datas_mois as $mois){
+        $clientsByDeptsByMonth[$num][$mois] = 0;
+    }
+}
+
+
+
+
 foreach($clientsByMonth as $month=>$clients){
+    $monthes[] = $month;
+
+
+
+    $connaissanceByMonthByType[$month] = getEmptyConnaissanceArr();
+
     if (empty($numCentreByMonth[$month])) {
         $numCentreByMonth[$month] = 0;
     }
@@ -174,7 +162,23 @@ foreach($clientsByMonth as $month=>$clients){
     if (empty($totalByMonth[$month])) {
         $totalByMonth[$month] = 0;
     }
+
+
+
     foreach($clients as $key=>$client){
+        //// connaissance de d l'hôtel global/mois
+        $stmt->bindValue(":id", $client["id"]);
+        $stmt->execute();
+        $r= $stmt->fetchAll();
+
+        if($r){
+            foreach($r as $k=>$v){
+                $connaissanceByMonthByType[$month][$v["type_id"] - 1]++;
+                $connaissanceTotalByType[$v["type_id"] - 1]++;
+                $connaissanceTotal++;
+            }
+        }
+        //// repartition par region
         $totalOriginEntry++;
         if (in_array($client["departement_num"], $depsCentre)) {
             $numCentreByMonth[$month]++;
@@ -191,10 +195,29 @@ foreach($clientsByMonth as $month=>$clients){
                 $totalEtranger++;
             }
         }
+
+
         $totalByMonth[$month]++;
+
+        /// par departement
+        $clientsByDeptsByMonth[$client["departement_num"]][$month]++;
     }
+
+    //// connaissance de d l'hôtel global/mois
+    $connaissanceTotalByMonth[$month] = 0;
+    for ($i = 0; $i < count($connaissanceTotalByType); $i++) {
+        $connaissanceTotalByMonth[$month] += $connaissanceByMonthByType[$month][$i];
+    }
+
+    $all = $connaissanceTotalByMonth[$month];
+
+    $connaissancePercentByMonthByType[$month] = array_map(function($it) use ($all){
+        return round(($it / $all) * 100);
+    }, $connaissanceByMonthByType[$month]);
         
 }
+
+
 $numCentreByMonthPercent = array_map(function ($it, $to) {
     return round(($it / $to) * 100);
 }, $numCentreByMonth, $totalByMonth);
@@ -207,25 +230,17 @@ $numOtherByMonthPercent = array_map(function ($it, $to) {
 $numEtrangerByMonthPercent = array_map(function ($it, $to) {
     return round(($it / $to) * 100);
 }, $numEtrangerByMonth, $totalByMonth);
-
-
-//// repartition par departement
-$allDeptsNums = array_keys($departements);
-$clientsByDeptsByMonth = [];
-foreach($clientsByMonth as $month=>$clients){
-
-    foreach($clients as $key=>$client){
-
-        if(empty($clientsByDeptsByMonth[$client["departement_num"]])){
-            $clientsByDeptsByMonth[$client["departement_num"]] = [];
-        }
-        if(empty($clientsByDeptsByMonth[$client["departement_num"]][$month])){
-            $clientsByDeptsByMonth[$client["departement_num"]][$month] = 0;
-        }
-        $clientsByDeptsByMonth[$client["departement_num"]][$month]++;
+$numAllDeptsByMonthPercent = [];
+foreach($clientsByDeptsByMonth as $k=>$v){
+    //$k=>num dep, $v=>tableau effectif/mois
+    if(empty($numAllDeptsByMonthPercent[$k])){
+        $numAllDeptsByMonthPercent[$k] = [];
+    }
+    foreach($v as $m=>$e){
+        $numAllDeptsByMonthPercent[$k][$m] = round(($clientsByDeptsByMonth[$k][$m] / $totalByMonth[$m]) * 100) . "%";
     }
 }
-var_dump($clientsByDeptsByMonth);die(); /// non pas comme ça il manque des départements dans chanque tableau ///
+
 
 
 
@@ -234,6 +249,7 @@ var_dump($clientsByDeptsByMonth);die(); /// non pas comme ça il manque des dép
 $workbook = new PHPExcel();
 PHPExcel_Settings::setLocale("fr_FR");
 $workbook->getProperties()->setTitle("Les Jardins de Beauval");
+$columnNames = range("A", "Z");
 $activeSheet = $workbook->getActiveSheet();
 $activeSheet->setTitle("année " . $annee);
 $activeSheet->getColumnDimension("B")->setAutoSize(true);
@@ -324,9 +340,96 @@ foreach($connaissance_types as $key=>$type){
 }
 
 //// repartition par region
+$activeSheet->getStyle('C41:N41')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+$activeSheet->getStyle('C41:N41')->getFill()->getStartColor()->setRGB('ffff00');
+$activeSheet->getStyle('B41:N45')->applyFromArray(
+    [
+        "borders"=>[
+            "allborders"=>[
+                "style"=>PHPExcel_Style_Border::BORDER_THIN,
+                "color"=>[
+                    "rgb"=>"000000"
+                ]
+            ]
+        ]
+    ]
+);
+$activeSheet->getStyle('C41:N45')->applyFromArray(
+    [
+        "alignment"=>[
+            "horizontal"=>PHPExcel_Style_Alignment::HORIZONTAL_CENTER
+        ],
+    ]
+);
+
+$start = 2;
+foreach($monthes as $k=>$v){
+    $activeSheet->setCellValueByColumnAndRow($start+$k, 41, $v);
+
+    $activeSheet->setCellValueByColumnAndRow($start+$k, 45, $totalByMonth[$v]);
+
+}
+$activeSheet->setCellValueByColumnAndRow(1, 42, "Région Centre");
+$activeSheet->setCellValueByColumnAndRow(1, 43, "Région Parisienne");
+$activeSheet->setCellValueByColumnAndRow(1, 44, "Autres Départements");
+$activeSheet->setCellValueByColumnAndRow(1, 45, "Total");
+
+
+foreach($numCentreByMonthPercent as $k=>$v){
+    $activeSheet->setCellValueByColumnAndRow($start+$k, 42, "$v%");
+}
+foreach($numParisByMonthPercent as $k=>$v){
+    $activeSheet->setCellValueByColumnAndRow($start+$k, 43, "$v%");
+}
+foreach($numOtherByMonthPercent as $k=>$v){
+    $activeSheet->setCellValueByColumnAndRow($start+$k, 44, "$v%");
+}
 
 
 //// repartition par departement
+
+
+
+
+$startCol = 2;
+$startRow = 51;
+foreach($monthes as $k=>$v){
+    $activeSheet->setCellValueByColumnAndRow($start+$k, $startRow-1, $v);
+}
+
+$counter = 0;
+foreach($numAllDeptsByMonthPercent as $dep=>$mois){
+    $activeSheet->setCellValueByColumnAndRow($startCol-1, $startRow+$counter, $dep . " - " . $departements[$dep]);
+    $monthCounter = 0;
+    foreach($mois as $k=>$v){
+        $activeSheet->setCellValueByColumnAndRow($start+$monthCounter, $startRow+$counter, $numAllDeptsByMonthPercent[$dep][$k]);
+        $monthCounter++;
+    }
+
+    $counter++;
+}
+$activeSheet->getStyle($columnNames[$startCol].($startRow-1).":".$columnNames[$startCol+$monthCounter-1].($startRow-1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+$activeSheet->getStyle($columnNames[$startCol].($startRow-1).":".$columnNames[$startCol+$monthCounter-1].($startRow-1))->getFill()->getStartColor()->setRGB('ffff00');
+$activeSheet->getStyle($columnNames[$startCol-1].($startRow-1).":".$columnNames[$startCol+$monthCounter-1].($startRow+$counter-1))->applyFromArray(
+    [
+        "borders"=>[
+            "allborders"=>[
+                "style"=>PHPExcel_Style_Border::BORDER_THIN,
+                "color"=>[
+                    "rgb"=>"000000"
+                ]
+            ]
+        ]
+    ]
+);
+$activeSheet->getStyle($columnNames[$startCol].($startRow-1).":".$columnNames[$startCol+$monthCounter-1].($startRow+$counter-1))->applyFromArray(
+    [
+        "alignment"=>[
+            "horizontal"=>PHPExcel_Style_Alignment::HORIZONTAL_CENTER
+        ],
+    ]
+);
+
 
 
 
