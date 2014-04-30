@@ -289,7 +289,205 @@ foreach ($clientsByDeptsByMonth as $k => $v) {
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+$sql = "SELECT * FROM satisfaction WHERE client_id=:id";
+$stmt = $pdo->prepare($sql);
+$satisfactionByMonth = [];
+$satisfactionByMonthTotal = [];
+$totalSatisfaction = 0;
+foreach($ClientsByMonth as $month=>$clients){
+    if(empty($satisfactionByMonth[$month])){
+        $satisfactionByMonth[$month] = [];
+    }
+    if(empty($satisfactionByMonthTotal[$month])){
+        $satisfactionByMonthTotal[$month] = 0;
+    }
+    if(empty($satisfactionByMonth[$month]["globalement"])){
+        $satisfactionByMonth[$month]["globalement"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["chambres"])){
+        $satisfactionByMonth[$month]["chambres"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["restauration"])){
+        $satisfactionByMonth[$month]["restauration"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["bar"])){
+        $satisfactionByMonth[$month]["bar"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["accueil"])){
+        $satisfactionByMonth[$month]["accueil"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["environnement"])){
+        $satisfactionByMonth[$month]["environnement"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["rapport"])){
+        $satisfactionByMonth[$month]["rapport"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["resto_amabilite"])){
+        $satisfactionByMonth[$month]["resto_amabilite"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["resto_service"])){
+        $satisfactionByMonth[$month]["resto_service"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["resto_diversite"])){
+        $satisfactionByMonth[$month]["resto_diversite"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["resto_plats"])){
+        $satisfactionByMonth[$month]["resto_plats"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["resto_vins"])){
+        $satisfactionByMonth[$month]["resto_vins"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["resto_prix"])){
+        $satisfactionByMonth[$month]["resto_prix"] = [0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["spa"])){
+        $satisfactionByMonth[$month]["spa"] = [0,0,0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["revenir"])){
+        $satisfactionByMonth[$month]["revenir"] = [0,0,0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["recommander"])){
+        $satisfactionByMonth[$month]["recommander"] = [0,0,0,0];
+    }
+    if(empty($satisfactionByMonth[$month]["prix"])){
+        $satisfactionByMonth[$month]["prix"] = [0,0,0];
+    }
+
+
+
+    foreach($clients as $key=>$client){
+        $stmt->bindValue(":id", $client["id"]);
+        $stmt->execute();
+        $r = $stmt->fetch();
+
+        if($r){
+            $satisfactionByMonthTotal[$month]++;
+            $totalSatisfaction++;
+            /////////////// globale
+            if((int)$r["globalement"] === 1){
+                $satisfactionByMonth[$month]["globalement"][0]++;
+            }
+            if((int)$r["globalement"] === 2){
+                $satisfactionByMonth[$month]["globalement"][1]++;
+            }
+            if((int)$r["chambres"] === 1){
+                $satisfactionByMonth[$month]["chambres"][0]++;
+            }
+            if((int)$r["chambres"] === 2){
+                $satisfactionByMonth[$month]["chambres"][1]++;
+            }
+            if((int)$r["restauration"] === 1){
+                $satisfactionByMonth[$month]["restauration"][0]++;
+            }
+            if((int)$r["restauration"] === 2){
+                $satisfactionByMonth[$month]["restauration"][1]++;
+            }
+            if((int)$r["bar"] === 1){
+                $satisfactionByMonth[$month]["bar"][0]++;
+            }
+            if((int)$r["bar"] === 2){
+                $satisfactionByMonth[$month]["bar"][1]++;
+            }
+            if((int)$r["accueil"] === 1){
+                $satisfactionByMonth[$month]["accueil"][0]++;
+            }
+            if((int)$r["accueil"] === 2){
+                $satisfactionByMonth[$month]["accueil"][1]++;
+            }
+            if((int)$r["environnement"] === 1){
+                $satisfactionByMonth[$month]["environnement"][0]++;
+            }
+            if((int)$r["environnement"] === 2){
+                $satisfactionByMonth[$month]["environnement"][1]++;
+            }
+            if((int)$r["rapport"] === 1){
+                $satisfactionByMonth[$month]["rapport"][0]++;
+            }
+            if((int)$r["rapport"] === 2){
+                $satisfactionByMonth[$month]["rapport"][1]++;
+            }
+
+            //////////// resto
+            if((int)$r["resto_amabilite"] === 1){
+                $satisfactionByMonth[$month]["resto_amabilite"][0]++;
+            }
+            if((int)$r["resto_amabilite"] === 2){
+                $satisfactionByMonth[$month]["resto_amabilite"][1]++;
+            }
+            if((int)$r["resto_service"] === 1){
+                $satisfactionByMonth[$month]["resto_service"][0]++;
+            }
+            if((int)$r["resto_service"] === 2){
+                $satisfactionByMonth[$month]["resto_service"][1]++;
+            }
+            if((int)$r["resto_diversite"] === 1){
+                $satisfactionByMonth[$month]["resto_diversite"][0]++;
+            }
+            if((int)$r["resto_diversite"] === 2){
+                $satisfactionByMonth[$month]["resto_diversite"][1]++;
+            }
+            if((int)$r["resto_plats"] === 1){
+                $satisfactionByMonth[$month]["resto_plats"][0]++;
+            }
+            if((int)$r["resto_plats"] === 2){
+                $satisfactionByMonth[$month]["resto_plats"][1]++;
+            }
+            if((int)$r["resto_vins"] === 1){
+                $satisfactionByMonth[$month]["resto_vins"][0]++;
+            }
+            if((int)$r["resto_vins"] === 2){
+                $satisfactionByMonth[$month]["resto_vins"][1]++;
+            }
+            if((int)$r["resto_prix"] === 1){
+                $satisfactionByMonth[$month]["resto_prix"][0]++;
+            }
+            if((int)$r["resto_prix"] === 2){
+                $satisfactionByMonth[$month]["resto_prix"][1]++;
+            }
+
+
+            ///// perception prix
+            $satisfactionByMonth[$month]["prix"][(int)$r["prix"]-1]++;
+
+            ////// spa
+            $satisfactionByMonth[$month]["spa"][(int)$r["spa"]-1]++;
+
+            //// revenir
+            $satisfactionByMonth[$month]["revenir"][(int)$r["revenir"]-1]++;
+
+            ///// recommander
+            $satisfactionByMonth[$month]["recommander"][(int)$r["recommander"]-1]++;
+
+
+
+
+
+
+        }
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 $workbook = new PHPExcel();
 PHPExcel_Settings::setLocale("fr_FR");
 $workbook->getProperties()->setTitle("Les Jardins de Beauval");
@@ -551,10 +749,15 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 
 //TODO descriptif
 //TODO total
-$startRow = $endRow + 6;
+$startRow = $endRow + 7;
 $endRow = $startRow;
 $startCol = 1;
 $endCol = $startCol;
+
+$activeSheet->getStyle("B".($startRow-4))->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-4, "Filtre: Région Parisienne, Cumul depuis le début de l'année.");
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Merci d'indiquer votre date d'arrivée à l'hôtel (saisir le mois ci-dessous)");
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "Comment avez-vous connu l'Hôtel Les Jardins de Beauval ? Etait-ce par...");
 
 foreach ($monthes as $k => $v) {
     $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
@@ -605,10 +808,15 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 
 //TODO descriptif
 //TODO total
-$startRow = $endRow + 6;
+$startRow = $endRow + 7;
 $endRow = $startRow;
 $startCol = 1;
 $endCol = $startCol;
+
+$activeSheet->getStyle("B".($startRow-4))->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-4, "Filtre: Région Centre, Cumul depuis le début de l'année.");
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Merci d'indiquer votre date d'arrivée à l'hôtel (saisir le mois ci-dessous)");
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "Comment avez-vous connu l'Hôtel Les Jardins de Beauval ? Etait-ce par...");
 
 foreach ($monthes as $k => $v) {
     $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
@@ -658,13 +866,18 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// connaissance region autres
-//TODO descriptif
+
 //TODO total
 
-$startRow = $endRow + 6;
+$startRow = $endRow + 7;
 $endRow = $startRow;
 $startCol = 1;
 $endCol = $startCol;
+
+$activeSheet->getStyle("B".($startRow-4))->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-4, "Filtre: Autres départements, Cumul depuis le début de l'année.");
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Merci d'indiquer votre date d'arrivée à l'hôtel (saisir le mois ci-dessous)");
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "Comment avez-vous connu l'Hôtel Les Jardins de Beauval ? Etait-ce par...");
 
 foreach ($monthes as $k => $v) {
     $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
@@ -716,6 +929,17 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 //tres satisfaits
 
 // satisfaits + tres satisfaits
+
+$startRow = $endRow + 6;
+$endRow = $startRow;
+$startCol = 1;
+$endCol = $startCol;
+
+$activeSheet->getStyle("B".($startRow-3))->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Filtre: Cumul depuis le début de l'année.");
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "% de Très satisfaits + Satisfaits");
+
+
 
 
 
