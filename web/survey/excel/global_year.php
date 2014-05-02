@@ -95,6 +95,7 @@ for ($i = $monthStart; $i < $monthEnd + 1; $i++) {
         $count = count($r);
         $effectifsByMonth[$datas_mois[$i - 1]] = $count;
         $effectifTotal += $count;
+
     } else {
         $clientsByMonth[$datas_mois[$i - 1]] = [];
         $effectifsByMonth[$datas_mois[$i - 1]] = 0;
@@ -148,11 +149,15 @@ $connaissanceRegionParisByMonthByType = [];
 $connaissanceRegionParisByMonthTotal = [];
 $connaissanceRegionAutresByMonthByType = [];
 $connaissanceRegionAutresByMonthTotal = [];
-
 $connaissanceRegionParisByDepsByType = [];
 $connaissanceRegionParisByDepsTotal = [];
+$clientsByDeptsTotal = [];
+foreach($departements as $num=>$name){
+    $clientsByDeptsTotal[$num] = 0;
+}
 foreach ($clientsByMonth as $month => $clients) {
     $monthes[] = $month;
+
 
     $connaissanceByMonthByType[$month] = getEmptyConnaissanceArr();
 
@@ -193,6 +198,7 @@ foreach ($clientsByMonth as $month => $clients) {
 
 
     foreach ($clients as $key => $client) {
+        $clientsByDeptsTotal[$client["departement_num"]]++;
         //// connaissance de d l'hôtel global/mois
         $stmt->bindValue(":id", $client["id"]);
         $stmt->execute();
@@ -544,7 +550,7 @@ $workbook->getProperties()->setTitle("Les Jardins de Beauval");
 $columnNames = range("A", "Z");
 $activeSheet = $workbook->getActiveSheet();
 $activeSheet->setTitle("année " . $annee);
-$activeSheet->getColumnDimension("B")->setAutoSize(true);
+$activeSheet->getColumnDimension("B")->setWidth(90);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -727,9 +733,6 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// repartition par departement
-
-//TODO total
-
 $startCol = 1;
 $startRow = $endRow + 7;
 
@@ -756,8 +759,14 @@ foreach ($numAllDeptsByMonthPercent as $dep => $mois) {
         $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $monthCounter, $endRow, $numAllDeptsByMonthPercent[$dep][$k]);
         $monthCounter++;
     }
-
     $endRow++;
+}
+
+$row = 0;
+foreach($departements as $num=>$name){
+    $result = round(($clientsByDeptsTotal[$num] / $effectifTotal) * 100, 1);
+    $activeSheet->setCellValueByColumnAndRow($endCol, $startRow+$row, $result . "%");
+    $row++;
 }
 $endRow -= 1;
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
