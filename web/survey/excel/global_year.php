@@ -102,7 +102,7 @@ for ($i = $monthStart; $i < $monthEnd + 1; $i++) {
 }
 
 $percentByMonth = array_map(function ($it) use ($effectifTotal) {
-    return round(($it / $effectifTotal) * 100);
+    return round(($it / $effectifTotal) * 100,1);
 }, $effectifsByMonth);
 
 
@@ -273,15 +273,15 @@ foreach ($clientsByMonth as $month => $clients) {
     $all = $connaissanceTotalByMonth[$month];
 
     $connaissancePercentByMonthByType[$month] = array_map(function ($it) use ($all) {
-        return round(($it / $all) * 100);
+        return round(($it / $all) * 100, 1);
     }, $connaissanceByMonthByType[$month]);
 
 }
 
-$connaissanceRegionParisByDepsByTypePrecent = [];
+$connaissanceRegionParisByDepsByTypePercent = [];
 foreach($connaissanceRegionParisByDepsByType as $dep=>$types){
     $total = $connaissanceRegionParisByDepsTotal[$dep];
-    $connaissanceRegionParisByDepsByTypePrecent[$dep] = array_map(function($it) use ($total){
+    $connaissanceRegionParisByDepsByTypePercent[$dep] = array_map(function($it) use ($total){
         return round(($it/$total)*100,1);
     }, $connaissanceRegionParisByDepsByType[$dep]);
 }
@@ -602,24 +602,27 @@ $activeSheet->setCellValueByColumnAndRow(3, $start, "100%");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// connaissance globale
 
-
-//TODO total
-
 $activeSheet->getStyle("B24")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
 $activeSheet->setCellValueByColumnAndRow(1,24, "Filtre: Cumul depuis le début de l'année.");
 $activeSheet->setCellValueByColumnAndRow(1,25, "Merci d'indiquer votre date d'arrivée à l'hôtel (saisir le mois ci-dessous)");
 $activeSheet->setCellValueByColumnAndRow(1,26, "Comment avez-vous connu l'Hôtel Les Jardins de Beauval ? Etait-ce par...");
 
-
+$startCol = 1;
+$endCol = $startCol+1;
 $startRow = 28;
 for ($i = 0; $i < count($monthes); $i++) {
-    $activeSheet->setCellValueByColumnAndRow(2 + $i, $startRow, $monthes[$i]);
+    $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $i, $startRow, $monthes[$i]);
+    $endCol++;
 }
-$activeSheet->setCellValueByColumnAndRow(2 + $i, $startRow, "Total");
-
+$activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
 $startRow += 1;
-$startCol = 1;
 $endRow = $startRow;
+
+foreach($connaissance_types as $key=>$type){
+    $result = round(($connaissanceTotalByType[$key] / $connaissanceTotal) * 100, 1);
+    $activeSheet->setCellValueByColumnAndRow($endCol, $startRow + $key, $result . "%");
+}
+
 foreach ($connaissance_types as $key => $type) {
 
     $activeSheet->setCellValueByColumnAndRow($startCol, $startRow + $key, $type);
@@ -630,7 +633,6 @@ foreach ($connaissance_types as $key => $type) {
     }
     $endRow++;
 }
-
 
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$startCol + 2 + 11] . ($startRow - 1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$startCol + 2 + 11] . ($startRow - 1))->getFill()->getStartColor()->setRGB('ffff00');
@@ -657,10 +659,6 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// repartition par region
-
-
-//TODO total
-
 
 $startRow = $endRow + 7;
 $endRow = $startRow;
@@ -697,6 +695,14 @@ foreach ($numOtherByMonthPercent as $k => $v) {
 foreach ($monthes as $k => $v) {
     $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow + 3, $totalByMonth[$v]);
 }
+
+$activeSheet->setCellValueByColumnAndRow($endCol, $startRow, round(($totalCentre/$totalOriginEntry)*100,1) . "%");
+$activeSheet->setCellValueByColumnAndRow($endCol, $startRow+1, round(($totalParis/$totalOriginEntry)*100,1) . "%");
+$activeSheet->setCellValueByColumnAndRow($endCol, $startRow+2, round(($totalOther/$totalOriginEntry)*100,1) . "%");
+
+
+
+
 $endRow = $startRow + 3;
 
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
@@ -785,7 +791,6 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// connaissance region paris // $connaissanceRegionParisByMonthByType
 
-//TODO descriptif
 //TODO total
 $startRow = $endRow + 7;
 $endRow = $startRow;
@@ -842,7 +847,6 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 /// connaissance region centre
 //
 
-//TODO descriptif
 //TODO total
 $startRow = $endRow + 7;
 $endRow = $startRow;
@@ -1540,9 +1544,10 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
         ],
     ]
 );
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//connaissance zoo region parisienne sur l'année
+// $connaissanceRegionParisByDepsByTypePercent
 $startRow = $endRow + 6;
 $endRow = $startRow;
 $startCol = 1;
@@ -1553,16 +1558,45 @@ $activeSheet->setCellValueByColumnAndRow(1,$startRow-4, "Filtre:Région Parisien
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Merci de noter le numéro de votre département d'habitation (2 chiffres; 100 pour pays étranger) :");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "Comment avez-vous connu l'Hôtel Les Jardins de Beauval ? Etait-ce par...");
 
-foreach ($monthes as $k => $v) {
-    $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
-    $endCol = $startCol + 1 + $k;
+foreach ($connaissance_types as $key => $type) {
+    $activeSheet->setCellValueByColumnAndRow($startCol, $startRow+1 + $key, $type);
+    $endRow++;
 }
-
-$endCol+=1;
+foreach($depsParis as $k=>$v){
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow, $v . " " . $departements[$v]);
+    $activeSheet->getStyle($columnNames[$startCol+1+$k].$startRow)->getAlignment()->setWrapText(true);
+    $endCol = $startCol + 1 + $k;
+    foreach ($connaissance_types as $key => $type) {
+        $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+1+$key, $connaissanceRegionParisByDepsByTypePercent[$v][$key]."%");
+    }
+}
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
-$startRow +=1;
-
-// $connaissanceRegionParisByDepsByTypePrecent
+$endRow+=1;
+$activeSheet->setCellValueByColumnAndRow($startCol, $endRow, "Total");
+foreach($depsParis as $k=>$v){
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k,$endRow, $connaissanceRegionParisByDepsTotal[$v]);
+}
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow) . ":" . $columnNames[$endCol] . ($startRow ))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow) . ":" . $columnNames[$endCol] . ($startRow ))->getFill()->getStartColor()->setRGB('ffff00');
+$activeSheet->getStyle($columnNames[$startCol] . ($startRow ) . ":" . $columnNames[$endCol] . ($endRow))->applyFromArray(
+    [
+        "borders" => [
+            "allborders" => [
+                "style" => PHPExcel_Style_Border::BORDER_THIN,
+                "color" => [
+                    "rgb" => "000000"
+                ]
+            ]
+        ]
+    ]
+);
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow) . ":" . $columnNames[$endCol] . ($endRow))->applyFromArray(
+    [
+        "alignment" => [
+            "horizontal" => PHPExcel_Style_Alignment::HORIZONTAL_CENTER
+        ],
+    ]
+);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// sauvegarde
