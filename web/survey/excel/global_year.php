@@ -152,6 +152,12 @@ $connaissanceRegionAutresByMonthTotal = [];
 $connaissanceRegionParisByDepsByType = [];
 $connaissanceRegionParisByDepsTotal = [];
 $clientsByDeptsTotal = [];
+$connaissanceRegionCentreByTypeTotal= getEmptyConnaissanceArr();
+$connaissanceRegionCentreTotal=0;
+$connaissanceRegionParisByTypeTotal= getEmptyConnaissanceArr();
+$connaissanceRegionParisTotal=0;
+$connaissanceRegionAutresByTypeTotal= getEmptyConnaissanceArr();
+$connaissanceRegionAutresTotal=0;
 foreach($departements as $num=>$name){
     $clientsByDeptsTotal[$num] = 0;
 }
@@ -212,10 +218,19 @@ foreach ($clientsByMonth as $month => $clients) {
                 $connaissanceTotal++;
             }
 
+            /*$connaissanceRegionCentreByTypeTotal= getEmptyConnaissanceArr();
+            $connaissanceRegionCentreTotal=0;
+            $connaissanceRegionParisByTypeTotal= getEmptyConnaissanceArr();
+            $connaissanceRegionParisTotal=0;
+            $connaissanceRegionAutresByTypeTotal= getEmptyConnaissanceArr();
+            $connaissanceRegionAutresTotal=0;*/
+
             if (in_array($client["departement_num"], $depsCentre)) {
                 foreach($r as $l=>$type){
                     $connaissanceRegionCentreByMonthTotal[$month]++;
                     $connaissanceRegionCentreByMonthByType[$month][$type["type_id"] - 1]++;
+                    $connaissanceRegionCentreByTypeTotal[$type["type_id"] - 1]++;
+                    $connaissanceRegionCentreTotal++;
                 }
             } elseif (in_array($client["departement_num"], $depsParis)) {
                 foreach($depsParis as $k=>$dep){
@@ -236,12 +251,16 @@ foreach ($clientsByMonth as $month => $clients) {
                 foreach($r as $l=>$type){
                     $connaissanceRegionParisByMonthTotal[$month]++;
                     $connaissanceRegionParisByMonthByType[$month][$type["type_id"] - 1]++;
+                    $connaissanceRegionParisByTypeTotal[$type["type_id"] - 1]++;
+                    $connaissanceRegionParisTotal++;
                 }
             } else {
                 if ($client["departement_num"] != 100) {
                     foreach($r as $l=>$type){
                         $connaissanceRegionAutresByMonthTotal[$month]++;
                         $connaissanceRegionAutresByMonthByType[$month][$type["type_id"] - 1]++;
+                        $connaissanceRegionAutresByTypeTotal[$type["type_id"] - 1]++;
+                        $connaissanceRegionAutresTotal++;
                     }
                 }
             }
@@ -795,7 +814,6 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// connaissance region paris // $connaissanceRegionParisByMonthByType
 
-//TODO total
 $startRow = $endRow + 7;
 $endRow = $startRow;
 $startCol = 1;
@@ -814,6 +832,10 @@ foreach ($monthes as $k => $v) {
 $endCol+=1;
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
 $startRow +=1;
+foreach($connaissance_types as $key=>$type){
+    $result = round(($connaissanceRegionParisByTypeTotal[$key] / $connaissanceRegionParisTotal) * 100, 1);
+    $activeSheet->setCellValueByColumnAndRow($endCol, $startRow+$key, $result . "%");
+}
 
 foreach($connaissance_types as $key=>$type){
     $activeSheet->setCellValueByColumnAndRow($startCol, $startRow + $key, $type);
@@ -849,9 +871,6 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// connaissance region centre
-//
-
-//TODO total
 $startRow = $endRow + 7;
 $endRow = $startRow;
 $startCol = 1;
@@ -870,7 +889,10 @@ foreach ($monthes as $k => $v) {
 $endCol+=1;
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
 $startRow +=1;
-
+foreach($connaissance_types as $key=>$type){
+    $result = round(($connaissanceRegionCentreByTypeTotal[$key] / $connaissanceRegionCentreTotal) * 100, 1);
+    $activeSheet->setCellValueByColumnAndRow($endCol, $startRow+$key, $result . "%");
+}
 foreach($connaissance_types as $key=>$type){
     $activeSheet->setCellValueByColumnAndRow($startCol, $startRow + $key, $type);
 
@@ -902,15 +924,9 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
     ]
 );
 
-
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// connaissance region autres
-
-//TODO total
-
 $startRow = $endRow + 7;
 $endRow = $startRow;
 $startCol = 1;
@@ -929,7 +945,10 @@ foreach ($monthes as $k => $v) {
 $endCol+=1;
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
 $startRow +=1;
-
+foreach($connaissance_types as $key=>$type){
+    $result = round(($connaissanceRegionAutresByTypeTotal[$key] / $connaissanceRegionAutresTotal) * 100, 1);
+    $activeSheet->setCellValueByColumnAndRow($endCol, $startRow+$key, $result . "%");
+}
 foreach($connaissance_types as $key=>$type){
     $activeSheet->setCellValueByColumnAndRow($startCol, $startRow + $key, $type);
 
@@ -964,6 +983,8 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // satisfaction globale
+
+// TODO total
 
 // satisfaits + tres satisfaits
 $startRow = $endRow + 6;
@@ -1035,6 +1056,7 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
     ]
 );
 
+// TODO total
 //tres satisfaits
 
 $startRow = $endRow + 6;
@@ -1108,6 +1130,7 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // satisfaction hotel
 
+// TODO total
 // satisfaits + tres satisfaits
 $startRow = $endRow + 6;
 $endRow = $startRow;
@@ -1174,6 +1197,9 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
         ],
     ]
 );
+
+// TODO total
+
 //tres satisfaits
 $startRow = $endRow + 6;
 $endRow = $startRow;
@@ -1244,6 +1270,9 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // prix
+
+// TODO total
+
 $startRow = $endRow + 6;
 $endRow = $startRow;
 $startCol = 1;
@@ -1305,6 +1334,8 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // spa
+
+// TODO total
 
 $startRow = $endRow + 6;
 $endRow = $startRow;
@@ -1368,6 +1399,7 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // visite zoo
 
+// TODO total
 $startRow = $endRow + 6;
 $endRow = $startRow;
 $startCol = 1;
@@ -1431,6 +1463,7 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // revenir
 
+// TODO total
 $startRow = $endRow + 6;
 $endRow = $startRow;
 $startCol = 1;
@@ -1491,6 +1524,8 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // recommander
+
+// TODO total
 $startRow = $endRow + 6;
 $endRow = $startRow;
 $startCol = 1;
@@ -1552,6 +1587,8 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // $connaissanceRegionParisByDepsByTypePercent
+
+// TODO total
 $startRow = $endRow + 6;
 $endRow = $startRow;
 $startCol = 1;
@@ -1607,33 +1644,6 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow) . ":" . $column
 
 $excelWriter = new PHPExcel_Writer_Excel2007($workbook);
 $excelWriter->save($savePath . DIRECTORY_SEPARATOR . "evolution_mensuelle_" . $annee . ".xlsx");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
