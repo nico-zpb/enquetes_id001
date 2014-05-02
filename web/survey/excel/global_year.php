@@ -299,6 +299,11 @@ $stmt = $pdo->prepare($sql);
 $satisfactionByMonth = [];
 $satisfactionByMonthTotal = [];
 $totalSatisfaction = 0;
+$satisfactionByMonthPrixTotalEffectif = [];
+$satisfactionByMonthSpaTotalEffectif = [];
+$satisfactionByMonthRevenirTotalEffectif = [];
+$satisfactionByMonthRecommanderTotalEffectif = [];
+
 foreach($clientsByMonth as $month=>$clients){
     if(empty($satisfactionByMonth[$month])){
         $satisfactionByMonth[$month] = [];
@@ -357,6 +362,7 @@ foreach($clientsByMonth as $month=>$clients){
     if(empty($satisfactionByMonth[$month]["prix"])){
         $satisfactionByMonth[$month]["prix"] = [0,0,0];
     }
+
 
 
 
@@ -449,40 +455,44 @@ foreach($clientsByMonth as $month=>$clients){
             if((int)$r["resto_prix"] === 2){
                 $satisfactionByMonth[$month]["resto_prix"][1]++;
             }
-
-
             ///// perception prix
-            $satisfactionByMonth[$month]["prix"][(int)$r["prix"]-1]++;
+            if(empty($satisfactionByMonthPrixTotalEffectif[$month])){
+                $satisfactionByMonthPrixTotalEffectif[$month] = 0;
+            }
+            if($r["prix"] > 0){
+                $satisfactionByMonth[$month]["prix"][(int)$r["prix"]-1]++;
 
+                $satisfactionByMonthPrixTotalEffectif[$month]++;
+            }
             ////// spa
-            $satisfactionByMonth[$month]["spa"][(int)$r["spa"]-1]++;
+            if(empty($satisfactionByMonthSpaTotalEffectif[$month])){
+                $satisfactionByMonthSpaTotalEffectif[$month] = 0;
+            }
+            if($r["spa"] > 0){
+                $satisfactionByMonth[$month]["spa"][(int)$r["spa"]-1]++;
 
+                $satisfactionByMonthSpaTotalEffectif[$month]++;
+            }
             //// revenir
-            $satisfactionByMonth[$month]["revenir"][(int)$r["revenir"]-1]++;
+            if(empty($satisfactionByMonthRevenirTotalEffectif[$month])){
+                $satisfactionByMonthRevenirTotalEffectif[$month] = 0;
+            }
+            if($r["revenir"] > 0){
+                $satisfactionByMonth[$month]["revenir"][(int)$r["revenir"]-1]++;
 
+                $satisfactionByMonthRevenirTotalEffectif[$month]++;
+            }
             ///// recommander
-            $satisfactionByMonth[$month]["recommander"][(int)$r["recommander"]-1]++;
+            if(empty($satisfactionByMonthRecommanderTotalEffectif[$month])){
+                $satisfactionByMonthRecommanderTotalEffectif[$month] = 0;
+            }
 
-
-
-
-
-
+            if($r["recommander"] > 0){
+                $satisfactionByMonth[$month]["recommander"][(int)$r["recommander"]-1]++;
+            }
         }
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1208,8 +1218,64 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // prix
+$startRow = $endRow + 6;
+$endRow = $startRow;
+$startCol = 1;
+$endCol = $startCol;
 
+$activeSheet->getStyle("B".($startRow-4))->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-4, "Filtre: Cumul depuis le début de l'année.");
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Merci d'indiquer votre date d'arrivée à l'hôtel (saisir le mois ci-dessous)");
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "Au regard de la qualité des chambres et de l'environnement de l'hôtel, avez-vous trouvé le prix :");
 
+foreach ($monthes as $k => $v) {
+    $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
+    $endCol = $startCol + 1 + $k;
+}
+
+$endCol+=1;
+$activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
+$startRow +=1;
+
+foreach($datas_perception_prix as $k=>$prix){
+    $activeSheet->setCellValueByColumnAndRow($startCol, $startRow+$k, $prix);
+    $endRow += 1;
+}
+$endRow += 1;
+$activeSheet->setCellValueByColumnAndRow($startCol, $endRow, "Total");
+
+foreach($monthes as $k=>$v){
+    if($satisfactionByMonthPrixTotalEffectif[$v] == 0){
+        continue;
+    }
+    foreach($satisfactionByMonth[$v]["prix"] as $perc=>$num){
+        $result = round(($num / $satisfactionByMonthPrixTotalEffectif[$v]) * 100, 1);
+        $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+$perc, $result."%");
+
+    }
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $endRow, $satisfactionByMonthPrixTotalEffectif[$v]);
+}
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->getStartColor()->setRGB('ffff00');
+$activeSheet->getStyle($columnNames[$startCol] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($endRow))->applyFromArray(
+    [
+        "borders" => [
+            "allborders" => [
+                "style" => PHPExcel_Style_Border::BORDER_THIN,
+                "color" => [
+                    "rgb" => "000000"
+                ]
+            ]
+        ]
+    ]
+);
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($endRow))->applyFromArray(
+    [
+        "alignment" => [
+            "horizontal" => PHPExcel_Style_Alignment::HORIZONTAL_CENTER
+        ],
+    ]
+);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
