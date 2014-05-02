@@ -699,9 +699,7 @@ foreach ($monthes as $k => $v) {
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, round(($totalCentre/$totalOriginEntry)*100,1) . "%");
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow+1, round(($totalParis/$totalOriginEntry)*100,1) . "%");
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow+2, round(($totalOther/$totalOriginEntry)*100,1) . "%");
-
-
-
+$activeSheet->setCellValueByColumnAndRow($endCol, $startRow+3, $totalOriginEntry);
 
 $endRow = $startRow + 3;
 
@@ -730,9 +728,7 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// repartition par departement
 
-
 //TODO total
-
 
 $startCol = 1;
 $startRow = $endRow + 7;
@@ -743,7 +739,6 @@ $activeSheet->getStyle("B".($startRow-4))->getFont()->getColor()->setARGB(PHPExc
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-4, "Filtre: Cumul depuis le début de l'année.");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Merci d'indiquer votre date d'arrivée à l'hôtel (saisir le mois ci-dessous)");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "Merci de noter le numéro de votre département d'habitation (2 chiffres; 100 pour pays étranger) :");
-
 
 foreach ($monthes as $k => $v) {
     $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
