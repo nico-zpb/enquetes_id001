@@ -299,7 +299,7 @@ $stmt = $pdo->prepare($sql);
 $satisfactionByMonth = [];
 $satisfactionByMonthTotal = [];
 $totalSatisfaction = 0;
-foreach($ClientsByMonth as $month=>$clients){
+foreach($clientsByMonth as $month=>$clients){
     if(empty($satisfactionByMonth[$month])){
         $satisfactionByMonth[$month] = [];
     }
@@ -919,17 +919,13 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
     ]
 );
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // satisfaction globale
 
-//tres satisfaits
-
 // satisfaits + tres satisfaits
-
 $startRow = $endRow + 6;
 $endRow = $startRow;
 $startCol = 1;
@@ -939,21 +935,273 @@ $activeSheet->getStyle("B".($startRow-3))->getFont()->getColor()->setARGB(PHPExc
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Filtre: Cumul depuis le début de l'année.");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "% de Très satisfaits + Satisfaits");
 
+foreach ($monthes as $k => $v) {
+    $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
+    $endCol = $startCol + 1 + $k;
+}
+
+$endCol+=1;
+$activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
+$startRow +=1;
+
+foreach($datas_services_bis as $k=>$service){
+    $activeSheet->setCellValueByColumnAndRow($startCol, $startRow+$k, $service);
+}
+
+foreach($monthes as $k => $v){
+    $result = round( ( ( $satisfactionByMonth[$v]["globalement"][0] + $satisfactionByMonth[$v]["globalement"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow, $result."%");
+
+    $result = round( ( ( $satisfactionByMonth[$v]["chambres"][0] + $satisfactionByMonth[$v]["chambres"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+1, $result."%");
+
+    $result = round( ( ( $satisfactionByMonth[$v]["restauration"][0] + $satisfactionByMonth[$v]["restauration"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+2, $result."%");
+
+    $result = round( ( ( $satisfactionByMonth[$v]["bar"][0] + $satisfactionByMonth[$v]["bar"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+3, $result."%");
+
+    $result = round( ( ( $satisfactionByMonth[$v]["accueil"][0] + $satisfactionByMonth[$v]["accueil"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+4, $result."%");
+
+    $result = round( ( ( $satisfactionByMonth[$v]["environnement"][0] + $satisfactionByMonth[$v]["environnement"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+5, $result."%");
+
+    $result = round( ( ( $satisfactionByMonth[$v]["rapport"][0] + $satisfactionByMonth[$v]["rapport"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+6, $result."%");
+
+}
+
+$endRow +=7;
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->getStartColor()->setRGB('ffff00');
+$activeSheet->getStyle($columnNames[$startCol] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($endRow))->applyFromArray(
+    [
+        "borders" => [
+            "allborders" => [
+                "style" => PHPExcel_Style_Border::BORDER_THIN,
+                "color" => [
+                    "rgb" => "000000"
+                ]
+            ]
+        ]
+    ]
+);
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($endRow))->applyFromArray(
+    [
+        "alignment" => [
+            "horizontal" => PHPExcel_Style_Alignment::HORIZONTAL_CENTER
+        ],
+    ]
+);
+
+//tres satisfaits
+
+$startRow = $endRow + 6;
+$endRow = $startRow;
+$startCol = 1;
+$endCol = $startCol;
+
+$activeSheet->getStyle("B".($startRow-3))->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Filtre: Cumul depuis le début de l'année.");
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "% de Très satisfaits");
+
+foreach ($monthes as $k => $v) {
+    $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
+    $endCol = $startCol + 1 + $k;
+}
+
+$endCol+=1;
+$activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
+$startRow +=1;
 
 
+foreach($datas_services_bis as $k=>$service){
+    $activeSheet->setCellValueByColumnAndRow($startCol, $startRow+$k, $service);
+}
+foreach($monthes as $k => $v){
+    $result = round( ( $satisfactionByMonth[$v]["globalement"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow, $result."%");
 
+    $result = round( ( $satisfactionByMonth[$v]["chambres"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+1, $result."%");
 
+    $result = round( ( $satisfactionByMonth[$v]["restauration"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+2, $result."%");
 
+    $result = round( ( $satisfactionByMonth[$v]["bar"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+3, $result."%");
+
+    $result = round( ( $satisfactionByMonth[$v]["accueil"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+4, $result."%");
+
+    $result = round( ( $satisfactionByMonth[$v]["environnement"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+5, $result."%");
+
+    $result = round( ( $satisfactionByMonth[$v]["rapport"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+6, $result."%");
+
+}
+$endRow +=7;
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->getStartColor()->setRGB('ffff00');
+$activeSheet->getStyle($columnNames[$startCol] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($endRow))->applyFromArray(
+    [
+        "borders" => [
+            "allborders" => [
+                "style" => PHPExcel_Style_Border::BORDER_THIN,
+                "color" => [
+                    "rgb" => "000000"
+                ]
+            ]
+        ]
+    ]
+);
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($endRow))->applyFromArray(
+    [
+        "alignment" => [
+            "horizontal" => PHPExcel_Style_Alignment::HORIZONTAL_CENTER
+        ],
+    ]
+);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // satisfaction hotel
 
-//tres satisfaits
-
 // satisfaits + tres satisfaits
+$startRow = $endRow + 6;
+$endRow = $startRow;
+$startCol = 1;
+$endCol = $startCol;
 
+$activeSheet->getStyle("B".($startRow-3))->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Filtre: Cumul depuis le début de l'année.");
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "% de Très satisfaits + Satisfaits");
+
+foreach ($monthes as $k => $v) {
+    $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
+    $endCol = $startCol + 1 + $k;
+}
+
+$endCol+=1;
+$activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
+$startRow +=1;
+
+foreach($datas_resto as $k=>$service){
+    $activeSheet->setCellValueByColumnAndRow($startCol, $startRow+$k, $service);
+}
+
+foreach($monthes as $k => $v){
+    $result = round( ( ( $satisfactionByMonth[$v]["resto_amabilite"][0] + $satisfactionByMonth[$v]["resto_amabilite"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow, $result."%");
+
+    $result = round( ( ( $satisfactionByMonth[$v]["resto_service"][0] + $satisfactionByMonth[$v]["resto_service"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+1, $result."%");
+
+    $result = round( ( ( $satisfactionByMonth[$v]["resto_diversite"][0] + $satisfactionByMonth[$v]["resto_diversite"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+2, $result."%");
+
+    $result = round( ( ( $satisfactionByMonth[$v]["resto_plats"][0] + $satisfactionByMonth[$v]["resto_plats"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+3, $result."%");
+
+    $result = round( ( ( $satisfactionByMonth[$v]["resto_vins"][0] + $satisfactionByMonth[$v]["resto_vins"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+4, $result."%");
+
+    $result = round( ( ( $satisfactionByMonth[$v]["resto_prix"][0] + $satisfactionByMonth[$v]["resto_prix"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+5, $result."%");
+
+}
+
+$endRow +=6;
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->getStartColor()->setRGB('ffff00');
+$activeSheet->getStyle($columnNames[$startCol] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($endRow))->applyFromArray(
+    [
+        "borders" => [
+            "allborders" => [
+                "style" => PHPExcel_Style_Border::BORDER_THIN,
+                "color" => [
+                    "rgb" => "000000"
+                ]
+            ]
+        ]
+    ]
+);
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($endRow))->applyFromArray(
+    [
+        "alignment" => [
+            "horizontal" => PHPExcel_Style_Alignment::HORIZONTAL_CENTER
+        ],
+    ]
+);
+//tres satisfaits
+$startRow = $endRow + 6;
+$endRow = $startRow;
+$startCol = 1;
+$endCol = $startCol;
+
+$activeSheet->getStyle("B".($startRow-3))->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Filtre: Cumul depuis le début de l'année.");
+$activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "% de Très satisfaits");
+
+foreach ($monthes as $k => $v) {
+    $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
+    $endCol = $startCol + 1 + $k;
+}
+
+$endCol+=1;
+$activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
+$startRow +=1;
+
+foreach($datas_resto as $k=>$service){
+    $activeSheet->setCellValueByColumnAndRow($startCol, $startRow+$k, $service);
+}
+
+foreach($monthes as $k => $v){
+    $result = round( ( $satisfactionByMonth[$v]["resto_amabilite"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow, $result."%");
+
+    $result = round( ( $satisfactionByMonth[$v]["resto_service"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+1, $result."%");
+
+    $result = round( (  $satisfactionByMonth[$v]["resto_diversite"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+2, $result."%");
+
+    $result = round( (  $satisfactionByMonth[$v]["resto_plats"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+3, $result."%");
+
+    $result = round( (  $satisfactionByMonth[$v]["resto_vins"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+4, $result."%");
+
+    $result = round( (  $satisfactionByMonth[$v]["resto_prix"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+5, $result."%");
+
+}
+
+$endRow +=6;
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->getStartColor()->setRGB('ffff00');
+$activeSheet->getStyle($columnNames[$startCol] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($endRow))->applyFromArray(
+    [
+        "borders" => [
+            "allborders" => [
+                "style" => PHPExcel_Style_Border::BORDER_THIN,
+                "color" => [
+                    "rgb" => "000000"
+                ]
+            ]
+        ]
+    ]
+);
+$activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($endRow))->applyFromArray(
+    [
+        "alignment" => [
+            "horizontal" => PHPExcel_Style_Alignment::HORIZONTAL_CENTER
+        ],
+    ]
+);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
