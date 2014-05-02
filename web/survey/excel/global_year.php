@@ -19,30 +19,23 @@ __      /     ______         \
 */
 
 session_start();
-
 include_once "../../../datas/all.php";
 include_once "../../../php/functions.php";
 include_once LIBS . "/PHPExcel.php";
-
 if (!isConnected()) {
     header("Location: /index.php");
     die();
 }
-
 if (!isPost() || !postExists("form_excel_global")) {
     header("Location: /index.php");
     die();
 }
-
 $savePath = realpath(dirname(__DIR__)) . DIRECTORY_SEPARATOR . "downloads";
-
 $form = getPost("form_excel_global");
 $annee = (int)$form["annee"];
 $monthStart = 1;
-
 $dateForTodayMonth = new DateTime();
 $monthEnd = $dateForTodayMonth->format("n");
-
 if ($debug) {
     $monthEnd = 12;
     if(file_exists($savePath . DIRECTORY_SEPARATOR . "evolution_mensuelle_" . $annee . ".xlsx")){
@@ -51,7 +44,6 @@ if ($debug) {
         }
     }
 }
-
 include_once "../../../php/enquete-connexion.php";
 // verif enregistrements pour la periode.
 $tmpDateStart = DateTime::createFromFormat("j-n-Y", "1-1-" . $annee);
@@ -71,24 +63,17 @@ if (!$numEntry) {
     header("Location: /survey/to-excel.php");
     die();
 }
-
 // effectifs par mois en nombre et pourcentage
 // effectif total de la periode
-
 $sql = "SELECT * FROM clients WHERE arrive_mois=:mois AND arrive_annee=:annee";
-
 $stmt = $pdo->prepare($sql);
 $stmt->bindValue(":annee", (int)$annee);
 $clientsByMonth = [];
 $effectifsByMonth = [];
 $effectifTotal = 0;
-
 for ($i = $monthStart; $i < $monthEnd + 1; $i++) {
-
-
     $stmt->bindValue(":mois", $i);
     $stmt->execute();
-
     $r = $stmt->fetchAll();
     if ($r) {
         $clientsByMonth[$datas_mois[$i - 1]] = $r;
@@ -101,18 +86,14 @@ for ($i = $monthStart; $i < $monthEnd + 1; $i++) {
         $effectifsByMonth[$datas_mois[$i - 1]] = 0;
     }
 }
-
 $percentByMonth = array_map(function ($it) use ($effectifTotal) {
     return round(($it / $effectifTotal) * 100,1);
 }, $effectifsByMonth);
-
-
 //// connaissance de d l'hôtel global/mois
 function getEmptyConnaissanceArr()
 {
     return [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 }
-
 $sql = "SELECT type_id FROM client_connaissance_type WHERE client_id=:id";
 $stmt = $pdo->prepare($sql);
 $connaissanceByMonthByType = [];
@@ -121,7 +102,6 @@ $connaissanceTotal = 0;
 $connaissanceTotalByMonth = [];
 $connaissancePercentByMonthByType = [];
 $monthes = [];
-
 //// repartition par region
 $numCentreByMonth = [];
 $numParisByMonth = [];
@@ -132,7 +112,6 @@ $totalParis = 0;
 $totalOther = 0;
 $totalEtranger = 0;
 $totalOriginEntry = 0;
-
 /// par departements
 $clientsByDeptsByMonth = $departements;
 foreach ($clientsByDeptsByMonth as $num => $name) {
@@ -141,7 +120,6 @@ foreach ($clientsByDeptsByMonth as $num => $name) {
         $clientsByDeptsByMonth[$num][$mois] = 0;
     }
 }
-
 ///////// connaissance par zone
 $connaissanceRegionCentreByMonthByType = [];
 $connaissanceRegionCentreByMonthTotal = [];
@@ -163,10 +141,7 @@ foreach($departements as $num=>$name){
 }
 foreach ($clientsByMonth as $month => $clients) {
     $monthes[] = $month;
-
-
     $connaissanceByMonthByType[$month] = getEmptyConnaissanceArr();
-
     if (empty($numCentreByMonth[$month])) {
         $numCentreByMonth[$month] = 0;
     }
@@ -182,7 +157,6 @@ foreach ($clientsByMonth as $month => $clients) {
     if (empty($totalByMonth[$month])) {
         $totalByMonth[$month] = 0;
     }
-
     if(empty($connaissanceRegionCentreByMonth[$month])){
         $connaissanceRegionCentreByMonthByType[$month] = getEmptyConnaissanceArr();
     }
@@ -201,15 +175,12 @@ foreach ($clientsByMonth as $month => $clients) {
     if(empty($connaissanceRegionAutresByMonthTotal[$month])){
         $connaissanceRegionAutresByMonthTotal[$month] = 0;
     }
-
-
     foreach ($clients as $key => $client) {
         $clientsByDeptsTotal[$client["departement_num"]]++;
         //// connaissance de d l'hôtel global/mois
         $stmt->bindValue(":id", $client["id"]);
         $stmt->execute();
         $r = $stmt->fetchAll();
-
         //// connaissance de d l'hôtel par zone/mois
         if ($r) {
             foreach ($r as $k => $v) {
@@ -217,14 +188,6 @@ foreach ($clientsByMonth as $month => $clients) {
                 $connaissanceTotalByType[$v["type_id"] - 1]++;
                 $connaissanceTotal++;
             }
-
-            /*$connaissanceRegionCentreByTypeTotal= getEmptyConnaissanceArr();
-            $connaissanceRegionCentreTotal=0;
-            $connaissanceRegionParisByTypeTotal= getEmptyConnaissanceArr();
-            $connaissanceRegionParisTotal=0;
-            $connaissanceRegionAutresByTypeTotal= getEmptyConnaissanceArr();
-            $connaissanceRegionAutresTotal=0;*/
-
             if (in_array($client["departement_num"], $depsCentre)) {
                 foreach($r as $l=>$type){
                     $connaissanceRegionCentreByMonthTotal[$month]++;
@@ -282,27 +245,20 @@ foreach ($clientsByMonth as $month => $clients) {
                 $totalEtranger++;
             }
         }
-
         $totalByMonth[$month]++;
-
         /// par departement
         $clientsByDeptsByMonth[$client["departement_num"]][$month]++;
     }
-
     //// connaissance de d l'hôtel global/mois
     $connaissanceTotalByMonth[$month] = 0;
     for ($i = 0; $i < count($connaissanceTotalByType); $i++) {
         $connaissanceTotalByMonth[$month] += $connaissanceByMonthByType[$month][$i];
     }
-
     $all = $connaissanceTotalByMonth[$month];
-
     $connaissancePercentByMonthByType[$month] = array_map(function ($it) use ($all) {
         return round(($it / $all) * 100, 1);
     }, $connaissanceByMonthByType[$month]);
-
 }
-
 $connaissanceRegionParisByDepsByTypePercent = [];
 foreach($connaissanceRegionParisByDepsByType as $dep=>$types){
     $total = $connaissanceRegionParisByDepsTotal[$dep];
@@ -310,8 +266,6 @@ foreach($connaissanceRegionParisByDepsByType as $dep=>$types){
         return round(($it/$total)*100,1);
     }, $connaissanceRegionParisByDepsByType[$dep]);
 }
-
-
 $numCentreByMonthPercent = array_map(function ($it, $to) {
     return round(($it / $to) * 100, 1);
 }, $numCentreByMonth, $totalByMonth);
@@ -334,10 +288,8 @@ foreach ($clientsByDeptsByMonth as $k => $v) {
         $numAllDeptsByMonthPercent[$k][$m] = round(($clientsByDeptsByMonth[$k][$m] / $totalByMonth[$m]) * 100, 1) . "%";
     }
 }
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 $sql = "SELECT * FROM satisfaction WHERE client_id=:id";
 $stmt = $pdo->prepare($sql);
 $satisfactionByMonth = [];
@@ -347,7 +299,6 @@ $satisfactionByMonthPrixTotalEffectif = [];
 $satisfactionByMonthSpaTotalEffectif = [];
 $satisfactionByMonthRevenirTotalEffectif = [];
 $satisfactionByMonthRecommanderTotalEffectif = [];
-
 foreach($clientsByMonth as $month=>$clients){
     if(empty($satisfactionByMonth[$month])){
         $satisfactionByMonth[$month] = [];
@@ -406,12 +357,10 @@ foreach($clientsByMonth as $month=>$clients){
     if(empty($satisfactionByMonth[$month]["prix"])){
         $satisfactionByMonth[$month]["prix"] = [0,0,0];
     }
-
     foreach($clients as $key=>$client){
         $stmt->bindValue(":id", $client["id"]);
         $stmt->execute();
         $r = $stmt->fetch();
-
         if($r){
             $satisfactionByMonthTotal[$month]++;
             $totalSatisfaction++;
@@ -458,7 +407,6 @@ foreach($clientsByMonth as $month=>$clients){
             if((int)$r["rapport"] === 2){
                 $satisfactionByMonth[$month]["rapport"][1]++;
             }
-
             //////////// resto
             if((int)$r["resto_amabilite"] === 1){
                 $satisfactionByMonth[$month]["resto_amabilite"][0]++;
@@ -534,7 +482,6 @@ foreach($clientsByMonth as $month=>$clients){
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //visite zoo
-
 $sql = "SELECT visite_zoo FROM sejours WHERE client_id=:id";
 $stmt = $pdo->prepare($sql);
 $visiteZooByMonth = [];
@@ -559,8 +506,6 @@ foreach($clientsByMonth as $month=>$clients){
         }
     }
 }
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 $workbook = new PHPExcel();
@@ -570,19 +515,14 @@ $columnNames = range("A", "Z");
 $activeSheet = $workbook->getActiveSheet();
 $activeSheet->setTitle("année " . $annee);
 $activeSheet->getColumnDimension("B")->setWidth(90);
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 $activeSheet->getStyle('B2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
 $activeSheet->getStyle('B2')->getFill()->getStartColor()->setRGB('ffff00');
 $activeSheet->setCellValueByColumnAndRow(1,2, "Résultats année " .$annee);
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// tableau des effectifs
-
-
 $activeSheet->getStyle('C7:D7')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
 $activeSheet->getStyle('C7:D7')->getFill()->getStartColor()->setRGB('ffff00');
 $activeSheet->getStyle('B7:D20')->applyFromArray(
@@ -604,11 +544,9 @@ $activeSheet->getStyle('C7:D20')->applyFromArray(
         ],
     ]
 );
-
 $activeSheet->getStyle("B4")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
 $activeSheet->setCellValueByColumnAndRow(1,4, "Filtre: Cumul depuis le début de l'année.");
 $activeSheet->setCellValueByColumnAndRow(1,5, "Merci d'indiquer votre date d'arrivée à l'hôtel (saisir le mois ci-dessous)");
-
 $activeSheet->setCellValue('B7', 'Mois');
 $activeSheet->setCellValue('C7', 'Effectifs');
 $activeSheet->setCellValue('D7', '%');
@@ -622,16 +560,13 @@ foreach ($effectifsByMonth as $month => $effectif) {
 $activeSheet->setCellValueByColumnAndRow(1, $start, "Total");
 $activeSheet->setCellValueByColumnAndRow(2, $start, $effectifTotal);
 $activeSheet->setCellValueByColumnAndRow(3, $start, "100%");
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// connaissance globale
-
 $activeSheet->getStyle("B24")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
 $activeSheet->setCellValueByColumnAndRow(1,24, "Filtre: Cumul depuis le début de l'année.");
 $activeSheet->setCellValueByColumnAndRow(1,25, "Merci d'indiquer votre date d'arrivée à l'hôtel (saisir le mois ci-dessous)");
 $activeSheet->setCellValueByColumnAndRow(1,26, "Comment avez-vous connu l'Hôtel Les Jardins de Beauval ? Etait-ce par...");
-
 $startCol = 1;
 $endCol = $startCol+1;
 $startRow = 28;
@@ -642,12 +577,10 @@ for ($i = 0; $i < count($monthes); $i++) {
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
 $startRow += 1;
 $endRow = $startRow;
-
 foreach($connaissance_types as $key=>$type){
     $result = round(($connaissanceTotalByType[$key] / $connaissanceTotal) * 100, 1);
     $activeSheet->setCellValueByColumnAndRow($endCol, $startRow + $key, $result . "%");
 }
-
 foreach ($connaissance_types as $key => $type) {
 
     $activeSheet->setCellValueByColumnAndRow($startCol, $startRow + $key, $type);
@@ -658,7 +591,6 @@ foreach ($connaissance_types as $key => $type) {
     }
     $endRow++;
 }
-
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$startCol + 2 + 11] . ($startRow - 1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$startCol + 2 + 11] . ($startRow - 1))->getFill()->getStartColor()->setRGB('ffff00');
 $activeSheet->getStyle($columnNames[$startCol] . ($startRow - 1) . ":" . $columnNames[$startCol + 2 + 11] . ($endRow - 1))->applyFromArray(
@@ -680,34 +612,26 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
         ],
     ]
 );
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// repartition par region
-
 $startRow = $endRow + 7;
 $endRow = $startRow;
 $endCol = $startCol;
-
 $activeSheet->getStyle("B".($startRow-4))->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-4, "Filtre: Cumul depuis le début de l'année.");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Merci d'indiquer votre date d'arrivée à l'hôtel (saisir le mois ci-dessous)");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "Merci de noter le numéro de votre département d'habitation (2 chiffres; 100 pour pays étranger) :");
-
-
 foreach ($monthes as $k => $v) {
     $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
     $endCol = $startCol + 1 + $k + 1;
 }
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
 $startRow += 1;
-
 $activeSheet->setCellValueByColumnAndRow(1, $startRow, "Région Centre");
 $activeSheet->setCellValueByColumnAndRow(1, $startRow + 1, "Région Parisienne");
 $activeSheet->setCellValueByColumnAndRow(1, $startRow + 2, "Autres Départements");
 $activeSheet->setCellValueByColumnAndRow(1, $startRow + 3, "Total");
-
-
 foreach ($numCentreByMonthPercent as $k => $v) {
     $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, "$v%");
 }
@@ -720,14 +644,11 @@ foreach ($numOtherByMonthPercent as $k => $v) {
 foreach ($monthes as $k => $v) {
     $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow + 3, $totalByMonth[$v]);
 }
-
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, round(($totalCentre/$totalOriginEntry)*100,1) . "%");
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow+1, round(($totalParis/$totalOriginEntry)*100,1) . "%");
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow+2, round(($totalOther/$totalOriginEntry)*100,1) . "%");
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow+3, $totalOriginEntry);
-
 $endRow = $startRow + 3;
-
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->getStartColor()->setRGB('ffff00');
 $activeSheet->getStyle($columnNames[$startCol] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($endRow))->applyFromArray(
@@ -754,14 +675,11 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 //// repartition par departement
 $startCol = 1;
 $startRow = $endRow + 7;
-
 $endCol = $startCol;
-
 $activeSheet->getStyle("B".($startRow-4))->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-4, "Filtre: Cumul depuis le début de l'année.");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Merci d'indiquer votre date d'arrivée à l'hôtel (saisir le mois ci-dessous)");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "Merci de noter le numéro de votre département d'habitation (2 chiffres; 100 pour pays étranger) :");
-
 foreach ($monthes as $k => $v) {
     $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
     $endCol = $startCol + 1 + $k;
@@ -780,7 +698,6 @@ foreach ($numAllDeptsByMonthPercent as $dep => $mois) {
     }
     $endRow++;
 }
-
 $row = 0;
 foreach($departements as $num=>$name){
     $result = round(($clientsByDeptsTotal[$num] / $effectifTotal) * 100, 1);
@@ -809,26 +726,21 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
         ],
     ]
 );
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// connaissance region paris // $connaissanceRegionParisByMonthByType
-
 $startRow = $endRow + 7;
 $endRow = $startRow;
 $startCol = 1;
 $endCol = $startCol;
-
 $activeSheet->getStyle("B".($startRow-4))->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-4, "Filtre: Région Parisienne, Cumul depuis le début de l'année.");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Merci d'indiquer votre date d'arrivée à l'hôtel (saisir le mois ci-dessous)");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "Comment avez-vous connu l'Hôtel Les Jardins de Beauval ? Etait-ce par...");
-
 foreach ($monthes as $k => $v) {
     $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
     $endCol = $startCol + 1 + $k;
 }
-
 $endCol+=1;
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
 $startRow +=1;
@@ -836,13 +748,11 @@ foreach($connaissance_types as $key=>$type){
     $result = round(($connaissanceRegionParisByTypeTotal[$key] / $connaissanceRegionParisTotal) * 100, 1);
     $activeSheet->setCellValueByColumnAndRow($endCol, $startRow+$key, $result . "%");
 }
-
 foreach($connaissance_types as $key=>$type){
     $activeSheet->setCellValueByColumnAndRow($startCol, $startRow + $key, $type);
 
     foreach ($monthes as $k => $v) {
         $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow + $key, round(($connaissanceRegionParisByMonthByType[$v][$key]/$connaissanceRegionParisByMonthTotal[$v])*100,1)."%" );
-
     }
     $endRow++;
 }
@@ -867,7 +777,6 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
         ],
     ]
 );
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// connaissance region centre
@@ -875,17 +784,14 @@ $startRow = $endRow + 7;
 $endRow = $startRow;
 $startCol = 1;
 $endCol = $startCol;
-
 $activeSheet->getStyle("B".($startRow-4))->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-4, "Filtre: Région Centre, Cumul depuis le début de l'année.");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Merci d'indiquer votre date d'arrivée à l'hôtel (saisir le mois ci-dessous)");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "Comment avez-vous connu l'Hôtel Les Jardins de Beauval ? Etait-ce par...");
-
 foreach ($monthes as $k => $v) {
     $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
     $endCol = $startCol + 1 + $k;
 }
-
 $endCol+=1;
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
 $startRow +=1;
@@ -923,7 +829,6 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
         ],
     ]
 );
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// connaissance region autres
@@ -931,17 +836,14 @@ $startRow = $endRow + 7;
 $endRow = $startRow;
 $startCol = 1;
 $endCol = $startCol;
-
 $activeSheet->getStyle("B".($startRow-4))->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-4, "Filtre: Autres départements, Cumul depuis le début de l'année.");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Merci d'indiquer votre date d'arrivée à l'hôtel (saisir le mois ci-dessous)");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "Comment avez-vous connu l'Hôtel Les Jardins de Beauval ? Etait-ce par...");
-
 foreach ($monthes as $k => $v) {
     $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
     $endCol = $startCol + 1 + $k;
 }
-
 $endCol+=1;
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
 $startRow +=1;
@@ -951,10 +853,8 @@ foreach($connaissance_types as $key=>$type){
 }
 foreach($connaissance_types as $key=>$type){
     $activeSheet->setCellValueByColumnAndRow($startCol, $startRow + $key, $type);
-
     foreach ($monthes as $k => $v) {
         $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow + $key, round(($connaissanceRegionAutresByMonthByType[$v][$key]/$connaissanceRegionAutresByMonthTotal[$v])*100,1)."%" );
-
     }
     $endRow++;
 }
@@ -979,38 +879,30 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
         ],
     ]
 );
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // satisfaction globale
-
 // satisfaits + tres satisfaits
 $startRow = $endRow + 6;
 $endRow = $startRow;
 $startCol = 1;
 $endCol = $startCol;
-
 $activeSheet->getStyle("B".($startRow-3))->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Filtre: Cumul depuis le début de l'année.");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "% de Très satisfaits + Satisfaits");
-
 foreach ($monthes as $k => $v) {
     $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
     $endCol = $startCol + 1 + $k;
 }
-
 $endCol+=1;
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
 $startRow +=1;
-
 foreach($datas_services_bis as $k=>$service){
     $activeSheet->setCellValueByColumnAndRow($startCol, $startRow+$k, $service);
 }
-
 $satisfaitTotal = [];
 $tresSatisfaitTotal = [];
 foreach($monthes as $k => $v){
-
     if(empty($satisfaitTotal["globalement"])){
         $satisfaitTotal["globalement"] = 0;
     }
@@ -1073,34 +965,25 @@ foreach($monthes as $k => $v){
         $tresSatisfaitTotal["rapport"] = 0;
     }
     $tresSatisfaitTotal["rapport"] += $satisfactionByMonth[$v]["rapport"][0];
-
     $result = round( ( ( $satisfactionByMonth[$v]["globalement"][0] + $satisfactionByMonth[$v]["globalement"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow, $result."%");
-
     $result = round( ( ( $satisfactionByMonth[$v]["chambres"][0] + $satisfactionByMonth[$v]["chambres"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+1, $result."%");
-
     $result = round( ( ( $satisfactionByMonth[$v]["restauration"][0] + $satisfactionByMonth[$v]["restauration"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+2, $result."%");
-
     $result = round( ( ( $satisfactionByMonth[$v]["bar"][0] + $satisfactionByMonth[$v]["bar"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+3, $result."%");
-
     $result = round( ( ( $satisfactionByMonth[$v]["accueil"][0] + $satisfactionByMonth[$v]["accueil"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+4, $result."%");
-
     $result = round( ( ( $satisfactionByMonth[$v]["environnement"][0] + $satisfactionByMonth[$v]["environnement"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+5, $result."%");
-
     $result = round( ( ( $satisfactionByMonth[$v]["rapport"][0] + $satisfactionByMonth[$v]["rapport"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+6, $result."%");
-
 }
 foreach($datas_services_bis_shorts as $k=>$type){
     $result = round((($satisfaitTotal[$type]+$tresSatisfaitTotal[$type])/$totalSatisfaction) *100, 1);
     $activeSheet->setCellValueByColumnAndRow($endCol, $startRow + $k, $result."%");
 }
-
 $endRow +=7;
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->getStartColor()->setRGB('ffff00');
@@ -1124,58 +1007,43 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
     ]
 );
 //tres satisfaits
-
 $startRow = $endRow + 6;
 $endRow = $startRow;
 $startCol = 1;
 $endCol = $startCol;
-
 $activeSheet->getStyle("B".($startRow-3))->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Filtre: Cumul depuis le début de l'année.");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "% de Très satisfaits");
-
 foreach ($monthes as $k => $v) {
     $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
     $endCol = $startCol + 1 + $k;
 }
-
 $endCol+=1;
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
 $startRow +=1;
-
-
 foreach($datas_services_bis as $k=>$service){
     $activeSheet->setCellValueByColumnAndRow($startCol, $startRow+$k, $service);
 }
 foreach($monthes as $k => $v){
     $result = round( ( $satisfactionByMonth[$v]["globalement"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow, $result."%");
-
     $result = round( ( $satisfactionByMonth[$v]["chambres"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+1, $result."%");
-
     $result = round( ( $satisfactionByMonth[$v]["restauration"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+2, $result."%");
-
     $result = round( ( $satisfactionByMonth[$v]["bar"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+3, $result."%");
-
     $result = round( ( $satisfactionByMonth[$v]["accueil"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+4, $result."%");
-
     $result = round( ( $satisfactionByMonth[$v]["environnement"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+5, $result."%");
-
     $result = round( ( $satisfactionByMonth[$v]["rapport"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+6, $result."%");
-
 }
-
 foreach($datas_services_bis_shorts as $k=>$type){
     $result = round(($tresSatisfaitTotal[$type]/$totalSatisfaction) *100, 1);
     $activeSheet->setCellValueByColumnAndRow($endCol, $startRow + $k, $result."%");
 }
-
 $endRow +=7;
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->getStartColor()->setRGB('ffff00');
@@ -1206,27 +1074,22 @@ $startRow = $endRow + 6;
 $endRow = $startRow;
 $startCol = 1;
 $endCol = $startCol;
-
 $activeSheet->getStyle("B".($startRow-3))->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Filtre: Cumul depuis le début de l'année.");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "% de Très satisfaits + Satisfaits");
-
 foreach ($monthes as $k => $v) {
     $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
     $endCol = $startCol + 1 + $k;
 }
-
 $endCol+=1;
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
 $startRow +=1;
-
 foreach($datas_resto as $k=>$service){
     $activeSheet->setCellValueByColumnAndRow($startCol, $startRow+$k, $service);
 }
 $satisfaitTotal = [];
 $tresSatisfaitTotal = [];
 foreach($monthes as $k => $v){
-
     if(empty($satisfaitTotal["resto_amabilite"])){
         $satisfaitTotal["resto_amabilite"] = 0;
     }
@@ -1280,32 +1143,23 @@ foreach($monthes as $k => $v){
         $tresSatisfaitTotal["resto_prix"] = 0;
     }
     $tresSatisfaitTotal["resto_prix"] += $satisfactionByMonth[$v]["resto_prix"][0];
-
     $result = round( ( ( $satisfactionByMonth[$v]["resto_amabilite"][0] + $satisfactionByMonth[$v]["resto_amabilite"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow, $result."%");
-
     $result = round( ( ( $satisfactionByMonth[$v]["resto_service"][0] + $satisfactionByMonth[$v]["resto_service"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+1, $result."%");
-
     $result = round( ( ( $satisfactionByMonth[$v]["resto_diversite"][0] + $satisfactionByMonth[$v]["resto_diversite"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+2, $result."%");
-
     $result = round( ( ( $satisfactionByMonth[$v]["resto_plats"][0] + $satisfactionByMonth[$v]["resto_plats"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+3, $result."%");
-
     $result = round( ( ( $satisfactionByMonth[$v]["resto_vins"][0] + $satisfactionByMonth[$v]["resto_vins"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+4, $result."%");
-
     $result = round( ( ( $satisfactionByMonth[$v]["resto_prix"][0] + $satisfactionByMonth[$v]["resto_prix"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+5, $result."%");
-
 }
-
 foreach($datas_resto_shorts as $k=>$type){
     $result = round((($tresSatisfaitTotal[$type]+$satisfaitTotal[$type])/$totalSatisfaction) *100, 1);
     $activeSheet->setCellValueByColumnAndRow($endCol, $startRow + $k, $result."%");
 }
-
 $endRow +=6;
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->getStartColor()->setRGB('ffff00');
@@ -1333,49 +1187,37 @@ $startRow = $endRow + 6;
 $endRow = $startRow;
 $startCol = 1;
 $endCol = $startCol;
-
 $activeSheet->getStyle("B".($startRow-3))->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Filtre: Cumul depuis le début de l'année.");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "% de Très satisfaits");
-
 foreach ($monthes as $k => $v) {
     $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
     $endCol = $startCol + 1 + $k;
 }
-
 $endCol+=1;
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
 $startRow +=1;
-
 foreach($datas_resto as $k=>$service){
     $activeSheet->setCellValueByColumnAndRow($startCol, $startRow+$k, $service);
 }
-
 foreach($monthes as $k => $v){
     $result = round( ( $satisfactionByMonth[$v]["resto_amabilite"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow, $result."%");
-
     $result = round( ( $satisfactionByMonth[$v]["resto_service"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+1, $result."%");
-
     $result = round( (  $satisfactionByMonth[$v]["resto_diversite"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+2, $result."%");
-
     $result = round( (  $satisfactionByMonth[$v]["resto_plats"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+3, $result."%");
-
     $result = round( (  $satisfactionByMonth[$v]["resto_vins"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+4, $result."%");
-
     $result = round( (  $satisfactionByMonth[$v]["resto_prix"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+5, $result."%");
-
 }
 foreach($datas_resto_shorts as $k=>$type){
     $result = round(($tresSatisfaitTotal[$type]/$totalSatisfaction) *100, 1);
     $activeSheet->setCellValueByColumnAndRow($endCol, $startRow + $k, $result."%");
 }
-
 $endRow +=6;
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->getStartColor()->setRGB('ffff00');
@@ -1398,50 +1240,49 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
         ],
     ]
 );
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // prix
-
-// TODO total
-
 $startRow = $endRow + 6;
 $endRow = $startRow;
 $startCol = 1;
 $endCol = $startCol;
-
 $activeSheet->getStyle("B".($startRow-4))->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-4, "Filtre: Cumul depuis le début de l'année.");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Merci d'indiquer votre date d'arrivée à l'hôtel (saisir le mois ci-dessous)");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "Au regard de la qualité des chambres et de l'environnement de l'hôtel, avez-vous trouvé le prix :");
-
 foreach ($monthes as $k => $v) {
     $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
     $endCol = $startCol + 1 + $k;
 }
-
 $endCol+=1;
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
 $startRow +=1;
-
 foreach($datas_perception_prix as $k=>$prix){
     $activeSheet->setCellValueByColumnAndRow($startCol, $startRow+$k, $prix);
     $endRow += 1;
 }
 $endRow += 1;
 $activeSheet->setCellValueByColumnAndRow($startCol, $endRow, "Total");
-
+$satisfactionPrixTotalByType = [0,0,0];
+$satisfactionPrixTotalEffectif = 0;
 foreach($monthes as $k=>$v){
     if($satisfactionByMonthPrixTotalEffectif[$v] == 0){
         continue;
     }
+    $satisfactionPrixTotalEffectif += $satisfactionByMonthPrixTotalEffectif[$v];
     foreach($satisfactionByMonth[$v]["prix"] as $perc=>$num){
         $result = round(($num / $satisfactionByMonthPrixTotalEffectif[$v]) * 100, 1);
         $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+$perc, $result."%");
-
+        $satisfactionPrixTotalByType[$perc] += $num;
     }
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $endRow, $satisfactionByMonthPrixTotalEffectif[$v]);
 }
+foreach($satisfactionPrixTotalByType as $k=>$v){
+    $result = round(($v/$satisfactionPrixTotalEffectif) * 100, 1);
+    $activeSheet->setCellValueByColumnAndRow($endCol, $startRow+$k, $result . "%");
+}
+$activeSheet->setCellValueByColumnAndRow($endCol, $endRow, $satisfactionPrixTotalEffectif);
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->getStartColor()->setRGB('ffff00');
 $activeSheet->getStyle($columnNames[$startCol] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($endRow))->applyFromArray(
@@ -1466,46 +1307,46 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // spa
-
-// TODO total
-
 $startRow = $endRow + 6;
 $endRow = $startRow;
 $startCol = 1;
 $endCol = $startCol;
-
 $activeSheet->getStyle("B".($startRow-4))->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-4, "Filtre: Cumul depuis le début de l'année.");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Merci d'indiquer votre date d'arrivée à l'hôtel (saisir le mois ci-dessous)");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "Si vous avez utilisé le SPA de l’hôtel, diriez-vous que vous êtes :");
-
 foreach ($monthes as $k => $v) {
     $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
     $endCol = $startCol + 1 + $k;
 }
-
 $endCol+=1;
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
 $startRow +=1;
-
 foreach($datas_satisfaction_bis as $k=>$satif){
     $activeSheet->setCellValueByColumnAndRow($startCol, $startRow+$k, $satif);
     $endRow += 1;
 }
 $endRow += 1;
 $activeSheet->setCellValueByColumnAndRow($startCol, $endRow, "Total");
-
+$satisfactionSpaTotalByType = [0,0,0,0];
+$satisfactionSpaTotalEffectif = 0;
 foreach($monthes as $k=>$v){
     if($satisfactionByMonthSpaTotalEffectif[$v] == 0){
         continue;
     }
+    $satisfactionSpaTotalEffectif += $satisfactionByMonthSpaTotalEffectif[$v];
     foreach($satisfactionByMonth[$v]["spa"] as $perc=>$num){
         $result = round(($num / $satisfactionByMonthSpaTotalEffectif[$v]) * 100, 1);
         $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+$perc, $result."%");
-
+        $satisfactionSpaTotalByType[$perc] += $num;
     }
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $endRow, $satisfactionByMonthSpaTotalEffectif[$v]);
 }
+foreach($satisfactionSpaTotalByType as $k=>$v){
+    $result = round(($v/$satisfactionSpaTotalEffectif) * 100, 1);
+    $activeSheet->setCellValueByColumnAndRow($endCol, $startRow+$k, $result . "%");
+}
+$activeSheet->setCellValueByColumnAndRow($endCol, $endRow, $satisfactionSpaTotalEffectif );
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->getStartColor()->setRGB('ffff00');
 $activeSheet->getStyle($columnNames[$startCol] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($endRow))->applyFromArray(
@@ -1530,45 +1371,44 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // visite zoo
-
-// TODO total
 $startRow = $endRow + 6;
 $endRow = $startRow;
 $startCol = 1;
 $endCol = $startCol;
-
 $activeSheet->getStyle("B".($startRow-4))->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-4, "Filtre: Cumul depuis le début de l'année.");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Merci d'indiquer votre date d'arrivée à l'hôtel (saisir le mois ci-dessous)");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "Avez-vous visité le ZooParc de Beauval pendant votre séjour ?");
-
 foreach ($monthes as $k => $v) {
     $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
     $endCol = $startCol + 1 + $k;
 }
-
 $endCol+=1;
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
 $startRow +=1;
-
 $activeSheet->setCellValueByColumnAndRow($startCol, $startRow, "Oui");
 $activeSheet->setCellValueByColumnAndRow($startCol, $startRow+1, "Non");
 $endRow += 3;
 $activeSheet->setCellValueByColumnAndRow($startCol, $endRow, "Total");
-
-
+$visiteZooEffectifTotal = 0;
+$visiteZooByYesNoTotal = [0,0];
 foreach($monthes as $k => $v){
     if($visiteZooByMonthEffectif[$v] == 0){
         continue;
     }
+    $visiteZooEffectifTotal +=  $visiteZooByMonthEffectif[$v];
     foreach($visiteZooByMonth[$v] as $key=>$yesNo){
         $num = round(($yesNo / $visiteZooByMonthEffectif[$v]) * 100, 1);
         $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+$key, $num."%");
-
+        $visiteZooByYesNoTotal[$key] += $yesNo;
     }
-
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $endRow, $visiteZooByMonthEffectif[$v]);
 }
+foreach($visiteZooByYesNoTotal as $k=>$v){
+    $result = round(($v/$visiteZooEffectifTotal) * 100, 1);
+    $activeSheet->setCellValueByColumnAndRow($endCol, $startRow+$k, $result . "%");
+}
+$activeSheet->setCellValueByColumnAndRow($endCol, $endRow, $visiteZooEffectifTotal);
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->getStartColor()->setRGB('ffff00');
 $activeSheet->getStyle($columnNames[$startCol] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($endRow))->applyFromArray(
@@ -1590,27 +1430,21 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
         ],
     ]
 );
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // revenir
-
-// TODO total
 $startRow = $endRow + 6;
 $endRow = $startRow;
 $startCol = 1;
 $endCol = $startCol;
-
 $activeSheet->getStyle("B".($startRow-4))->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-4, "Filtre: Cumul depuis le début de l'année.");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Merci d'indiquer votre date d'arrivée à l'hôtel (saisir le mois ci-dessous)");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "Reviendriez-vous à l’Hôtel Les Jardins de Beauval si vous en aviez l’occasion ?");
-
 foreach ($monthes as $k => $v) {
     $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
     $endCol = $startCol + 1 + $k;
 }
-
 $endCol+=1;
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
 $startRow +=1;
@@ -1620,18 +1454,25 @@ foreach($datas_intentions as $k=>$intens){
 }
 $endRow += 1;
 $activeSheet->setCellValueByColumnAndRow($startCol, $endRow, "Total");
-
+$satisfactionRevenirEffectifTotal = 0;
+$satisfactionRevenirByTypeEffectifTotal = [0,0,0,0];
 foreach($monthes as $k => $v){
     if($satisfactionByMonthRevenirTotalEffectif[$v] == 0){
         continue;
     }
+    $satisfactionRevenirEffectifTotal += $satisfactionByMonthRevenirTotalEffectif[$v];
     foreach($satisfactionByMonth[$v]["revenir"] as $perc=>$num){
         $result = round(($num / $satisfactionByMonthRevenirTotalEffectif[$v]) * 100, 1);
         $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+$perc, $result."%");
-
+        $satisfactionRevenirByTypeEffectifTotal[$perc] += $num;
     }
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $endRow, $satisfactionByMonthRevenirTotalEffectif[$v]);
 }
+foreach($satisfactionRevenirByTypeEffectifTotal as $k=>$v){
+    $result = round(($v/$satisfactionRevenirEffectifTotal) * 100, 1);
+    $activeSheet->setCellValueByColumnAndRow($endCol, $startRow+$k, $result . "%");
+}
+$activeSheet->setCellValueByColumnAndRow($endCol, $endRow, $satisfactionRevenirEffectifTotal);
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->getStartColor()->setRGB('ffff00');
 $activeSheet->getStyle($columnNames[$startCol] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($endRow))->applyFromArray(
@@ -1656,23 +1497,18 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // recommander
-
-// TODO total
 $startRow = $endRow + 6;
 $endRow = $startRow;
 $startCol = 1;
 $endCol = $startCol;
-
 $activeSheet->getStyle("B".($startRow-4))->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-4, "Filtre: Cumul depuis le début de l'année.");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Merci d'indiquer votre date d'arrivée à l'hôtel (saisir le mois ci-dessous)");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "Et recommanderiez-vous l’hôtel à des proches ?");
-
 foreach ($monthes as $k => $v) {
     $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow, $v);
     $endCol = $startCol + 1 + $k;
 }
-
 $endCol+=1;
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
 $startRow +=1;
@@ -1682,18 +1518,25 @@ foreach($datas_intentions as $k=>$intens){
 }
 $endRow += 1;
 $activeSheet->setCellValueByColumnAndRow($startCol, $endRow, "Total");
-
+$satisfactionRecommanderEffectifTotal = 0;
+$satisfactionRecommanderByTypeEffectifTotal = [0,0,0,0];
 foreach($monthes as $k => $v){
     if($satisfactionByMonthRecommanderTotalEffectif[$v] == 0){
         continue;
     }
+    $satisfactionRecommanderEffectifTotal += $satisfactionByMonthRecommanderTotalEffectif[$v];
     foreach($satisfactionByMonth[$v]["recommander"] as $perc=>$num){
         $result = round(($num / $satisfactionByMonthRecommanderTotalEffectif[$v]) * 100, 1);
         $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+$perc, $result."%");
-
+        $satisfactionRecommanderByTypeEffectifTotal[$perc] += $num;
     }
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $endRow, $satisfactionByMonthRecommanderTotalEffectif[$v]);
 }
+foreach($satisfactionRecommanderByTypeEffectifTotal as $k=>$v){
+    $result = round(($v/$satisfactionRecommanderEffectifTotal) * 100, 1);
+    $activeSheet->setCellValueByColumnAndRow($endCol, $startRow+$k, $result . "%");
+}
+$activeSheet->setCellValueByColumnAndRow($endCol, $endRow, $satisfactionRecommanderEffectifTotal);
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->getStartColor()->setRGB('ffff00');
 $activeSheet->getStyle($columnNames[$startCol] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($endRow))->applyFromArray(
@@ -1715,22 +1558,17 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
         ],
     ]
 );
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // $connaissanceRegionParisByDepsByTypePercent
-
-// TODO total
 $startRow = $endRow + 6;
 $endRow = $startRow;
 $startCol = 1;
 $endCol = $startCol;
-
 $activeSheet->getStyle("B".($startRow-4))->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_BLUE);
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-4, "Filtre:Région Parisienne, Cumul depuis le début de l'année.");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-3, "Merci de noter le numéro de votre département d'habitation (2 chiffres; 100 pour pays étranger) :");
 $activeSheet->setCellValueByColumnAndRow(1,$startRow-2, "Comment avez-vous connu l'Hôtel Les Jardins de Beauval ? Etait-ce par...");
-
 foreach ($connaissance_types as $key => $type) {
     $activeSheet->setCellValueByColumnAndRow($startCol, $startRow+1 + $key, $type);
     $endRow++;
@@ -1773,9 +1611,5 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow) . ":" . $column
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// sauvegarde
-
 $excelWriter = new PHPExcel_Writer_Excel2007($workbook);
 $excelWriter->save($savePath . DIRECTORY_SEPARATOR . "evolution_mensuelle_" . $annee . ".xlsx");
-
-
-
