@@ -984,8 +984,6 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // satisfaction globale
 
-// TODO total
-
 // satisfaits + tres satisfaits
 $startRow = $endRow + 6;
 $endRow = $startRow;
@@ -1009,7 +1007,73 @@ foreach($datas_services_bis as $k=>$service){
     $activeSheet->setCellValueByColumnAndRow($startCol, $startRow+$k, $service);
 }
 
+$satisfaitTotal = [];
+$tresSatisfaitTotal = [];
 foreach($monthes as $k => $v){
+
+    if(empty($satisfaitTotal["globalement"])){
+        $satisfaitTotal["globalement"] = 0;
+    }
+    $satisfaitTotal["globalement"] += $satisfactionByMonth[$v]["globalement"][1];
+    if(empty($tresSatisfaitTotal["globalement"])){
+        $tresSatisfaitTotal["globalement"] = 0;
+    }
+    $tresSatisfaitTotal["globalement"] += $satisfactionByMonth[$v]["globalement"][0];
+
+    if(empty($satisfaitTotal["chambres"])){
+        $satisfaitTotal["chambres"] = 0;
+    }
+    $satisfaitTotal["chambres"] += $satisfactionByMonth[$v]["chambres"][1];
+    if(empty($tresSatisfaitTotal["chambres"])){
+        $tresSatisfaitTotal["chambres"] = 0;
+    }
+    $tresSatisfaitTotal["chambres"] += $satisfactionByMonth[$v]["chambres"][0];
+
+    if(empty($satisfaitTotal["restauration"])){
+        $satisfaitTotal["restauration"] = 0;
+    }
+    $satisfaitTotal["restauration"] += $satisfactionByMonth[$v]["restauration"][1];
+    if(empty($tresSatisfaitTotal["restauration"])){
+        $tresSatisfaitTotal["restauration"] = 0;
+    }
+    $tresSatisfaitTotal["restauration"] += $satisfactionByMonth[$v]["restauration"][0];
+
+    if(empty($satisfaitTotal["bar"])){
+        $satisfaitTotal["bar"] = 0;
+    }
+    $satisfaitTotal["bar"] += $satisfactionByMonth[$v]["bar"][1];
+    if(empty($tresSatisfaitTotal["bar"])){
+        $tresSatisfaitTotal["bar"] = 0;
+    }
+    $tresSatisfaitTotal["bar"] += $satisfactionByMonth[$v]["bar"][0];
+
+    if(empty($satisfaitTotal["accueil"])){
+        $satisfaitTotal["accueil"] = 0;
+    }
+    $satisfaitTotal["accueil"] += $satisfactionByMonth[$v]["accueil"][1];
+    if(empty($tresSatisfaitTotal["accueil"])){
+        $tresSatisfaitTotal["accueil"] = 0;
+    }
+    $tresSatisfaitTotal["accueil"] += $satisfactionByMonth[$v]["accueil"][0];
+
+    if(empty($satisfaitTotal["environnement"])){
+        $satisfaitTotal["environnement"] = 0;
+    }
+    $satisfaitTotal["environnement"] += $satisfactionByMonth[$v]["environnement"][1];
+    if(empty($tresSatisfaitTotal["environnement"])){
+        $tresSatisfaitTotal["environnement"] = 0;
+    }
+    $tresSatisfaitTotal["environnement"] += $satisfactionByMonth[$v]["environnement"][0];
+
+    if(empty($satisfaitTotal["rapport"])){
+        $satisfaitTotal["rapport"] = 0;
+    }
+    $satisfaitTotal["rapport"] += $satisfactionByMonth[$v]["rapport"][1];
+    if(empty($tresSatisfaitTotal["rapport"])){
+        $tresSatisfaitTotal["rapport"] = 0;
+    }
+    $tresSatisfaitTotal["rapport"] += $satisfactionByMonth[$v]["rapport"][0];
+
     $result = round( ( ( $satisfactionByMonth[$v]["globalement"][0] + $satisfactionByMonth[$v]["globalement"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow, $result."%");
 
@@ -1031,6 +1095,10 @@ foreach($monthes as $k => $v){
     $result = round( ( ( $satisfactionByMonth[$v]["rapport"][0] + $satisfactionByMonth[$v]["rapport"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+6, $result."%");
 
+}
+foreach($datas_services_bis_shorts as $k=>$type){
+    $result = round((($satisfaitTotal[$type]+$tresSatisfaitTotal[$type])/$totalSatisfaction) *100, 1);
+    $activeSheet->setCellValueByColumnAndRow($endCol, $startRow + $k, $result."%");
 }
 
 $endRow +=7;
@@ -1055,8 +1123,6 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
         ],
     ]
 );
-
-// TODO total
 //tres satisfaits
 
 $startRow = $endRow + 6;
@@ -1104,6 +1170,12 @@ foreach($monthes as $k => $v){
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+6, $result."%");
 
 }
+
+foreach($datas_services_bis_shorts as $k=>$type){
+    $result = round(($tresSatisfaitTotal[$type]/$totalSatisfaction) *100, 1);
+    $activeSheet->setCellValueByColumnAndRow($endCol, $startRow + $k, $result."%");
+}
+
 $endRow +=7;
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->getStartColor()->setRGB('ffff00');
@@ -1129,8 +1201,6 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // satisfaction hotel
-
-// TODO total
 // satisfaits + tres satisfaits
 $startRow = $endRow + 6;
 $endRow = $startRow;
@@ -1153,8 +1223,64 @@ $startRow +=1;
 foreach($datas_resto as $k=>$service){
     $activeSheet->setCellValueByColumnAndRow($startCol, $startRow+$k, $service);
 }
-
+$satisfaitTotal = [];
+$tresSatisfaitTotal = [];
 foreach($monthes as $k => $v){
+
+    if(empty($satisfaitTotal["resto_amabilite"])){
+        $satisfaitTotal["resto_amabilite"] = 0;
+    }
+    $satisfaitTotal["resto_amabilite"] += $satisfactionByMonth[$v]["resto_amabilite"][1];
+    if(empty($tresSatisfaitTotal["resto_amabilite"])){
+        $tresSatisfaitTotal["resto_amabilite"] = 0;
+    }
+    $tresSatisfaitTotal["resto_amabilite"] += $satisfactionByMonth[$v]["resto_amabilite"][0];
+
+    if(empty($satisfaitTotal["resto_service"])){
+        $satisfaitTotal["resto_service"] = 0;
+    }
+    $satisfaitTotal["resto_service"] += $satisfactionByMonth[$v]["resto_service"][1];
+    if(empty($tresSatisfaitTotal["resto_service"])){
+        $tresSatisfaitTotal["resto_service"] = 0;
+    }
+    $tresSatisfaitTotal["resto_service"] += $satisfactionByMonth[$v]["resto_service"][0];
+
+    if(empty($satisfaitTotal["resto_diversite"])){
+        $satisfaitTotal["resto_diversite"] = 0;
+    }
+    $satisfaitTotal["resto_diversite"] += $satisfactionByMonth[$v]["resto_diversite"][1];
+    if(empty($tresSatisfaitTotal["resto_diversite"])){
+        $tresSatisfaitTotal["resto_diversite"] = 0;
+    }
+    $tresSatisfaitTotal["resto_diversite"] += $satisfactionByMonth[$v]["resto_diversite"][0];
+
+    if(empty($satisfaitTotal["resto_plats"])){
+        $satisfaitTotal["resto_plats"] = 0;
+    }
+    $satisfaitTotal["resto_plats"] += $satisfactionByMonth[$v]["resto_plats"][1];
+    if(empty($tresSatisfaitTotal["resto_plats"])){
+        $tresSatisfaitTotal["resto_plats"] = 0;
+    }
+    $tresSatisfaitTotal["resto_plats"] += $satisfactionByMonth[$v]["resto_plats"][0];
+
+    if(empty($satisfaitTotal["resto_vins"])){
+        $satisfaitTotal["resto_vins"] = 0;
+    }
+    $satisfaitTotal["resto_vins"] += $satisfactionByMonth[$v]["resto_vins"][1];
+    if(empty($tresSatisfaitTotal["resto_vins"])){
+        $tresSatisfaitTotal["resto_vins"] = 0;
+    }
+    $tresSatisfaitTotal["resto_vins"] += $satisfactionByMonth[$v]["resto_vins"][0];
+
+    if(empty($satisfaitTotal["resto_prix"])){
+        $satisfaitTotal["resto_prix"] = 0;
+    }
+    $satisfaitTotal["resto_prix"] += $satisfactionByMonth[$v]["resto_prix"][1];
+    if(empty($tresSatisfaitTotal["resto_prix"])){
+        $tresSatisfaitTotal["resto_prix"] = 0;
+    }
+    $tresSatisfaitTotal["resto_prix"] += $satisfactionByMonth[$v]["resto_prix"][0];
+
     $result = round( ( ( $satisfactionByMonth[$v]["resto_amabilite"][0] + $satisfactionByMonth[$v]["resto_amabilite"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow, $result."%");
 
@@ -1173,6 +1299,11 @@ foreach($monthes as $k => $v){
     $result = round( ( ( $satisfactionByMonth[$v]["resto_prix"][0] + $satisfactionByMonth[$v]["resto_prix"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+5, $result."%");
 
+}
+
+foreach($datas_resto_shorts as $k=>$type){
+    $result = round((($tresSatisfaitTotal[$type]+$satisfaitTotal[$type])/$totalSatisfaction) *100, 1);
+    $activeSheet->setCellValueByColumnAndRow($endCol, $startRow + $k, $result."%");
 }
 
 $endRow +=6;
@@ -1197,9 +1328,6 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $co
         ],
     ]
 );
-
-// TODO total
-
 //tres satisfaits
 $startRow = $endRow + 6;
 $endRow = $startRow;
@@ -1242,6 +1370,10 @@ foreach($monthes as $k => $v){
     $result = round( (  $satisfactionByMonth[$v]["resto_prix"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+5, $result."%");
 
+}
+foreach($datas_resto_shorts as $k=>$type){
+    $result = round(($tresSatisfaitTotal[$type]/$totalSatisfaction) *100, 1);
+    $activeSheet->setCellValueByColumnAndRow($endCol, $startRow + $k, $result."%");
 }
 
 $endRow +=6;
