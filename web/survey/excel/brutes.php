@@ -51,18 +51,18 @@ $tmpLastDayVal = DateTime::createFromFormat("j-n-Y", "1-" . $monthEnd . "-" . $a
 $tmpLastDay = $tmpLastDayVal->format("t");
 $tmpDateEnd = DateTime::createFromFormat("j-n-Y", $tmpLastDay . "-" . $monthEnd . "-" . $annee);
 $tmpDateEndTs = $tmpDateEnd->getTimestamp();
-$sql = "SELECT * FROM clients WHERE arrive_timestamp>=:datestartts AND arrive_timestamp<=:dateendts";
+$sql = "SELECT * FROM clients AS c LEFT JOIN satisfaction AS s WHERE c.arrive_timestamp>=:datestartts AND c.arrive_timestamp<=:dateendts AND c.id=s.client_id";
 $stmt = $pdo->prepare($sql);
 $stmt->bindValue(":datestartts", $tmpDateStartTs);
 $stmt->bindValue(":dateendts", $tmpDateEndTs);
 $stmt->execute();
 $allClients = $stmt->fetchAll();
+$stmt = null;
 if (!count($allClients)) {
     setFlash("Il n'y a pas de résultats sur la période demandée.");
     header("Location: /survey/to-excel.php");
     die();
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -103,6 +103,13 @@ $activeSheet->getStyle($columnNames[0]."1:".$columnNames[$numCols]."1")->applyFr
         "vertical"=>PHPExcel_Style_Alignment::VERTICAL_TOP,
     ]
 ]);
+$sql = "SELECT * FROM sejours WHERE arrive_timestamp>=:datestartts AND arrive_timestamp<=:dateendts";
+$stmt = $pdo->prepare($sql);
+$stmt->bindValue(":datestartts", $tmpDateStartTs);
+$stmt->bindValue(":dateendts", $tmpDateEndTs);
+$stmt->execute();
+$sejourAll = $stmt->fetchAll();
+$stmt = null;
 
 
 
@@ -110,11 +117,13 @@ $startRow = 2;
 $endRow = $startRow;
 foreach($allClients as $key=>$client){
 
-    $sqlSejour = "SELECT * FROM sejours WHERE client_id=:id";
-    $sejourStmt = $pdo->prepare($sqlSejour);
-    $sejourStmt->bindValue(":id", $client["id"]);
-    $sejourStmt->execute();
-    $sejour = $sejourStmt->fetch();
+    $sejour = [];
+    foreach($sejourAll as $k=>$val){
+        if($val["client_id"] == $client["id"]){
+            $sejour = $val;
+            break;
+        }
+    }
 
     $activeSheet->getRowDimension($endRow)->setRowHeight(30);
     $endRow++;
@@ -124,17 +133,19 @@ foreach($allClients as $key=>$client){
     $stmt->bindValue(":id", $client["id"]);
     $stmt->execute();
     $result = $stmt->fetchAll();
+    $stmt = null;
     if($result){
         $connaissanceTypesStr = "/ ";
         foreach($result as $l=>$type){
             $connaissanceTypesStr .= $connaissance_types[$type["type_id"] - 1] . " / ";
 
             if($type["type_id"] == 11){
-                $subSql = "SELECT * FROM connaissance_types_custom WHERE client_id=:id";
-                $subStmt = $pdo->prepare($subSql);
-                $subStmt->bindValue(":id", $client["id"]);
-                $subStmt->execute();
-                $subResult = $subStmt->fetchAll();
+                $sql = "SELECT * FROM connaissance_types_custom WHERE client_id=:id";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id", $client["id"]);
+                $stmt->execute();
+                $subResult = $stmt->fetchAll();
+                $stmt = null;
                 if($subResult){
                     //var_dump($subResult[0]);
                     $activeSheet->setCellValueByColumnAndRow(1, $startRow+$key, $subResult[0]["name"]);
@@ -170,9 +181,55 @@ foreach($allClients as $key=>$client){
         $activeSheet->setCellValueByColumnAndRow(6, $startRow+$key, ucfirst($datas_mois[$client["arrive_mois"]-1]));
     }
 
+    //nbre nuits
+    if($sejour && $sejour["nbre_nuit"]>0){
+        $activeSheet->setCellValueByColumnAndRow(7, $startRow+$key, $sejour["nbre_nuit"]);
+    }
 
+    //nbre personnes adultes
+    if($sejour && $sejour["nbre_adulte"]>0){
+        $activeSheet->setCellValueByColumnAndRow(8, $startRow+$key, $datas_nbr_personnes[$sejour["nbre_adulte"]-1]);
+    }
 
+    //nbre personnes enfants
+    if($sejour && $sejour["nbre_enfant"]>0){
+        $activeSheet->setCellValueByColumnAndRow(9, $startRow+$key, $datas_nbr_personnes[$sejour["nbre_enfant"]-1]);
+    }
 
+    // satisfaction global
+    if($client["globalement"]){
+        $activeSheet->setCellValueByColumnAndRow(10, $startRow+$key, $datas_satisfaction_bis[$client["globalement"]-1]);
+    }
+
+    // satisfaction global
+    if($client["prix"]){
+        $activeSheet->setCellValueByColumnAndRow(10, $startRow+$key, $datas_perception_prix[$client["prix"]-1]);
+    }
+
+    // satisfaction chambres
+    if($client["chambres"]){
+        $activeSheet->setCellValueByColumnAndRow(11, $startRow+$key, $datas_satisfaction_bis[$client["chambres"]-1]);
+    }
+
+    // satisfaction bar
+    if($client["bar"]){
+        $activeSheet->setCellValueByColumnAndRow(12, $startRow+$key, $datas_satisfaction_bis[$client["bar"]-1]);
+    }
+
+    // satisfaction accueil
+    if($client["accueil"]){
+        $activeSheet->setCellValueByColumnAndRow(13, $startRow+$key, $datas_satisfaction_bis[$client["accueil"]-1]);
+    }
+
+    // satisfaction environnement
+    if($client["environnement"]){
+        $activeSheet->setCellValueByColumnAndRow(14, $startRow+$key, $datas_satisfaction_bis[$client["environnement"]-1]);
+    }
+
+    // satisfaction rapport
+    if($client["rapport"]){
+        $activeSheet->setCellValueByColumnAndRow(15, $startRow+$key, $datas_satisfaction_bis[$client["rapport"]-1]);
+    }
 }
 $activeSheet->getStyle($columnNames[0].$startRow.":".$columnNames[$numCols].$endRow)->applyFromArray([
     "font"=>[
