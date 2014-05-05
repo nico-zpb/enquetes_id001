@@ -183,3 +183,64 @@ $datas_nbr_nuits = [
 $datas_wifi = [
     "Oui, sans difficulté","J'ai cherché à me connecter mais j'ai eu des difficultés","Non, je n'ai pas cherché à me connecter",
 ];
+
+$questions = [
+    "Comment avez-vous connu l'Hôtel Les Jardins de Beauval ? Etait-ce par...",
+    "Par quel autre moyen ?",
+    "Merci de noter le numéro de votre département d'habitation (2 chiffres) ou votre pays de provenance si étranger:",
+    "Pays étrangers",
+    "Combien de temps a duré votre trajet jusqu'à l'Hôtel Les Jardins de Beauval ?",
+    "Quel type de chambre avez-vous occupé pendant votre séjour à l'hôtel ?",
+    "Merci d'indiquer votre date d'arrivée à l'hôtel",
+    "Combien de nuits y avez-vous dormi ?",
+    "Combien de personnes étiez-vous ? Adultes et enfants de 11 ans et plus",
+    "Combien de personnes étiez-vous ? Enfants de moins de 11 ans",
+    "Globalement, en ce qui concerne votre séjour à l'Hôtel Les Jardins de Beauval, diriez-vous que vous êtes :",
+    "Au regard de la qualité des chambres et de l'environement de l'hôtel, avez-vous trouvé le prix :",
+    "les chambres (confort, propreté, atmosphère)",
+    "la restauration (qualité, diversité, prix, amabilité du personnel)",
+    "le bar (ambiance, diversité, prix, amabilité du personnel)",
+    "l'accueil du personnel en général (amabilité, rapidité, réactivité)",
+    "l'environnement (décoration, jardin, atmosphère du lieu)",
+    "le rapport qualité/prix",
+    "l'amabilité du personnel",
+    "la qualité du service",
+    "la diversité des plats proposés",
+    "la qualité des plats",
+    "les vins (qualité et choix)",
+    "les prix",
+    "Si vous avez utilisé le SPA de l'hôtel, diriez-vous que vous êtes :",
+    "Pendant votre séjour, avez-vous utilisé la connexion Internet wifi de l'hôtel ?",
+    "Avez-vous visité le ZooParc de Beauval pendant votre séjour ?",
+    "Reviendriez-vous à l'Hôtel Les Jardins de Beauval si vous en aviez l'occasion ?",
+    "Et recommanderiez-vous l'hôtel à des proches ?",
+    "Vous pouvez noter ici vos commentaires, remarques et suggestions par rapport à l'Hôtel Les Jardins de Beauval (chambres, restauration, bar, accueil...)",
+    "Vous êtes :",
+    "Dans quelle tranche d'âge vous situez-vous ?",
+    "Quelle est votre profession ?",
+    "Aimeriez-vous recevoir une ou deux fois par an des informations de l'hôtel (nouveautés, offres promotionnelles...) ?",
+    "Nom :",
+    "Prénom :",
+    "Email :",
+];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
