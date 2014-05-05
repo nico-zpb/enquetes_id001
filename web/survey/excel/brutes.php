@@ -201,34 +201,116 @@ foreach($allClients as $key=>$client){
         $activeSheet->setCellValueByColumnAndRow(10, $startRow+$key, $datas_satisfaction_bis[$client["globalement"]-1]);
     }
 
-    // satisfaction global
+    // prix approprie
     if($client["prix"]){
-        $activeSheet->setCellValueByColumnAndRow(10, $startRow+$key, $datas_perception_prix[$client["prix"]-1]);
+        $activeSheet->setCellValueByColumnAndRow(11, $startRow+$key, $datas_perception_prix[$client["prix"]-1]);
     }
 
     // satisfaction chambres
     if($client["chambres"]){
-        $activeSheet->setCellValueByColumnAndRow(11, $startRow+$key, $datas_satisfaction_bis[$client["chambres"]-1]);
+        $activeSheet->setCellValueByColumnAndRow(12, $startRow+$key, $datas_satisfaction_bis[$client["chambres"]-1]);
+    }
+
+    // satisfaction restauration
+    if($client["restauration"]){
+        $activeSheet->setCellValueByColumnAndRow(13, $startRow+$key, $datas_satisfaction_bis[$client["restauration"]-1]);
     }
 
     // satisfaction bar
     if($client["bar"]){
-        $activeSheet->setCellValueByColumnAndRow(12, $startRow+$key, $datas_satisfaction_bis[$client["bar"]-1]);
+        $activeSheet->setCellValueByColumnAndRow(14, $startRow+$key, $datas_satisfaction_bis[$client["bar"]-1]);
     }
 
     // satisfaction accueil
     if($client["accueil"]){
-        $activeSheet->setCellValueByColumnAndRow(13, $startRow+$key, $datas_satisfaction_bis[$client["accueil"]-1]);
+        $activeSheet->setCellValueByColumnAndRow(15, $startRow+$key, $datas_satisfaction_bis[$client["accueil"]-1]);
     }
 
     // satisfaction environnement
     if($client["environnement"]){
-        $activeSheet->setCellValueByColumnAndRow(14, $startRow+$key, $datas_satisfaction_bis[$client["environnement"]-1]);
+        $activeSheet->setCellValueByColumnAndRow(16, $startRow+$key, $datas_satisfaction_bis[$client["environnement"]-1]);
     }
 
     // satisfaction rapport
     if($client["rapport"]){
-        $activeSheet->setCellValueByColumnAndRow(15, $startRow+$key, $datas_satisfaction_bis[$client["rapport"]-1]);
+        $activeSheet->setCellValueByColumnAndRow(17, $startRow+$key, $datas_satisfaction_bis[$client["rapport"]-1]);
+    }
+
+    // satisfaction resto_amabilite
+    if($client["resto_amabilite"]){
+        $activeSheet->setCellValueByColumnAndRow(18, $startRow+$key, $datas_satisfaction_bis[$client["resto_amabilite"]-1]);
+    }
+
+    // satisfaction resto_service
+    if($client["resto_service"]){
+        $activeSheet->setCellValueByColumnAndRow(19, $startRow+$key, $datas_satisfaction_bis[$client["resto_service"]-1]);
+    }
+
+    // satisfaction resto_diversite
+    if($client["resto_diversite"]){
+        $activeSheet->setCellValueByColumnAndRow(20, $startRow+$key, $datas_satisfaction_bis[$client["resto_diversite"]-1]);
+    }
+
+    // satisfaction resto_plats
+    if($client["resto_plats"]){
+        $activeSheet->setCellValueByColumnAndRow(21, $startRow+$key, $datas_satisfaction_bis[$client["resto_plats"]-1]);
+    }
+
+    // satisfaction resto_vins
+    if($client["resto_vins"]){
+        $activeSheet->setCellValueByColumnAndRow(22, $startRow+$key, $datas_satisfaction_bis[$client["resto_vins"]-1]);
+    }
+
+    // satisfaction resto_prix
+    if($client["resto_prix"]){
+        $activeSheet->setCellValueByColumnAndRow(23, $startRow+$key, $datas_satisfaction_bis[$client["resto_prix"]-1]);
+    }
+
+    // satisfaction spa
+    if($client["spa"]){
+        $activeSheet->setCellValueByColumnAndRow(24, $startRow+$key, $datas_satisfaction_bis[$client["spa"]-1]);
+    }
+
+    // sejour wifi
+    if($sejour && $sejour["wifi"]>0){
+        $activeSheet->setCellValueByColumnAndRow(25, $startRow+$key, $datas_wifi[$sejour["wifi"]-1]);
+    }
+
+    //sejour visite_zoo
+    if($sejour && $sejour["visite_zoo"]>0){
+        $visite = ($sejour["visite_zoo"] == 1) ? "Oui" : "Non";
+        $activeSheet->setCellValueByColumnAndRow(26, $startRow+$key, $visite);
+    }
+
+    // satisfaction revenir
+    if($client["revenir"]){
+        $activeSheet->setCellValueByColumnAndRow(27, $startRow+$key, $datas_intentions[$client["revenir"]-1]);
+    }
+
+    // satisfaction recommander
+    if($client["recommander"]){
+        $activeSheet->setCellValueByColumnAndRow(28, $startRow+$key, $datas_intentions[$client["recommander"]-1]);
+    }
+
+    // commentaire
+    if($client["commentaire"]){
+        $activeSheet->setCellValueByColumnAndRow(29, $startRow+$key, $client["commentaire"]);
+    }
+
+    // genre
+    if($client["sexe"]){
+        $sexe = ($client["sexe"] == 1) ? "Homme": "Femme";
+        $activeSheet->setCellValueByColumnAndRow(30, $startRow+$key, $sexe);
+    }
+
+    // age
+    if($client["tranche_age"]){
+        $activeSheet->setCellValueByColumnAndRow(31, $startRow+$key, $datas_trancheAge[$client["tranche_age"]-1]["name"]);
+    }
+
+    //prof
+    if($client["profession"]){
+        $activeSheet->setCellValueByColumnAndRow(32, $startRow+$key, $profession[$client["profession"]-1]);
     }
 }
 $activeSheet->getStyle($columnNames[0].$startRow.":".$columnNames[$numCols].$endRow)->applyFromArray([
