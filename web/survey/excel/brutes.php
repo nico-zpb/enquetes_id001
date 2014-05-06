@@ -298,6 +298,7 @@ foreach($allClients as $key=>$client){
     }
 
     // genre
+    $sexe = "";
     if($client["sexe"]){
         $sexe = ($client["sexe"] == 1) ? "Homme": "Femme";
         $activeSheet->setCellValueByColumnAndRow(30, $startRow+$key, $sexe);
@@ -311,6 +312,33 @@ foreach($allClients as $key=>$client){
     //prof
     if($client["profession"]){
         $activeSheet->setCellValueByColumnAndRow(32, $startRow+$key, $profession[$client["profession"]-1]);
+    }
+
+    // recevoir infos
+    if($client["infos"]){
+        $info = ((int)$client["infos"] === 1)? "Oui": "Non";
+        $activeSheet->setCellValueByColumnAndRow(33, $startRow+$key, $info);
+    }
+
+    //civilite
+    if($sexe){
+        $civilite = ($sexe == "Homme")? "Mr": "Mme";
+        $activeSheet->setCellValueByColumnAndRow(34, $startRow+$key, $civilite);
+    }
+
+    // nom
+    if($client["nom"]){
+        $activeSheet->setCellValueByColumnAndRow(35, $startRow+$key, $client["nom"]);
+    }
+
+    // prenom
+    if($client["prenom"]){
+        $activeSheet->setCellValueByColumnAndRow(36, $startRow+$key, $client["prenom"]);
+    }
+
+    // email
+    if($client["email"]){
+        $activeSheet->setCellValueByColumnAndRow(37, $startRow+$key, $client["email"]);
     }
 }
 $activeSheet->getStyle($columnNames[0].$startRow.":".$columnNames[$numCols].$endRow)->applyFromArray([

@@ -219,6 +219,7 @@ $questions = [
     "Dans quelle tranche d'âge vous situez-vous ?",
     "Quelle est votre profession ?",
     "Aimeriez-vous recevoir une ou deux fois par an des informations de l'hôtel (nouveautés, offres promotionnelles...) ?",
+    "Civilité",
     "Nom :",
     "Prénom :",
     "Email :",
