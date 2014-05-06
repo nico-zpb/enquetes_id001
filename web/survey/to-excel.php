@@ -100,6 +100,7 @@ $yearRange = range($annee-4, $annee);
     </div>
 </div>
 
+<!-- 
 <div class="wrapper">
     <div class="container">
         <div class="row">
@@ -117,25 +118,25 @@ $yearRange = range($annee-4, $annee);
                         <div class="col-md-2">
                             <label for="form_excel_global_mensuel_annee">année</label>
                             <select class="form-control" name="form_excel_global_mensuel[annee]" id="form_excel_global_mensuel_annee">
-                                <?php foreach($yearRange as $year): ?>
-                                    <option value="<?php echo $year; ?>" <?php if($year == $annee) { echo 'selected="selected"'; } ?>><?php echo $year; ?></option>
-                                <?php endforeach; ?>
+                                <?php //  foreach($yearRange as $year): ?>
+                                    <option value="<?php //  echo $year; ?>" <?php //  if($year == $annee) { echo 'selected="selected"'; } ?>><?php //  echo $year; ?></option>
+                                <?php //  endforeach; ?>
                             </select>
                         </div>
                         <div class="col-md-2">
                             <label for="form_excel_global_mensuel_month_start">début</label>
                             <select class="form-control" name="form_excel_global_mensuel[month_start]" id="form_excel_global_mensuel_month_start">
-                                <?php for($i=0; $i<12;$i++): ?>
-                                    <option value="<?php echo $i+1; ?>" <?php if($i+1 == $mois) { echo 'selected="selected"'; } ?>><?php echo ucfirst($datas_mois[$i]); ?></option>
-                                <?php endfor; ?>
+                                <?php //  for($i=0; $i<12;$i++): ?>
+                                    <option value="<?php //  echo $i+1; ?>" <?php //  if($i+1 == $mois) { echo 'selected="selected"'; } ?>><?php //  echo ucfirst($datas_mois[$i]); ?></option>
+                                <?php //  endfor; ?>
                             </select>
                         </div>
                         <div class="col-md-2">
                             <label for="form_excel_global_mensuel_month_end">fin</label>
                             <select class="form-control" name="form_excel_global_mensuel[month_end]" id="form_excel_global_mensuel_month_end">
-                                <?php for($i=0; $i<12;$i++): ?>
-                                    <option value="<?php echo $i+1; ?>" <?php if($i+1 == $mois) { echo 'selected="selected"'; } ?>><?php echo ucfirst($datas_mois[$i]); ?></option>
-                                <?php endfor; ?>
+                                <?php //  for($i=0; $i<12;$i++): ?>
+                                    <option value="<?php //  echo $i+1; ?>" <?php //  if($i+1 == $mois) { echo 'selected="selected"'; } ?>><?php //  echo ucfirst($datas_mois[$i]); ?></option>
+                                <?php //  endfor; ?>
                             </select>
                         </div>
                         <div class="col-md-6"></div>
@@ -145,7 +146,7 @@ $yearRange = range($annee-4, $annee);
         </form>
     </div>
 </div>
-
+-->
 <div class="wrapper">
     <div class="container">
         <div class="row">

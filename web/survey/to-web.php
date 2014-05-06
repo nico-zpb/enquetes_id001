@@ -193,7 +193,8 @@ $yearRange = range($annee-4, $annee);
         </form>
     </div>
 </div>
-
+<!-- TODO ??-->
+<!-- 
 <div class="wrapper">
     <div class="container">
         <div class="row">
@@ -212,25 +213,25 @@ $yearRange = range($annee-4, $annee);
                         <div class="col-md-4">
                             <label for="annee_start_cw">année</label>
                             <select name="form_cw_range[annee_start]" id="annee_start_cw" class="form-control">
-                                <?php foreach($yearRange as $year): ?>
-                                    <option value="<?php echo $year; ?>" <?php if($year == $annee) { echo 'selected="selected"'; } ?>><?php echo $year; ?></option>
-                                <?php endforeach; ?>
+                                <?php //  foreach($yearRange as $year): ?>
+                                    <option value="<?php //  echo $year; ?>" <?php //  if($year == $annee) { echo 'selected="selected"'; } ?>><?php //  echo $year; ?></option>
+                                <?php //  endforeach; ?>
                             </select>
                         </div>
                         <div class="col-md-4">
                             <label for="mois_start_cw">mois</label>
                             <select name="form_cw_range[mois_start]" id="mois_start_cw" class="form-control">
-                                <?php foreach($datas_mois as $k=>$v): ?>
-                                    <option value="<?php echo $k+1; ?>" <?php if($k+1 == $mois) { echo 'selected="selected"'; } ?>><?php echo $v; ?></option>
-                                <?php endforeach; ?>
+                                <?php //  foreach($datas_mois as $k=>$v): ?>
+                                    <option value="<?php //  echo $k+1; ?>" <?php //  if($k+1 == $mois) { echo 'selected="selected"'; } ?>><?php //  echo $v; ?></option>
+                                <?php //  endforeach; ?>
                             </select>
                         </div>
                         <div class="col-md-4">
                             <label for="jour_start_cw">jour</label>
                             <select name="form_cw_range[jour_start]" id="jour_start_cw" class="form-control">
-                                <?php for($i=0;$i<$joursDansMois; $i++): ?>
-                                    <option value="<?php echo $i+1; ?>" <?php if($i+1 == $jourStart) { echo 'selected="selected"'; } ?>><?php echo $i+1; ?></option>
-                                <?php endfor; ?>
+                                <?php //  for($i=0;$i<$joursDansMois; $i++): ?>
+                                    <option value="<?php //  echo $i+1; ?>" <?php //  if($i+1 == $jourStart) { echo 'selected="selected"'; } ?>><?php //  echo $i+1; ?></option>
+                                <?php //  endfor; ?>
                             </select>
                         </div>
                     </div>
@@ -241,25 +242,25 @@ $yearRange = range($annee-4, $annee);
                         <div class="col-md-4">
                             <label for="annee_end_cw">année</label>
                             <select name="form_cw_range[annee_end]" id="annee_end_cw" class="form-control">
-                                <?php foreach($yearRange as $year): ?>
-                                    <option value="<?php echo $year; ?>" <?php if($year == $annee) { echo 'selected="selected"'; } ?>><?php echo $year; ?></option>
-                                <?php endforeach; ?>
+                                <?php //  foreach($yearRange as $year): ?>
+                                    <option value="<?php //  echo $year; ?>" <?php //  if($year == $annee) { echo 'selected="selected"'; } ?>><?php //  echo $year; ?></option>
+                                <?php //  endforeach; ?>
                             </select>
                         </div>
                         <div class="col-md-4">
                             <label for="mois_end_cw">mois</label>
                             <select name="form_cw_range[mois_end]" id="mois_end_cw" class="form-control">
-                                <?php foreach($datas_mois as $k=>$v): ?>
-                                    <option value="<?php echo $k+1; ?>" <?php if($k+1 == $mois) { echo 'selected="selected"'; } ?>><?php echo $v; ?></option>
-                                <?php endforeach; ?>
+                                <?php //  foreach($datas_mois as $k=>$v): ?>
+                                    <option value="<?php //  echo $k+1; ?>" <?php //  if($k+1 == $mois) { echo 'selected="selected"'; } ?>><?php //  echo $v; ?></option>
+                                <?php //  endforeach; ?>
                             </select>
                         </div>
                         <div class="col-md-4">
                             <label for="jour_end_cw">jour</label>
                             <select name="form_cw_range[jour_end]" id="jour_end_cw" class="form-control">
-                                <?php for($i=0;$i<$joursDansMois; $i++): ?>
-                                    <option value="<?php echo $i+1; ?>" <?php if($i+1 == $jourEnd) { echo 'selected="selected"'; } ?>><?php echo $i+1; ?></option>
-                                <?php endfor; ?>
+                                <?php //  for($i=0;$i<$joursDansMois; $i++): ?>
+                                    <option value="<?php //  echo $i+1; ?>" <?php //  if($i+1 == $jourEnd) { echo 'selected="selected"'; } ?>><?php //  echo $i+1; ?></option>
+                                <?php //  endfor; ?>
                             </select>
                         </div>
                     </div>
@@ -273,20 +274,20 @@ $yearRange = range($annee-4, $annee);
                 </div>
 
 
-                <?php if(!$debug): ?>
+                <?php //  if(!$debug): ?>
                 <div class="col-md-12">
                     <div class="spacer"></div>
                     <div class="alert alert-success" id="cwSuccess"></div>
                     <div class="alert alert-danger" id="cwError"></div>
                 </div>
-                <?php endif; ?>
+                <?php //  endif; ?>
             </div>
         </form>
 
 
     </div>
 </div>
-
+-->
 
 <div class="container">
     <hr/>
