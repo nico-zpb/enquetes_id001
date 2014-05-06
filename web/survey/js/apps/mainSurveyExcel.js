@@ -34,10 +34,22 @@ var spinnerOpts = {
 
 $(function(){
 
-    var spinners =      $(".spinner");
+    var spinners =      $(".excel-spinner");
     spinners.spin(spinnerOpts);
-    var excelSpinner =  $("#excelSpinner");
-    excelSpinner.hide();
+
+    var excelSpinner1 =  $("#excelSpinner1");
+    var loader1 = $("#loader1");
+    loader1.hide();
+
+    var excelSpinner2 =  $("#excelSpinner2");
+    var loader2 = $("#loader2");
+    loader2.hide();
+
+
+
+
+
+
     var excelForm =     $("#excelForm");
     var excelSubmit =   $("#excelSubmit");
     var excelSuccess =  $("#excelSuccess");
@@ -52,53 +64,7 @@ $(function(){
     var jour_start =    $("#jour_start");
     var jour_end =      $("#jour_end");
 
-    annee_start.on("change", function(evt){
-        var a = parseInt($(this).val());
-        var m = parseInt(mois_start.val()-1);
 
-        var nj = getNumDaysInMonth(m,a);
-        jour_start.empty();
-
-        for(var i=0; i<nj; i++){
-            jour_start.append($("<option value='" + (i+1) + "'>" + (i+1) + "</option>"));
-        }
-    });
-
-    mois_start.on("change", function(evt){
-        var m = parseInt($(this).val()) - 1;
-        var a = parseInt(annee_start.val());
-
-        var nj = getNumDaysInMonth(m, a);
-        jour_start.empty();
-
-        for(var i=0; i<nj; i++){
-            jour_start.append($("<option value='" + (i+1) + "'>" + (i+1) + "</option>"));
-        }
-    });
-
-    mois_end.on("change", function(evt){
-        var m = parseInt($(this).val()) - 1;
-        var a = parseInt(annee_end.val());
-
-        var nj = getNumDaysInMonth(m, a);
-        jour_end.empty();
-
-        for(var i=0; i<nj; i++){
-            jour_end.append($("<option value='" + (i+1) + "'>" + (i+1) + "</option>"));
-        }
-    });
-
-    annee_end.on("change", function(evt){
-        var a = parseInt($(this).val());
-        var m = parseInt(mois_end.val()-1);
-
-        var nj = getNumDaysInMonth(m,a);
-        jour_end.empty();
-
-        for(var i=0; i<nj; i++){
-            jour_end.append($("<option value='" + (i+1) + "'>" + (i+1) + "</option>"));
-        }
-    });
 
     excelForm.on("submit", function(evt){
         evt.preventDefault();
@@ -126,4 +92,52 @@ $(function(){
             });
         return false;
     });
+
+    /*annee_start.on("change", function(evt){
+     var a = parseInt($(this).val());
+     var m = parseInt(mois_start.val()-1);
+
+     var nj = getNumDaysInMonth(m,a);
+     jour_start.empty();
+
+     for(var i=0; i<nj; i++){
+     jour_start.append($("<option value='" + (i+1) + "'>" + (i+1) + "</option>"));
+     }
+     });
+
+     mois_start.on("change", function(evt){
+     var m = parseInt($(this).val()) - 1;
+     var a = parseInt(annee_start.val());
+
+     var nj = getNumDaysInMonth(m, a);
+     jour_start.empty();
+
+     for(var i=0; i<nj; i++){
+     jour_start.append($("<option value='" + (i+1) + "'>" + (i+1) + "</option>"));
+     }
+     });
+
+     mois_end.on("change", function(evt){
+     var m = parseInt($(this).val()) - 1;
+     var a = parseInt(annee_end.val());
+
+     var nj = getNumDaysInMonth(m, a);
+     jour_end.empty();
+
+     for(var i=0; i<nj; i++){
+     jour_end.append($("<option value='" + (i+1) + "'>" + (i+1) + "</option>"));
+     }
+     });
+
+     annee_end.on("change", function(evt){
+     var a = parseInt($(this).val());
+     var m = parseInt(mois_end.val()-1);
+
+     var nj = getNumDaysInMonth(m,a);
+     jour_end.empty();
+
+     for(var i=0; i<nj; i++){
+     jour_end.append($("<option value='" + (i+1) + "'>" + (i+1) + "</option>"));
+     }
+     });*/
 });

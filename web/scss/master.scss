@@ -1,5 +1,15 @@
 @import "compass";
 
+@mixin clearfix(){
+  *zoom:1;
+  &:before, &:after{
+    display: table;
+    content: " ";
+  }
+  &:after{
+    clear: both;
+  }
+}
 $hotelColorGreen: #97bf0d;
 $hotelColorLightBrown: #f6f3ea;
 $hotelColorDarkBrown: #A9A085;
@@ -100,6 +110,21 @@ hr {
   height: 20px;
 }
 
+.excel-loader{
+  position: relative;
+  @include clearfix;
+  p{
+    margin-left: 25px;
+  }
+}
+
+.excel-spinner{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+}
 section{
   &.question{
     margin-bottom: 25px;

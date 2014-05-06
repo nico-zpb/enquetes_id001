@@ -91,6 +91,12 @@ $yearRange = range($annee-4, $annee);
                         </div>
                         <div class="col-md-4">
                             <button type="submit" id="submit_excel_global" class="btn btn-hotel">continuer &raquo;</button>
+                            <div id="loader1" class="excel-loader">
+                                <div id="excelSpinner1" class="excel-spinner"></div>
+                                <p>génération du fichier en cours</p>
+                            </div>
+
+                            <div id="download-excel-global"><p><a href="" class="btn btn-hotel-inverse">télécharger</a></p></div>
                         </div>
                         <div class="col-md-6"></div>
                     </div>
@@ -170,6 +176,12 @@ $yearRange = range($annee-4, $annee);
                         </div>
                         <div class="col-md-4">
                             <button type="submit" id="submit_excel_brutes" class="btn btn-hotel">continuer &raquo;</button>
+                            <div id="loader2" class="excel-loader">
+                                <div id="excelSpinner2" class="excel-spinner"></div>
+                                <p>génération du fichier en cours</p>
+                            </div>
+
+                            <div id="download-excel-global"><p><a href="" class="btn btn-hotel-inverse">télécharger</a></p></div>
                         </div>
                         <div class="col-md-6"></div>
                     </div>

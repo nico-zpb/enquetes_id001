@@ -68,6 +68,17 @@ include_once "../../php/navbar.php";
     </div>
 </div>
 
+<div class="wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Format PDF</h2>
+                <p>Exportez en PDF</p>
+                <p><a class="btn btn-hotel" href="/survey/to-pdf.php">continuer &raquo;</a></p>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="container">
     <hr/>
