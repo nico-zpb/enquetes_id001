@@ -82,9 +82,11 @@ foreach ($ClientsByMonth as $monthShortName => $clientsInMonth) {
         $tmp = $stmt->fetchAll();
         if ($tmp) {
             foreach ($tmp as $l => $t) {
-                $connaissanceByMonth[$monthShortName][$t["type_id"] - 1]++;
-                $connaissanceTotal[$t["type_id"] - 1]++;
-                $connaissanceEntries++;
+                if($t["type_id"]>0){
+                    $connaissanceByMonth[$monthShortName][$t["type_id"] - 1]++;
+                    $connaissanceTotal[$t["type_id"] - 1]++;
+                    $connaissanceEntries++;
+                }
             }
         }
     }
@@ -212,19 +214,25 @@ foreach($ClientsByMonth as $month=>$clients){
         if($result){
             if (in_array($c["departement_num"], $depsCentre)) {
                 foreach($result as $key=>$type){
-                    $connaissanceRegionCentreByMonthTotal[$month]++;
-                    $connaissanceRegionCentreByMonth[$month][$type["type_id"] - 1]++;
+                    if($type["type_id"]>0){
+                        $connaissanceRegionCentreByMonthTotal[$month]++;
+                        $connaissanceRegionCentreByMonth[$month][$type["type_id"] - 1]++;
+                    }
                 }
             } elseif (in_array($c["departement_num"], $depsParis)) {
                 foreach($result as $key=>$type){
-                    $connaissanceRegionParisByMonthTotal[$month]++;
-                    $connaissanceRegionParisByMonth[$month][$type["type_id"] - 1]++;
+                    if($type["type_id"]>0){
+                        $connaissanceRegionParisByMonthTotal[$month]++;
+                        $connaissanceRegionParisByMonth[$month][$type["type_id"] - 1]++;
+                    }
                 }
             } else {
                 if ($c["departement_num"] != 100) {
                     foreach($result as $key=>$type){
-                        $connaissanceRegionAutresByMonthTotal[$month]++;
-                        $connaissanceRegionAutresByMonth[$month][$type["type_id"] - 1]++;
+                        if($type["type_id"]>0){
+                            $connaissanceRegionAutresByMonthTotal[$month]++;
+                            $connaissanceRegionAutresByMonth[$month][$type["type_id"] - 1]++;
+                        }
                     }
                 }
             }
@@ -389,28 +397,24 @@ foreach($ClientsByMonth as $month=>$client){
             if((int)$r["resto_prix"] === 2){
                 $satisfactionByMonth[$month]["resto_prix"][1]++;
             }
-
-
             ///// perception prix
-            $satisfactionByMonth[$month]["prix"][(int)$r["prix"]-1]++;
-
+            if($r["prix"]>0){
+                $satisfactionByMonth[$month]["prix"][(int)$r["prix"]-1]++;
+            }
             ////// spa
-            $satisfactionByMonth[$month]["spa"][(int)$r["spa"]-1]++;
-
+            if($r["spa"]>0){
+                $satisfactionByMonth[$month]["spa"][(int)$r["spa"]-1]++;
+            }
             //// revenir
-            $satisfactionByMonth[$month]["revenir"][(int)$r["revenir"]-1]++;
-
+            if($r["revenir"]>0){
+                $satisfactionByMonth[$month]["revenir"][(int)$r["revenir"]-1]++;
+            }
             ///// recommander
-            $satisfactionByMonth[$month]["recommander"][(int)$r["recommander"]-1]++;
-
-
-
-
-
-
+            if($r["recommander"]>0){
+                $satisfactionByMonth[$month]["recommander"][(int)-1]++;
+            }
         }
     }
-
 }
 ////// le zoo
 
@@ -430,7 +434,7 @@ foreach($ClientsByMonth as $month=>$client){
         $stmt->bindValue(":id", $c["id"]);
         $stmt->execute();
         $r = $stmt->fetch();
-        if($r){
+        if($r && $r["visite_zoo"]>0){
             $visiteZooTotalByMonth[$month]++;
             $visiteZooByMonth[$month][(int)$r["visite_zoo"]-1]++;
         }

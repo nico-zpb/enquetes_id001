@@ -140,22 +140,54 @@ $recommander = [0, 0, 0, 0];
 
 foreach ($satisfaction as $k => $v) {
     // satisfaction globale
-    $globalSatisf[$v["globalement"] - 1]++;
-    $satifChambre[$v["chambres"] - 1]++;
-    $satifRestauration[$v["restauration"] - 1]++;
-    $satifBar[$v["bar"] - 1]++;
-    $satifAccueil[$v["accueil"] - 1]++;
-    $satifEnvironement[$v["environnement"] - 1]++;
-    $satifRapport[$v["rapport"] - 1]++;
-    $perceptionPrix[$v["prix"] - 1]++;
-    $satifAmabilite[$v["resto_amabilite"] - 1]++;
-    $satifService[$v["resto_service"] - 1]++;
-    $satifDiversite[$v["resto_diversite"] - 1]++;
-    $satifPlats[$v["resto_plats"] - 1]++;
-    $satifVins[$v["resto_vins"] - 1]++;
-    $satifPrix[$v["resto_prix"] - 1]++;
-    $revenir[$v["revenir"] - 1]++;
-    $recommander[$v["recommander"] - 1]++;
+    if($v["globalement"] > 0){
+        $globalSatisf[$v["globalement"] - 1]++;
+    }
+    if($v["chambres"] > 0){
+        $satifChambre[$v["chambres"] - 1]++;
+    }
+    if($v["restauration"] > 0){
+        $satifRestauration[$v["restauration"] - 1]++;
+    }
+    if($v["bar"] > 0){
+        $satifBar[$v["bar"] - 1]++;
+    }
+    if($v["accueil"] > 0){
+        $satifAccueil[$v["accueil"] - 1]++;
+    }
+    if($v["environnement"] > 0){
+        $satifEnvironement[$v["environnement"] - 1]++;
+    }
+    if($v["rapport"] > 0){
+        $satifRapport[$v["rapport"] - 1]++;
+    }
+    if($v["prix"] > 0){
+        $perceptionPrix[$v["prix"] - 1]++;
+    }
+    if($v["resto_amabilite"] > 0){
+        $satifAmabilite[$v["resto_amabilite"] - 1]++;
+    }
+    if($v["resto_service"] > 0){
+        $satifService[$v["resto_service"] - 1]++;
+    }
+    if($v["resto_diversite"] > 0){
+        $satifDiversite[$v["resto_diversite"] - 1]++;
+    }
+    if($v["resto_plats"] > 0){
+        $satifPlats[$v["resto_plats"] - 1]++;
+    }
+    if($v["resto_vins"] > 0){
+        $satifVins[$v["resto_vins"] - 1]++;
+    }
+    if($v["resto_prix"] > 0){
+        $satifPrix[$v["resto_prix"] - 1]++;
+    }
+    if($v["revenir"] > 0){
+        $revenir[$v["revenir"] - 1]++;
+    }
+    if($v["recommander"] > 0){
+        $recommander[$v["recommander"] - 1]++;
+    }
 }
 
 $allServicesSatif = [
@@ -191,8 +223,9 @@ foreach ($clients as $k => $c) {
     $tmp = $stmt->fetchAll();
     if ($tmp) {
         foreach ($tmp as $l => $t) {
-            $resultsConnaissance[$t["type_id"] - 1]++;
-
+            if($t["type_id"]>0){
+                $resultsConnaissance[$t["type_id"] - 1]++;
+            }
         }
     }
 }
@@ -260,8 +293,9 @@ foreach($clientsParisiens as $k=>$cp){
     $tmp = $stmt->fetchAll();
     if ($tmp) {
         foreach ($tmp as $l => $t) {
-            $resultsConnaissanceParis[$t["type_id"] - 1]++;
-
+            if($t["type_id"]){
+                $resultsConnaissanceParis[$t["type_id"] - 1]++;
+            }
         }
     }
 }
@@ -295,8 +329,9 @@ foreach($clientsParisiensParDeps as $k=>$deptParis){
         $tmp = $stmt->fetchAll();
         if ($tmp) {
             foreach ($tmp as $m => $t) {
-                $resultsConnaissanceParisParDepts[$k][$t["type_id"] - 1]++;
-
+                if($t["type_id"]>0){
+                    $resultsConnaissanceParisParDepts[$k][$t["type_id"] - 1]++;
+                }
             }
         }
     }
@@ -340,7 +375,9 @@ usort($selected, function($a,$b){
 //////////////// temps de trajet
 $tpsTrajet = [0,0,0];
 foreach($clients as $c){
-    $tpsTrajet[$c["tps_trajet"] - 1]++;
+    if($c["tps_trajet"]>0){
+        $tpsTrajet[$c["tps_trajet"] - 1]++;
+    }
 }
 $tpsTrajetPercent = array_map(function($it) use ($numEntry){
     return round(($it/$numEntry) * 100);
@@ -430,7 +467,9 @@ $countRooms = count($result);
 $rooms = [0,0,0,0];
 if($result){
     foreach($result as $k=>$v){
-        $rooms[$v["room"] - 1]++;
+        if($v["room"]>0){
+            $rooms[$v["room"] - 1]++;
+        }
     }
 }
 $roomsPercent = array_map(function($it) use ($countRooms){
@@ -495,10 +534,9 @@ foreach($clients as $k=>$c){
     $stmt->bindValue(":id", $c["id"]);
     $stmt->execute();
     $tmp = $stmt->fetch();
-    if($tmp){
+    if($tmp && $tmp["spa"]>0){
         $spaCounter++;
         $spa[$tmp["spa"] - 1]++;
-
     }
 }
 $spaPercent = array_map(function($it) use ($spaCounter){
@@ -516,8 +554,10 @@ $wifi = [0,0,0];
 $wifiCounter = 0;
 if($result){
     foreach($result as $k=>$v){
-        $wifiCounter++;
-        $wifi[$v["wifi"] - 1]++;
+        if($v["wifi"]>0){
+            $wifiCounter++;
+            $wifi[$v["wifi"] - 1]++;
+        }
     }
 }
 $wifiPercent = array_map(function($it) use ($wifiCounter){
