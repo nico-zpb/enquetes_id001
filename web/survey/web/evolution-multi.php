@@ -411,7 +411,7 @@ foreach($ClientsByMonth as $month=>$client){
             }
             ///// recommander
             if($r["recommander"]>0){
-                $satisfactionByMonth[$month]["recommander"][(int)-1]++;
+                $satisfactionByMonth[$month]["recommander"][(int)$r["recommander"]-1]++;
             }
         }
     }
