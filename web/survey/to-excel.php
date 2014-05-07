@@ -181,7 +181,7 @@ $yearRange = range($annee-4, $annee);
                                 <p>génération du fichier en cours</p>
                             </div>
 
-                            <div id="download-excel-global"><p><a href="" class="btn btn-hotel-inverse">télécharger</a></p></div>
+                            <div id="download-excel-brutes"><p><a href="" class="btn btn-hotel-inverse">télécharger</a></p></div>
                         </div>
                         <div class="col-md-6"></div>
                     </div>

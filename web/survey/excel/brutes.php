@@ -356,3 +356,7 @@ $activeSheet->getStyle($columnNames[0].$startRow.":".$columnNames[$numCols].$end
 /// sauvegarde
 $excelWriter = new PHPExcel_Writer_Excel2007($workbook);
 $excelWriter->save($savePath . DIRECTORY_SEPARATOR . "donnees_brutes_" . $annee . ".xlsx");
+header("Content-Type: application/json");
+$response = ["error"=>false, "link"=>"/survey/downloads/donnees_brutes_" . $annee . ".xlsx"];
+echo json_encode($response);
+die();

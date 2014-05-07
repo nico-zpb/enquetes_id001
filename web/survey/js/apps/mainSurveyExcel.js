@@ -33,31 +33,86 @@ var spinnerOpts = {
 };
 
 $(function(){
-
     var spinners =      $(".excel-spinner");
     spinners.spin(spinnerOpts);
 
     var excelSpinner1 =  $("#excelSpinner1");
     var loader1 = $("#loader1");
     loader1.hide();
+    var download_excel_global = $("#download-excel-global");
+    download_excel_global.hide();
+    var form_excel_global = $("#form_excel_global");
+    var submit_excel_global = $("#submit_excel_global");
+
+    form_excel_global.on("submit", function(evt){
+        evt.preventDefault();
+        submit_excel_global.hide();
+        loader1.show();
+        $.post(form_excel_global.attr("action"), form_excel_global.serialize())
+            .done(function(resp){
+                if(!resp.error){
+                    console.log(resp);
+                    loader1.hide();
+                    var a = download_excel_global.find("a.btn");
+                    var href = a.attr("href");
+                    href = href + resp.link;
+                    a.attr("href", href) ;
+                    download_excel_global.show();
+                } else {
+
+                }
+            })
+            .fail(function(resp){
+
+            });
+        return false;
+    });
 
     var excelSpinner2 =  $("#excelSpinner2");
     var loader2 = $("#loader2");
     loader2.hide();
+    var download_excel_brutes = $("#download-excel-brutes");
+    download_excel_brutes.hide();
+    var form_excel_brutes = $("#form_excel_brutes");
+    var submit_excel_brutes = $("#submit_excel_brutes");
+
+    form_excel_brutes.on("submit",function(evt){
+        evt.preventDefault();
+        submit_excel_brutes.hide();
+        loader2.show();
+        $.post(form_excel_brutes.attr("action"), form_excel_brutes.serialize())
+            .done(function(resp){
+                if(!resp.error){
+
+                    loader2.hide();
+                    var a = download_excel_brutes.find("a.btn");
+                    var href = a.attr("href");
+                    href = href + resp.link;
+                    a.attr("href", href) ;
+                    download_excel_brutes.show();
+                } else {
+
+                }
+            })
+            .fail(function(resp){
+
+            });
+        return false;
+    });
 
 
 
 
 
 
-    var excelForm =     $("#excelForm");
-    var excelSubmit =   $("#excelSubmit");
+
+
     var excelSuccess =  $("#excelSuccess");
     excelSuccess.hide();
     var excelError =    $("#excelError");
     excelError.hide();
 
-    var annee_start =   $("#annee_start");
+    /*var annee_start =   $("#annee_start");
     var annee_end =     $("#annee_end");
     var mois_start =    $("#mois_start");
     var mois_end =      $("#mois_end");
@@ -91,7 +146,7 @@ $(function(){
                 excelError.text("Error "+ xhr.status + " " + xhr.statusText + ". Une erreur serveur est survenue, merci de prévenir le webmaster de cet incident. Excusez nous pour ce désagrément.").show();
             });
         return false;
-    });
+    });*/
 
     /*annee_start.on("change", function(evt){
      var a = parseInt($(this).val());

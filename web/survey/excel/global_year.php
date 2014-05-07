@@ -26,7 +26,7 @@ if (!isConnected()) {
     header("Location: /index.php");
     die();
 }
-if (!isPost() || !postExists("form_excel_global")) {
+if (!isAjax() && (!isPost() || !postExists("form_excel_global"))) {
     header("Location: /index.php");
     die();
 }
@@ -1615,3 +1615,10 @@ $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow) . ":" . $column
 /// sauvegarde
 $excelWriter = new PHPExcel_Writer_Excel2007($workbook);
 $excelWriter->save($savePath . DIRECTORY_SEPARATOR . "evolution_mensuelle_" . $annee . ".xlsx");
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+header("Content-Type: application/json");
+$response = ["error"=>false, "link"=>"/survey/downloads/evolution_mensuelle_" . $annee . ".xlsx"];
+echo json_encode($response);
+die();
