@@ -90,7 +90,7 @@
         </tr>
         <tr>
             <td style="width: 15%;"></td>
-            <td style="width: 85%; font-weight: bold; font-size:12pt;" class="">Vert soutenu : 90% et +, vert clair : 80 à moins de 90%, rouge : &lt; 80% de satisfaits</td>
+            <td style="width: 85%; font-weight: bold; font-size:14pt;" class="">Vert soutenu : 90% et +, vert clair : 80 à moins de 90%, rouge : &lt; 80% de satisfaits</td>
         </tr>
         <tr>
             <td style="width: 15%;" class="sub-header">Dont % de très satisfaits</td>
