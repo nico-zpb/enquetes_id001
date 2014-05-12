@@ -19,8 +19,157 @@
 */
 include_once "../../../datas/all.php";
 include_once "../../../php/functions.php";
+//TODO get year ( form on front page .....)
+$annee = 2014; //provisoire
+$monthStart = 1;
+$dateStart = DateTime::createFromFormat("j-n-Y", "1-".$monthStart."-".$annee);
+
+// aujourd'hui
+$dateForToday = new DateTime();
+// mois actuel
+$monthEnd = $dateForToday->format("n");
+
+if($debug){
+    $monthEnd = 12;
+}
+
+
+$tmpDateEnd = DateTime::createFromFormat("j-n-Y", "1-" . $monthEnd . "-" . $annee);
+// nombre de jours dans le mois actuel
+$lastDayOfMonthEnd = $tmpDateEnd->format("t");
+// datetime du dernier jour du mois actuel
+$dateEnd = DateTime::createFromFormat("j-n-Y", $lastDayOfMonthEnd . "-" . $monthEnd . "-" .$annee);
+
+// recup des timestamps
+$dateStartTs = $dateStart->getTimestamp();
+$dateEndTs = $dateEnd->getTimestamp();
+
+include_once "../../../php/enquete-connexion.php";
+$numEntry = 0;
+
+// verif il y a t-il des enregistrements pour la periode ?
+$sql = "SELECT COUNT(*) as num FROM clients WHERE arrive_timestamp>=:datestartts AND arrive_timestamp<=:dateendts";
+$stmt = $pdo->prepare($sql);
+$stmt->bindValue(":datestartts", $dateStartTs);
+$stmt->bindValue(":dateendts", $dateEndTs);
+$stmt->execute();
+$numEntry = $stmt->fetch()["num"];
+if(!$numEntry){
+    die("no clients"); //TODO revoit sur page principale en cas de 0 entry
+    /*setFlash("Il n'y a pas de résultats sur la période demandée.");
+    header("Location: /survey/to-web.php");
+    die();*/
+}
+
+$clientsByMonth = [];
+$numEntryByMonth = [];
+$numEntriesTotal = 0;
+
+$sql = "SELECT * FROM clients WHERE arrive_annee=:annee AND arrive_mois=:mois";
+$stmt = $pdo->prepare($sql);
+for ($i = $monthStart; $i < $monthEnd + 1; $i++) {
+
+    $stmt->bindValue(":annee", $annee);
+    $stmt->bindValue(":mois", $i);
+    $stmt->execute();
+    $result = $stmt->fetchAll();
+    if (!$result) {
+        $ClientsByMonth[$datas_mois[$i - 1]] = [];
+        $numEntryByMonth[$datas_mois[$i - 1]] = 0;
+    }
+    $count = count($result);
+    $ClientsByMonth[$datas_mois[$i - 1]] = $result;
+    $numEntryByMonth[$datas_mois[$i - 1]] = $count;
+    $numEntriesTotal += $count;
+}
+
+/////////// connaissance /////////
+function getEmptyConnaissanceArr()
+{
+    return [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+}
+
+$sql = "SELECT type_id FROM client_connaissance_type WHERE client_id=:id";
+$stmt = $pdo->prepare($sql);
+
+$connaissanceByMonth = [];
+$connaissanceNumByMonth = [];
+$connaissancePercentByMonth = [];
+$connaissanceTotal = getEmptyConnaissanceArr();
+$connaissanceEntries = 0;
+
+foreach ($ClientsByMonth as $monthShortName => $clientsInMonth) {
+    $connaissanceByMonth[$monthShortName] = getEmptyConnaissanceArr();
+    $connaissanceNumByMonth[$monthShortName] = 0;
+
+    foreach ($clientsInMonth as $k => $client) {
+        $stmt->bindValue(":id", $client["id"]);
+        $stmt->execute();
+        $tmp = $stmt->fetchAll();
+        if ($tmp) {
+            foreach ($tmp as $l => $t) {
+                if($t["type_id"]>0){
+                    $connaissanceByMonth[$monthShortName][$t["type_id"] - 1]++;
+                    $connaissanceTotal[$t["type_id"] - 1]++;
+                    $connaissanceEntries++;
+                }
+            }
+        }
+    }
+
+    for ($i = 0; $i < count($connaissanceTotal); $i++) {
+        $connaissanceNumByMonth[$monthShortName] += $connaissanceByMonth[$monthShortName][$i];
+    }
+
+    $all = $connaissanceNumByMonth[$monthShortName];
+
+    $connaissancePercentByMonth[$monthShortName] = array_map(function ($it) use ($all) {
+        return round(($it / $all) * 100);
+    }, $connaissanceByMonth[$monthShortName]);
+
+}
+
+$connaissancePercentTotal = array_map(function ($it) use ($connaissanceEntries) {
+    return round(($it / $connaissanceEntries) * 100);
+}, $connaissanceTotal);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 require_once(LIBS . DIRECTORY_SEPARATOR . "html2pdf.class.php");
-$annee = 2014;
+
 
 
 

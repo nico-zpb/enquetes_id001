@@ -25,5 +25,20 @@
         </tr>
     </table>
 
+    <table>
+        <thead>
+            <tr>
+
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($connaissance_types as $k=>$v): ?>
+                <tr>
+                    <td><?php echo $v; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
 
 </page>

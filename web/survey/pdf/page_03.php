@@ -24,6 +24,10 @@
             <td><span class="big">Nombre de questionnaires en <?php echo $annee; ?></span></td>
         </tr>
     </table>
-
+    <table>
+        <tr>
+            <td style="width: 100%; text-align: center; font-size:16pt;">Le nombre de questionnaires exploités en <?php echo $annee; ?> est de <?php echo $numEntry; ?></td>
+        </tr>
+    </table>
 
 </page>
