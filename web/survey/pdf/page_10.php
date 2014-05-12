@@ -27,7 +27,7 @@
 
 
     <table style="width: 100%;">
-
+        <?php $cols = count($connaissancePercentByMonth) + 1; $colwidth = (84/$cols); ?>
         <tr>
             <td style="width: 15%;"></td>
             <td style="width: 85%;" class="sub-header">Avez-vous été satisfaits des points suivants : </td>
@@ -38,20 +38,20 @@
                 <table class="table">
                     <thead>
                     <tr>
-                        <th></th>
+                        <th style="width: 16%;"></th>
                         <?php $monthes = [];?>
                         <?php foreach($connaissancePercentByMonth as $name=>$v): ?>
                             <?php $monthes[] = $name;?>
-                            <th><?php echo $name; ?></th>
+                            <th style="width:<?php echo $colwidth; ?>%;"><?php echo $name; ?></th>
                         <?php endforeach; ?>
-                        <th>Total</th>
+                        <th style="width:<?php echo $colwidth; ?>%;">Total</th>
                     </tr>
 
                     </thead>
                     <tbody>
                     <?php foreach($datas_services_bis_shorts as $k=>$name): ?>
                         <tr>
-                            <td><?php echo $datas_services_bis[$k]; ?></td>
+                            <td style="width: 16%; background-color: #dfe782;"><?php echo $datas_services_bis[$k]; ?></td>
                             <?php $totalBySatisfaction = 0; ?>
                             <?php foreach($monthes as $l=>$w): ?>
                                 <?php
@@ -68,7 +68,7 @@
                                     $class = " class='danger'";
                                 }
                                 ?>
-                                <td <?php echo $class; ?>><?php echo $sum; ?>%</td><!-- !pourcentage -->
+                                <td style="width:<?php echo $colwidth; ?>%;" <?php echo $class; ?>><?php echo $sum; ?>%</td><!-- !pourcentage -->
                             <?php endforeach; ?>
                             <?php
                             $total = round(($totalBySatisfaction/$totalSatisfaction) * 100);
@@ -80,7 +80,7 @@
                                 $classT = " class='danger'";
                             }
                             ?>
-                            <td <?php echo $classT; ?>><?php echo $total; ?>%</td>
+                            <td style="width:<?php echo $colwidth; ?>%;" <?php echo $classT; ?>><?php echo $total; ?>%</td>
                         </tr>
                     <?php endforeach; ?>
                     </tbody>
@@ -90,7 +90,7 @@
         </tr>
         <tr>
             <td style="width: 15%;"></td>
-            <td style="width: 85%;" class="sub-header">Vert soutenu : 90% et +, vert clair : 80 à moins de 90%, rouge : < 80% de satisfaits</td>
+            <td style="width: 85%; font-weight: bold; font-size:12pt;" class="">Vert soutenu : 90% et +, vert clair : 80 à moins de 90%, rouge : &lt; 80% de satisfaits</td>
         </tr>
         <tr>
             <td style="width: 15%;" class="sub-header">Dont % de très satisfaits</td>
@@ -98,29 +98,29 @@
                 <table class="table">
                     <thead>
                     <tr>
-                        <th></th>
+                        <th style="width: 16%;"></th>
                         <?php $monthes = [];?>
                         <?php foreach($connaissancePercentByMonth as $name=>$v): ?>
                             <?php $monthes[] = $name;?>
-                            <th><?php echo $name; ?></th>
+                            <th style="width:<?php echo $colwidth; ?>%;"><?php echo $name; ?></th>
                         <?php endforeach; ?>
-                        <th>Total</th>
+                        <th style="width:<?php echo $colwidth; ?>%;">Total</th>
                     </tr>
 
                     </thead>
                     <tbody>
                     <?php foreach($datas_services_bis_shorts as $k=>$name): ?>
                         <tr>
-                            <td><?php echo $datas_services_bis[$k]; ?></td>
+                            <td style="width: 16%; background-color: #dfe782;"><?php echo $datas_services_bis[$k]; ?></td>
                             <?php $totalBySatisfaction = 0; ?>
                             <?php foreach($monthes as $l=>$w): ?>
                                 <?php $totalBySatisfaction += $satisfactionByMonth[$w][$name][0]; ?>
-                                <td><?php echo round(($satisfactionByMonth[$w][$name][0] / $satisfactionByMonthTotal[$w]) * 100); ?>%</td><!-- !pourcentage -->
+                                <td style="width:<?php echo $colwidth; ?>%; background-color: #dfe782;"><?php echo round(($satisfactionByMonth[$w][$name][0] / $satisfactionByMonthTotal[$w]) * 100); ?>%</td><!-- !pourcentage -->
                             <?php endforeach; ?>
                             <?php
                             $total = round(($totalBySatisfaction/$totalSatisfaction) * 100);
                             ?>
-                            <td><?php echo $total; ?>%</td>
+                            <td style="width:<?php echo $colwidth; ?>%; background-color: #dfe782;"><?php echo $total; ?>%</td>
                         </tr>
                     <?php endforeach; ?>
                     </tbody>
