@@ -30,8 +30,10 @@ ob_start();
     include(dirname(__FILE__)."/page_03.php"); /* nombre de questionnaires */
     include(dirname(__FILE__)."/page_04.php");
     include(dirname(__FILE__)."/page_05.php");
-    include(dirname(__FILE__)."/page_06.php"); /* mensuel origine de la connaissance de l'hotel */
+    include(dirname(__FILE__)."/page_06.php"); /* mensuel - general - origine de la connaissance de l'hotel */
     include(dirname(__FILE__)."/page_07.php"); /* region d'habitation zone d'attraction */
+    include(dirname(__FILE__)."/page_08.php"); /* mensuel - zone - charts - origine de la connaissance de l'hotel */
+    include(dirname(__FILE__)."/page_09.php"); /* mensuel - zone - origine de la connaissance de l'hotel */
 $content = ob_get_clean();
 
 try{
