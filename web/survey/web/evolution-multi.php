@@ -162,16 +162,16 @@ foreach ($ClientsByMonth as $m => $d) {
 
 }
 $numCentreByMonthPercent = array_map(function ($it, $to) {
-    return round(($it / $to) * 100);
+    return round(($it / $to) * 100,1);
 }, $numCentreByMonth, $totalByMonth);
 $numParisByMonthPercent = array_map(function ($it, $to) {
-    return round(($it / $to) * 100);
+    return round(($it / $to) * 100,1);
 }, $numParisByMonth, $totalByMonth);
 $numOtherByMonthPercent = array_map(function ($it, $to) {
-    return round(($it / $to) * 100);
+    return round(($it / $to) * 100,1);
 }, $numOtherByMonth, $totalByMonth);
 $numEtrangerByMonthPercent = array_map(function ($it, $to) {
-    return round(($it / $to) * 100);
+    return round(($it / $to) * 100,1);
 }, $numEtrangerByMonth, $totalByMonth);
 
 ///////// connaissance par zone page-3

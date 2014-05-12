@@ -74,11 +74,11 @@ for ($i = $monthStart; $i < $monthEnd + 1; $i++) {
     $stmt->execute();
     $result = $stmt->fetchAll();
     if (!$result) {
-        $ClientsByMonth[$datas_mois[$i - 1]] = [];
+        $clientsByMonth[$datas_mois[$i - 1]] = [];
         $numEntryByMonth[$datas_mois[$i - 1]] = 0;
     }
     $count = count($result);
-    $ClientsByMonth[$datas_mois[$i - 1]] = $result;
+    $clientsByMonth[$datas_mois[$i - 1]] = $result;
     $numEntryByMonth[$datas_mois[$i - 1]] = $count;
     $numEntriesTotal += $count;
 }
@@ -98,7 +98,7 @@ $connaissancePercentByMonth = [];
 $connaissanceTotal = getEmptyConnaissanceArr();
 $connaissanceEntries = 0;
 
-foreach ($ClientsByMonth as $monthShortName => $clientsInMonth) {
+foreach ($clientsByMonth as $monthShortName => $clientsInMonth) {
     $connaissanceByMonth[$monthShortName] = getEmptyConnaissanceArr();
     $connaissanceNumByMonth[$monthShortName] = 0;
 
@@ -134,10 +134,139 @@ $connaissancePercentTotal = array_map(function ($it) use ($connaissanceEntries) 
 }, $connaissanceTotal);
 
 
+//////////// regions d'habitation page_07
+
+$numCentreByMonth = [];
+$numParisByMonth = [];
+$numOtherByMonth = [];
+$numEtrangerByMonth = [];
+$totalByMonth = [];
+$totalCentre = 0;
+$totalParis = 0;
+$totalOther = 0;
+$totalEtranger = 0;
+$totalOriginEntry = 0;
+
+foreach ($clientsByMonth as $m => $d) {
+
+    if (empty($numCentreByMonth[$m])) {
+        $numCentreByMonth[$m] = 0;
+    }
+    if (empty($numParisByMonth[$m])) {
+        $numParisByMonth[$m] = 0;
+    }
+    if (empty($numOtherByMonth[$m])) {
+        $numOtherByMonth[$m] = 0;
+    }
+    if (empty($numEtrangerByMonth[$m])) {
+        $numEtrangerByMonth[$m] = 0;
+    }
+    if (empty($totalByMonth[$m])) {
+        $totalByMonth[$m] = 0;
+    }
+
+    foreach ($d as $k => $c) {
+        $totalOriginEntry++;
+        if (in_array($c["departement_num"], $depsCentre)) {
+            $numCentreByMonth[$m]++;
+            $totalCentre++;
+        } elseif (in_array($c["departement_num"], $depsParis)) {
+            $numParisByMonth[$m]++;
+            $totalParis++;
+        } else {
+            if ($c["departement_num"] != 100) {
+                $numOtherByMonth[$m]++;
+                $totalOther++;
+            } else {
+                $numEtrangerByMonth[$m]++;
+                $totalEtranger++;
+            }
+        }
+        $totalByMonth[$m]++;
+    }
+
+
+}
+$numCentreByMonthPercent= array_map(function ($it, $to) {
+    return round(($it / $to) * 100,1);
+}, $numCentreByMonth, $totalByMonth);
+$numParisByMonthPercent = array_map(function ($it, $to) {
+    return round(($it / $to) * 100,1);
+}, $numParisByMonth, $totalByMonth);
+$numOtherByMonthPercent = array_map(function ($it, $to) {
+    return round(($it / $to) * 100,1);
+}, $numOtherByMonth, $totalByMonth);
+$numEtrangerByMonthPercent = array_map(function ($it, $to) {
+    return round(($it / $to) * 100,1);
+}, $numEtrangerByMonth, $totalByMonth);
+
+
+///////// connaissance par zone page_09
+$connaissanceRegionCentreByMonth = [];
+$connaissanceRegionCentreByMonthTotal = [];
+$connaissanceRegionParisByMonth = [];
+$connaissanceRegionParisByMonthTotal = [];
+$connaissanceRegionAutresByMonth = [];
+$connaissanceRegionAutresByMonthTotal = [];
+
+$sql = "SELECT type_id FROM client_connaissance_type WHERE client_id=:id";
+$stmt = $pdo->prepare($sql);
+foreach($clientsByMonth as $month=>$clients){
+
+    if(empty($connaissanceRegionCentreByMonth[$month])){
+        $connaissanceRegionCentreByMonth[$month] = getEmptyConnaissanceArr();
+    }
+    if(empty($connaissanceRegionParisByMonth[$month])){
+        $connaissanceRegionParisByMonth[$month] = getEmptyConnaissanceArr();
+    }
+    if(empty($connaissanceRegionAutresByMonth[$month])){
+        $connaissanceRegionAutresByMonth[$month] = getEmptyConnaissanceArr();
+    }
+    if(empty($connaissanceRegionCentreByMonthTotal[$month])){
+        $connaissanceRegionCentreByMonthTotal[$month] = 0;
+    }
+    if(empty($connaissanceRegionParisByMonthTotal[$month])){
+        $connaissanceRegionParisByMonthTotal[$month] = 0;
+    }
+    if(empty($connaissanceRegionAutresByMonthTotal[$month])){
+        $connaissanceRegionAutresByMonthTotal[$month] = 0;
+    }
 
 
 
+    foreach($clients as $k=>$c){
+        $stmt->bindValue(":id", $c["id"]);
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+        if($result){
+            if (in_array($c["departement_num"], $depsCentre)) {
+                foreach($result as $key=>$type){
+                    if($type["type_id"]>0){
+                        $connaissanceRegionCentreByMonthTotal[$month]++;
+                        $connaissanceRegionCentreByMonth[$month][$type["type_id"] - 1]++;
+                    }
+                }
+            } elseif (in_array($c["departement_num"], $depsParis)) {
+                foreach($result as $key=>$type){
+                    if($type["type_id"]>0){
+                        $connaissanceRegionParisByMonthTotal[$month]++;
+                        $connaissanceRegionParisByMonth[$month][$type["type_id"] - 1]++;
+                    }
+                }
+            } else {
+                if ($c["departement_num"] != 100) {
+                    foreach($result as $key=>$type){
+                        if($type["type_id"]>0){
+                            $connaissanceRegionAutresByMonthTotal[$month]++;
+                            $connaissanceRegionAutresByMonth[$month][$type["type_id"] - 1]++;
+                        }
+                    }
+                }
+            }
+        }
 
+    }
+}
 
 
 

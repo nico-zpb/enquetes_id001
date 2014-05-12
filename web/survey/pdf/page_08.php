@@ -25,5 +25,5 @@
         </tr>
     </table>
 
-
+<!-- TODO charts -->
 </page>

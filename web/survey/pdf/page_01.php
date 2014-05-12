@@ -7,7 +7,30 @@
  */
 ?>
 <style type="text/css">
-    table{border: none; width:100%;}
+    table{
+        width: 100%;
+
+    }
+    table.table{
+        border: none; min-width:100%; border-collapse: collapse;table-layout: fixed;
+    }
+    table.table.small tr th, table.table.small tr td{
+        font-size: 6pt;
+    }
+    table.table tr th{
+        text-align: left;
+        background-color: #97bf0d;
+        color: #ffffff;
+    }
+    table.table tr th, table.table tr td {
+        padding: 1mm;
+    }
+    table.table tr.odd {
+        background-color: #dfe782;
+    }
+    table.table tr.even {
+        background-color: #97bf0d;
+    }
     table.page_footer{  padding: 2mm; }
     table.page-header{padding: 2mm;}
     table.page-header tr td{
