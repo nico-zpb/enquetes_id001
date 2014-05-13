@@ -19,6 +19,7 @@
 */ 
 ?>
 <page pageset="old">
+    <bookmark title="Satisfaction globale par service" level="0"></bookmark>
     <table class="page-header">
         <tr>
             <td><span class="regular">Satisfaction globale par service</span></td>

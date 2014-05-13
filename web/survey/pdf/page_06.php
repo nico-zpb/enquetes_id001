@@ -19,6 +19,7 @@
 */ 
 ?>
 <page pageset="old">
+    <bookmark title="Origine de la connaissance de l'hôtel" level="0"></bookmark>
     <table class="page-header">
         <tr>
             <td><span class="regular">Origine de la connaissance de l'hôtel</span></td>

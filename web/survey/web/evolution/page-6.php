@@ -135,9 +135,9 @@
                                 <td><?php echo $name; ?></td>
                                 <?php foreach($monthes as $l=>$w): ?>
                                     <?php $totalProp += $satisfactionByMonth[$w]["spa"][$k]; ?>
-                                    <td><?php echo round(($satisfactionByMonth[$w]["spa"][$k]/$satisfactionByMonthTotal[$w]) * 100); ?>%</td>
+                                    <td><?php echo round(($satisfactionByMonth[$w]["spa"][$k]/$satisfactionByMonthTotal[$w]) * 100,1); ?>%</td>
                                 <?php endforeach; ?>
-                                <td><?php echo round(($totalProp / $totalSatisfaction ) * 100); ?>%</td>
+                                <td><?php echo round(($totalProp / $totalSatisfaction ) * 100,1); ?>%</td>
                             </tr>
                         <?php endforeach; ?>
                         <tr>
@@ -204,9 +204,9 @@
                                 <td><?php echo $name; ?></td>
                                 <?php foreach($monthes as $l=>$w): ?>
                                     <?php $totalProp += $satisfactionByMonth[$w]["revenir"][$k]; ?>
-                                    <td><?php echo round(($satisfactionByMonth[$w]["revenir"][$k]/$satisfactionByMonthTotal[$w]) * 100); ?>%</td>
+                                    <td><?php echo round(($satisfactionByMonth[$w]["revenir"][$k]/$satisfactionByMonthTotal[$w]) * 100,1); ?>%</td>
                                 <?php endforeach; ?>
-                                <td><?php echo round(($totalProp / $totalSatisfaction ) * 100); ?>%</td>
+                                <td><?php echo round(($totalProp / $totalSatisfaction ) * 100,1); ?>%</td>
                             </tr>
                         <?php endforeach; ?>
                         <tr>
@@ -343,17 +343,17 @@
                                 $totalOui += $visiteZooByMonth[$w][0];
                                 $totalAll += $visiteZooTotalByMonth[$w];
                                 ?>
-                                <td><?php echo round(($visiteZooByMonth[$w][0] / $visiteZooTotalByMonth[$w]) * 100); ?>%</td>
+                                <td><?php echo round(($visiteZooByMonth[$w][0] / $visiteZooTotalByMonth[$w]) * 100,1); ?>%</td>
                             <?php endforeach; ?>
-                            <td><?php echo round(($totalOui/$totalAll) * 100); ?>%</td>
+                            <td><?php echo round(($totalOui/$totalAll) * 100,1); ?>%</td>
                         </tr>
                         <tr>
                             <td>Non</td>
                             <?php foreach($monthes as $l=>$w): ?>
                                 <?php $totalNon += $visiteZooByMonth[$w][1]; ?>
-                                <td><?php echo round(($visiteZooByMonth[$w][1] / $visiteZooTotalByMonth[$w]) * 100); ?>%</td>
+                                <td><?php echo round(($visiteZooByMonth[$w][1] / $visiteZooTotalByMonth[$w]) * 100,1); ?>%</td>
                             <?php endforeach; ?>
-                            <td><?php echo round(($totalNon/$totalAll) * 100); ?>%</td>
+                            <td><?php echo round(($totalNon/$totalAll) * 100,1); ?>%</td>
                         </tr>
                         <tr>
                             <td>Total</td>

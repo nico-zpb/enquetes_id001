@@ -19,6 +19,7 @@
 */ 
 ?>
 <page pageset="old">
+    <bookmark title="Intention de revenir (fidélisation)" level="0"></bookmark>
     <table class="page-header">
         <tr>
             <td><span class="regular">Intention de revenir (fidélisation)</span></td>

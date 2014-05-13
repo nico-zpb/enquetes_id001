@@ -20,6 +20,7 @@
 ?>
 
 <page pageset="old">
+    <bookmark title="Visite du zoo pendant la durée du séjour" level="0"></bookmark>
     <table class="page-header">
         <tr>
             <td><span class="regular">Visite du zoo pendant la durée du séjour</span></td>

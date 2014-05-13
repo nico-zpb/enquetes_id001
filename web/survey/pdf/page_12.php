@@ -19,6 +19,7 @@
 */ 
 ?>
 <page pageset="old">
+    <bookmark title="Perception du rapport qualité/prix de l'hôtel" level="0"></bookmark>
     <table class="page-header">
         <tr>
             <td><span class="regular">Perception du rapport qualité/prix de l'hôtel</span></td>

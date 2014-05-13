@@ -478,7 +478,7 @@ ob_start();
     include(dirname(__FILE__)."/page_01.php");
     include(dirname(__FILE__)."/page_02.php"); /* sommaire */
     include(dirname(__FILE__)."/page_03.php"); /* nombre de questionnaires */
-    include(dirname(__FILE__)."/page_04.php");
+    //include(dirname(__FILE__)."/page_04.php"); /* page de commentataires */
     include(dirname(__FILE__)."/page_05.php");
     include(dirname(__FILE__)."/page_06.php"); /* mensuel - general - origine de la connaissance de l'hotel */
     include(dirname(__FILE__)."/page_07.php"); /* region d'habitation zone d'attraction */

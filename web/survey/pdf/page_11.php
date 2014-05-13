@@ -19,6 +19,7 @@
 */ 
 ?>
 <page pageset="old">
+    <bookmark title="Satisfaction restauration" level="0"></bookmark>
     <table class="page-header">
         <tr>
             <td><span class="regular">Satisfaction restauration</span></td>

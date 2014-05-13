@@ -19,6 +19,7 @@ __      /     ______         \
 */
 ?>
 <page pageset="old">
+    <bookmark title="Satisfaction concernant le SPA" level="0"></bookmark>
     <table class="page-header">
         <tr>
             <td><span class="regular">Satisfaction concernant le SPA</span></td>

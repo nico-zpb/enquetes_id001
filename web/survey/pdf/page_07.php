@@ -19,6 +19,7 @@
 */
 ?>
 <page pageset="old">
+    <bookmark title="Région d'habitation (zone d'attraction)" level="0"></bookmark>
     <table class="page-header">
         <tr>
             <td><span class="regular">Région d'habitation (zone d'attraction)</span></td>
