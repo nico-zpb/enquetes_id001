@@ -58,28 +58,28 @@
                                 $percentVS = round(($satisfactionByMonth[$w][$name][0] / $satisfactionByMonthTotal[$w]) * 100);
                                 $percentS = round(($satisfactionByMonth[$w][$name][1] / $satisfactionByMonthTotal[$w]) * 100);
                                 $sum = $percentS + $percentVS;
-                                $class = "";
+                                $style = "";
                                 if($sum >= 90){
-                                    $class = " class='success'";
+                                    $style = " background-color:#63b451;";
                                 } elseif($sum<90 && $sum >= 80){
-                                    $class = " class='info'";
+                                    $style = " background-color:#dfe782;";
                                 } else {
-                                    $class = " class='danger'";
+                                    $style = " background-color:#d03838;";
                                 }
                                 ?>
-                                <td style="width:<?php echo $colwidth; ?>%;" <?php echo $class; ?>><?php echo $sum; ?>%</td><!-- !pourcentage -->
+                                <td style="width:<?php echo $colwidth; ?>%;<?php echo $style; ?>" ><?php echo $sum; ?>%</td><!-- !pourcentage -->
                             <?php endforeach; ?>
                             <?php
                             $total = round(($totalBySatisfaction/$totalSatisfaction) * 100);
                             if($total >= 90){
-                                $classT = " class='success'";
+                                $style = " background-color:#63b451;";
                             } elseif($total<90 && $total >= 80){
-                                $classT = " class='info'";
+                                $style = " background-color:#dfe782;";
                             } else {
-                                $classT = " class='danger'";
+                                $style = " background-color:#d03838;";
                             }
                             ?>
-                            <td style="width:<?php echo $colwidth; ?>%;" <?php echo $classT; ?>><?php echo $total; ?>%</td>
+                            <td style="width:<?php echo $colwidth; ?>%;<?php echo $style; ?>" ><?php echo $total; ?>%</td>
                         </tr>
                     <?php endforeach; ?>
                     </tbody>
@@ -89,7 +89,7 @@
         </tr>
         <tr>
             <td style="width: 15%; padding-top:2mm; padding-bottom: 2mm;"></td>
-            <td style="width: 85%; font-weight: bold; font-size:14pt; padding-top:2mm; padding-bottom: 2mm;" class="">Vert soutenu : 90% et +, vert clair : 80 à moins de 90%, rouge : &lt; 80% de satisfaits</td>
+            <td style="width: 85%; font-weight: bold; font-size:14pt; padding-top:4mm; padding-bottom: 6mm;" class="">Vert soutenu : 90% et +, vert clair : 80 à moins de 90%, rouge : &lt; 80% de satisfaits</td>
         </tr>
         <tr>
             <td style="width: 15%;" class="sub-header">Dont % de très satisfaits</td>

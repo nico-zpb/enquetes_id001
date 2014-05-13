@@ -66,9 +66,9 @@
                                 <td><?php echo $name; ?></td>
                                 <?php foreach($monthes as $l=>$w): ?>
                                     <?php $totalProp += $satisfactionByMonth[$w]["prix"][$k]; ?>
-                                    <td><?php echo round(($satisfactionByMonth[$w]["prix"][$k]/$satisfactionByMonthTotal[$w]) * 100); ?>%</td>
+                                    <td><?php echo round(($satisfactionByMonth[$w]["prix"][$k]/$satisfactionByMonthTotal[$w]) * 100,1); ?>%</td>
                                 <?php endforeach; ?>
-                                <td><?php echo round(($totalProp / $totalSatisfaction ) * 100); ?>%</td>
+                                <td><?php echo round(($totalProp / $totalSatisfaction ) * 100,1); ?>%</td>
                             </tr>
                         <?php endforeach; ?>
                         <tr>

@@ -488,6 +488,8 @@ ob_start();
     include(dirname(__FILE__)."/page_09.php"); /* mensuel - zone - origine de la connaissance de l'hotel */
     include(dirname(__FILE__)."/page_10.php"); /* mensuel - zone - origine de la connaissance de l'hotel */
     include(dirname(__FILE__)."/page_11.php"); /* mensuel - zone - origine de la connaissance de l'hotel */
+    include(dirname(__FILE__)."/page_12.php"); /* mensuel - zone - Perception du rapport qualité/prix de l'hôtel */
+    include(dirname(__FILE__)."/page_13.php"); /* mensuel - zone - Satisfaction concernant le SPA */
 $content = ob_get_clean();
 
 try{
