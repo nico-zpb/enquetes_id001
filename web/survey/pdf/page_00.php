@@ -444,32 +444,30 @@ foreach($clientsByMonth as $month=>$client){
     }
 }
 
+////// le zoo
 
+$sql = "SELECT visite_zoo FROM sejours WHERE client_id=:id";
+$stmt = $pdo->prepare($sql);
+$visiteZooByMonth = [];
+$visiteZooTotalByMonth = [];
+foreach($clientsByMonth as $month=>$client){
+    if(empty($visiteZooByMonth[$month])){
+        $visiteZooByMonth[$month] = [0,0];
+    }
+    if(empty($visiteZooTotalByMonth[$month])){
+        $visiteZooTotalByMonth[$month] = 0;
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    foreach($client as $k=>$c){
+        $stmt->bindValue(":id", $c["id"]);
+        $stmt->execute();
+        $r = $stmt->fetch();
+        if($r && $r["visite_zoo"]>0){
+            $visiteZooTotalByMonth[$month]++;
+            $visiteZooByMonth[$month][(int)$r["visite_zoo"]-1]++;
+        }
+    }
+}
 
 require_once(LIBS . DIRECTORY_SEPARATOR . "html2pdf.class.php");
 
@@ -490,6 +488,9 @@ ob_start();
     include(dirname(__FILE__)."/page_11.php"); /* mensuel - zone - origine de la connaissance de l'hotel */
     include(dirname(__FILE__)."/page_12.php"); /* mensuel - zone - Perception du rapport qualité/prix de l'hôtel */
     include(dirname(__FILE__)."/page_13.php"); /* mensuel - zone - Satisfaction concernant le SPA */
+    include(dirname(__FILE__)."/page_14.php"); /* mensuel - zone - visite zoo */
+    include(dirname(__FILE__)."/page_15.php"); /* mensuel - zone - revenir */
+    include(dirname(__FILE__)."/page_16.php"); /* mensuel - zone - recommander */
 $content = ob_get_clean();
 
 try{

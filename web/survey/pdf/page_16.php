@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: Nicolas Canfrère
  * Date: 13/05/14
- * Time: 09:08
+ * Time: 11:27
  */
   /*
            ____________________
@@ -21,12 +21,12 @@
 <page pageset="old">
     <table class="page-header">
         <tr>
-            <td><span class="regular">Perception du rapport qualité/prix de l'hôtel</span></td>
+            <td><span class="regular">Recommandation à des proches</span></td>
         </tr>
     </table>
     <table style="width: 100%;">
         <tr>
-            <td style="width: 100%;" class="sub-header">Au regard de la qualité des chambres et de l'environnement de l'hôtel, avez-vous trouvé le prix :</td>
+            <td style="width: 100%;" class="sub-header">Et recommanderiez-vous l'hôtel à des proches ?</td>
         </tr>
     </table>
     <?php $cols = count($connaissancePercentByMonth) + 1; $colwidth = (84/$cols); ?>
@@ -43,13 +43,13 @@
         </tr>
         </thead>
         <tbody>
-        <?php foreach($datas_perception_prix as $k=>$name): ?>
+        <?php foreach($datas_intentions as $k=>$name): ?>
             <?php $totalProp = 0; ?>
             <tr <?php if(($k+1)%2 == 0){echo 'class="even"'; } else {echo 'class="odd"';} ?>>
                 <td style="width: 16%;"><?php echo $name; ?></td>
                 <?php foreach($monthes as $l=>$w): ?>
-                    <?php $totalProp += $satisfactionByMonth[$w]["prix"][$k]; ?>
-                    <td style="width:<?php echo $colwidth; ?>%;"><?php echo round(($satisfactionByMonth[$w]["prix"][$k]/$satisfactionByMonthTotal[$w]) * 100,1); ?>%</td>
+                    <?php $totalProp += $satisfactionByMonth[$w]["recommander"][$k]; ?>
+                    <td style="width:<?php echo $colwidth; ?>%;"><?php echo round(($satisfactionByMonth[$w]["recommander"][$k]/$satisfactionByMonthTotal[$w]) * 100,1); ?>%</td>
                 <?php endforeach; ?>
                 <td style="width:<?php echo $colwidth; ?>%;"><?php echo round(($totalProp / $totalSatisfaction ) * 100,1); ?>%</td>
             </tr>
@@ -62,6 +62,6 @@
             <td style="width:<?php echo $colwidth; ?>%;"><?php echo $totalSatisfaction; ?></td>
         </tr>
         </tbody>
-    </table>
 
+    </table>
 </page>
