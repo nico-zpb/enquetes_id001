@@ -475,22 +475,22 @@ require_once(LIBS . DIRECTORY_SEPARATOR . "html2pdf.class.php");
 
 
 ob_start();
-    include(dirname(__FILE__)."/page_01.php");
-    include(dirname(__FILE__)."/page_02.php"); /* sommaire */
-    include(dirname(__FILE__)."/page_03.php"); /* nombre de questionnaires */
+    include(dirname(__FILE__) . "/page_01.php");
+    include(dirname(__FILE__) . "/page_02.php"); /* sommaire */
+    include(dirname(__FILE__) . "/page_03.php"); /* nombre de questionnaires */
     //include(dirname(__FILE__)."/page_04.php"); /* page de commentataires */
-    include(dirname(__FILE__)."/page_05.php");
-    include(dirname(__FILE__)."/page_06.php"); /* mensuel - general - origine de la connaissance de l'hotel */
-    include(dirname(__FILE__)."/page_07.php"); /* region d'habitation zone d'attraction */
-    include(dirname(__FILE__)."/page_08.php"); /* mensuel - zone - charts - origine de la connaissance de l'hotel */
-    include(dirname(__FILE__)."/page_09.php"); /* mensuel - zone - origine de la connaissance de l'hotel */
-    include(dirname(__FILE__)."/page_10.php"); /* mensuel - zone - origine de la connaissance de l'hotel */
-    include(dirname(__FILE__)."/page_11.php"); /* mensuel - zone - origine de la connaissance de l'hotel */
-    include(dirname(__FILE__)."/page_12.php"); /* mensuel - zone - Perception du rapport qualité/prix de l'hôtel */
-    include(dirname(__FILE__)."/page_13.php"); /* mensuel - zone - Satisfaction concernant le SPA */
-    include(dirname(__FILE__)."/page_14.php"); /* mensuel - zone - visite zoo */
-    include(dirname(__FILE__)."/page_15.php"); /* mensuel - zone - revenir */
-    include(dirname(__FILE__)."/page_16.php"); /* mensuel - zone - recommander */
+    include(dirname(__FILE__) . "/page_05.php");
+    include(dirname(__FILE__) . "/page_06.php"); /* mensuel - general - origine de la connaissance de l'hotel */
+    include(dirname(__FILE__) . "/page_07.php"); /* region d'habitation zone d'attraction */
+    include(dirname(__FILE__) . "/page_08.php"); /* mensuel - zone - charts - origine de la connaissance de l'hotel */
+    include(dirname(__FILE__) . "/page_09.php"); /* mensuel - zone - origine de la connaissance de l'hotel */
+    include(dirname(__FILE__) . "/page_10.php"); /* mensuel - zone - origine de la connaissance de l'hotel */
+    include(dirname(__FILE__) . "/page_11.php"); /* mensuel - zone - origine de la connaissance de l'hotel */
+    include(dirname(__FILE__) . "/page_12.php"); /* mensuel - zone - Perception du rapport qualité/prix de l'hôtel */
+    include(dirname(__FILE__) . "/page_13.php"); /* mensuel - zone - Satisfaction concernant le SPA */
+    include(dirname(__FILE__) . "/page_14.php"); /* mensuel - zone - visite zoo */
+    include(dirname(__FILE__) . "/page_15.php"); /* mensuel - zone - revenir */
+    include(dirname(__FILE__) . "/page_16.php"); /* mensuel - zone - recommander */
 $content = ob_get_clean();
 
 try{
