@@ -91,7 +91,7 @@
                         <tr>
                             <td><?php echo $ct; ?></td>
                             <?php foreach($resultsConnaissanceParisParDepts as $depNum=>$values): ?>
-                                <td><?php echo round(($values[$k] / $resultsConnaissanceParisParDeptsTotal[$depNum]) * 100); ?>%</td>
+                                <td><?php echo round(($values[$k] / $resultsConnaissanceParisParDeptsTotal[$depNum]) * 100,1); ?>%</td>
                             <?php endforeach; ?>
                         </tr>
                     <?php endforeach; ?>
