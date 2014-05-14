@@ -222,8 +222,8 @@ include(dirname(__FILE__) . "/page_04.php"); /* satisfaction globale */
 include(dirname(__FILE__) . "/page_05.php"); /* Satisfaction des différents services */
 include(dirname(__FILE__) . "/page_06.php"); /* Perception du rapport qualité/prix de l'hôtel */
 include(dirname(__FILE__) . "/page_07.php"); /* Satisfaction concernant la restauration */
-//include(dirname(__FILE__) . "/page_08.php"); /* mensuel - zone - charts - origine de la connaissance de l'hotel */
-//include(dirname(__FILE__) . "/page_09.php"); /* mensuel - zone - origine de la connaissance de l'hotel */
+include(dirname(__FILE__) . "/page_08.php"); /* Intention de revenir (fidélisation) */
+include(dirname(__FILE__) . "/page_09.php"); /* Recommandation à des proches */
 //include(dirname(__FILE__) . "/page_10.php"); /* mensuel - zone - origine de la connaissance de l'hotel */
 //include(dirname(__FILE__) . "/page_11.php"); /* mensuel - zone - origine de la connaissance de l'hotel */
 //include(dirname(__FILE__) . "/page_12.php"); /* mensuel - zone - Perception du rapport qualité/prix de l'hôtel */
