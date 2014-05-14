@@ -194,6 +194,7 @@ $allServicesSatif = [
     array_map($toPercent, $satifEnvironement),
     array_map($toPercent, $satifRapport)
 ];
+$globalSatisfPercent = array_map($toPercent, $globalSatisf);
 
 $allRestoSatif = [
     array_map($toPercent, $satifAmabilite),
@@ -356,6 +357,120 @@ foreach($clientsParisiensParDeps as $k=>$deptParis){
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 $endTime = microtime(true);
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//pChart
+include_once(LIBS.DIRECTORY_SEPARATOR."pChart".DIRECTORY_SEPARATOR."pData.class.php");
+include_once(LIBS.DIRECTORY_SEPARATOR."pChart".DIRECTORY_SEPARATOR."pDraw.class.php");
+include_once(LIBS.DIRECTORY_SEPARATOR."pChart".DIRECTORY_SEPARATOR."pPie.class.php");
+include_once(LIBS.DIRECTORY_SEPARATOR."pChart".DIRECTORY_SEPARATOR."pImage.class.php");
+
+//pie chart satisfaction globale img/satif-globale.png
+$datas = new pData();
+$datas->addPoints($globalSatisfPercent,"pourcentage");
+
+$legend = [];
+foreach($datas_satisfaction_bis as $k=>$v){
+    $legend[] = $v . " " . $globalSatisfPercent[$k] ."%";
+}
+
+$datas->addPoints($legend,"legende");
+$datas->setAbscissa("legende");
+
+$picture = new pImage(600,450,$datas);
+$picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
+$pie = new pPie($picture, $datas);
+
+$pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"boreder"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
+$pie->drawPieLegend(20, 390, ["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"FontR"=>"50","FontG"=>"50","FontB"=>"50"]);
+$picture->render("img/satif-globale.png");
+
+
+// bar chart satisfaction services img/services.png
+/*$datas = new pData();
+
+$points = [[],[],[],[]];
+foreach($allServicesSatif as $k=>$v){
+    //$datas->addPoints([], "pourceantages_" . $k);
+    foreach($v as $l=>$m){
+        $points[$l][] = $m;
+    }
+}
+
+foreach($points as $k=>$v){
+    $datas->addPoints($v, "pourcentages_" . $k);
+}
+
+$datas->addPoints($datas_satisfaction_bis, "legende");
+$datas->setAbscissa("legende");
+$picture = new pImage(800,650,$datas);
+$picture->setGraphArea(5,5,795,645);*/
+// $picture->drawStackedBarChart([]);
+// $picture->render("img/services.png"); //TODO finir bar chart
+
+
+
+// pie chart perception prix img/rapport-qualprix.png
+$datas = new pData();
+$datas->addPoints($perceptionPrixPercent,"pourcentage");
+
+$legend = [];
+foreach($datas_perception_prix as $k=>$v){
+    $legend[] = $v . " " . $perceptionPrixPercent[$k] ."%";
+}
+$datas->addPoints($legend,"legende");
+$datas->setAbscissa("legende");
+
+$picture = new pImage(600,450,$datas);
+$picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
+$pie = new pPie($picture, $datas);
+
+$pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"boreder"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
+$pie->drawPieLegend(20, 390, ["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"FontR"=>"50","FontG"=>"50","FontB"=>"50"]);
+$picture->render("img/rapport-qualprix.png");
+
+
+// pie chart revenir img/revenir.png
+$datas = new pData();
+$datas->addPoints($revenirPercent,"pourcentage");
+
+$legend = [];
+foreach($datas_intentions as $k=>$v){
+    $legend[] = $v . " " . $revenirPercent[$k] ."%";
+}
+$datas->addPoints($legend,"legende");
+$datas->setAbscissa("legende");
+
+$picture = new pImage(600,450,$datas);
+$picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
+$pie = new pPie($picture, $datas);
+
+$pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"boreder"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
+$pie->drawPieLegend(20, 390, ["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"FontR"=>"50","FontG"=>"50","FontB"=>"50"]);
+$picture->render("img/revenir.png");
+
+// pie chart revenir img/recommander.png
+$datas = new pData();
+$datas->addPoints($recommanderPercent,"pourcentage");
+
+$legend = [];
+foreach($datas_intentions as $k=>$v){
+    $legend[] = $v . " " . $recommanderPercent[$k] ."%";
+}
+$datas->addPoints($legend,"legende");
+$datas->setAbscissa("legende");
+
+$picture = new pImage(600,450,$datas);
+$picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
+$pie = new pPie($picture, $datas);
+
+$pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"boreder"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
+$pie->drawPieLegend(20, 390, ["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"FontR"=>"50","FontG"=>"50","FontB"=>"50"]);
+$picture->render("img/recommander.png");
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 require_once(LIBS . DIRECTORY_SEPARATOR . "html2pdf.class.php");
 

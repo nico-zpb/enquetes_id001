@@ -39,4 +39,11 @@
         </tr>
     </table>
     <!-- TODO charts Intention de revenir (fidélisation) -->
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%; text-align: center;">
+                <img src="img/revenir.png" alt=""/>
+            </td>
+        </tr>
+    </table>
 </page>

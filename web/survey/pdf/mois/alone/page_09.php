@@ -39,4 +39,11 @@
         </tr>
     </table>
     <!-- TODO charts Recommandation à des proches -->
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%; text-align: center;">
+                <img src="img/recommander.png" alt=""/>
+            </td>
+        </tr>
+    </table>
 </page>

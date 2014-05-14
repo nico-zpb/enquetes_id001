@@ -31,5 +31,13 @@
         </tr>
     </table>
     <!-- TODO charts Perception du rapport qualité/prix de l'hôtel -->
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%; text-align: center;">
+                <img src="img/rapport-qualprix.png" alt=""/>
+            </td>
+        </tr>
+    </table>
+
 
 </page>
