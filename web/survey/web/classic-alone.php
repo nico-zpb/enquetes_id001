@@ -71,7 +71,7 @@ foreach ($datas_trancheAge as $k => $v) {
             $max = $result["num"];
             $highlightAge = $k;
         }
-        $tranchesAge[] = ["name" => $v["name"], "num" => $result["num"], "percent" => round(($result["num"] / $numEntry) * 100)];
+        $tranchesAge[] = ["name" => $v["name"], "num" => $result["num"], "percent" => round(($result["num"] / $numEntry) * 100,1)];
     }
 }
 //
@@ -93,7 +93,7 @@ foreach ($datas_professions as $k => $v) {
             $max = $result["num"];
             $highlightProf = $k;
         }
-        $prof[] = ["name" => $v["name"], "num" => $result["num"], "percent" => round(($result["num"] / $numEntry) * 100)];
+        $prof[] = ["name" => $v["name"], "num" => $result["num"], "percent" => round(($result["num"] / $numEntry) * 100,1)];
     }
 
 }
@@ -113,7 +113,7 @@ foreach ($clients as $k => $c) {
 }
 /////////////////////////////
 $toPercent = function ($it) use ($numEntry) {
-    return round(($it / $numEntry) * 100);
+    return round(($it / $numEntry) * 100,1);
 };
 
 // satisfaction globale

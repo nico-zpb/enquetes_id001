@@ -17,8 +17,10 @@
     (_ (_   |   |   |  |   |   |
       (__<  |mm_|mm_|  |mm_|mm_|
 */
-include_once "../../../datas/all.php";
-include_once "../../../php/functions.php";
+include_once "../../../../datas/all.php";
+include_once "../../../../php/functions.php";
+include_once "../../../../php/enquete-connexion.php";
+
 //TODO get year ( form on front page .....)
 $annee = 2014; //provisoire
 $monthStart = 1;
@@ -44,7 +46,7 @@ $dateEnd = DateTime::createFromFormat("j-n-Y", $lastDayOfMonthEnd . "-" . $month
 $dateStartTs = $dateStart->getTimestamp();
 $dateEndTs = $dateEnd->getTimestamp();
 
-include_once "../../../php/enquete-connexion.php";
+
 $numEntry = 0;
 
 // verif il y a t-il des enregistrements pour la periode ?

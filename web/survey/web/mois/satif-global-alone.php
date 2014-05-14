@@ -41,8 +41,8 @@
             </div>
             <div class="col-md-12">
                 <?php
-                $tauxSatisfaitTres = round(($globalSatisf[0] / $numEntry) * 100);
-                $tauxSatisfait = round(($globalSatisf[1] / $numEntry) * 100)
+                $tauxSatisfaitTres = round(($globalSatisf[0] / $numEntry) * 100,1);
+                $tauxSatisfait = round(($globalSatisf[1] / $numEntry) * 100,1);
                 ?>
                 <h4 class="text-success text-center">taux de satisfaits : <?php echo $tauxSatisfait + $tauxSatisfaitTres; ?>% dont <?php echo $tauxSatisfaitTres; ?>% de "très satisfaits".</h4>
                 <p>Question : &laquo; Globalement, en ce qui concerne votre séjour à l'Hôtel Les Jardins de Beauval, diriez-vous que vous êtes &raquo;</p>
