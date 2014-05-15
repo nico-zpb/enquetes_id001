@@ -31,7 +31,7 @@
             <td style="width: 100%; text-align: center; font-weight: bold;">Comment avez-vous connu l'Hôtel Les Jardins de Beauval ? Etait-ce par...</td>
         </tr>
     </table>
-    <!-- TODO charts Origine de la connaissance de l'hôtel - Région Parisienne -->
+
     <table style="width: 100%;">
         <tr>
             <td style="width: 100%; text-align: center;">
@@ -39,8 +39,6 @@
             </td>
         </tr>
     </table>
-
-
 
     <table class="table" style="width: 100%; font-size: 8pt;">
         <thead>

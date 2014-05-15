@@ -43,8 +43,6 @@
         </tr>
     </table>
 
-    <!-- TODO chart Satisfaction globale -->
-
     <table style="width: 100%;">
         <tr>
             <td style="width: 100%; text-align: center;">

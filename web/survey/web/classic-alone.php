@@ -231,7 +231,7 @@ for ($i = 0; $i < count($resultsConnaissance); $i++) {
     $resultsConnaissanceTotal += $resultsConnaissance[$i];
 }
 $resultsConnaissancePercent = array_map(function ($it) use ($resultsConnaissanceTotal) {
-    return round(($it / $resultsConnaissanceTotal) * 100);
+    return round(($it / $resultsConnaissanceTotal) * 100,1);
 }, $resultsConnaissance);
 
 
@@ -304,7 +304,7 @@ for ($i = 0; $i < count($resultsConnaissanceParis); $i++) {
     $resultsConnaissanceParisTotal += $resultsConnaissanceParis[$i];
 }
 $resultsConnaissanceParisPercent = array_map(function ($it) use ($resultsConnaissanceParisTotal) {
-    return round(($it / $resultsConnaissanceParisTotal) * 100);
+    return round(($it / $resultsConnaissanceParisTotal) * 100,1);
 }, $resultsConnaissanceParis);
 
 ////////////////////////////
@@ -359,7 +359,7 @@ foreach($departements as $num=>$name){
     $tmp = $stmt->fetch();
     if($tmp){
         $effectifsParDept[$num] = $tmp["num"];
-        $effectifsParDeptPercent[$num] = round(($tmp["num"] / $numEntry) * 100);
+        $effectifsParDeptPercent[$num] = round(($tmp["num"] / $numEntry) * 100,1);
         // selection des departements les plus representatifs
         if($effectifsParDeptPercent[$num] >= 1.5){
             $selected[] = ["dept_num"=>$num, "dept_name"=>$name, "effectif"=>$tmp["num"], "percent"=>$effectifsParDeptPercent[$num]];
@@ -385,7 +385,7 @@ foreach($clients as $c){
 
 }
 $tpsTrajetPercent = array_map(function($it) use ($numEntry){
-    return round(($it/$numEntry) * 100);
+    return round(($it/$numEntry) * 100,1);
 }, $tpsTrajet);
 ////////////
 
@@ -458,10 +458,10 @@ if($result){
     }
 }
 $nbrAdultesPercent = array_map(function($it) use($counterPersons){
-    return round(($it / $counterPersons) * 100);
+    return round(($it / $counterPersons) * 100,1);
 }, $nbrAdultes);
 $nbrEnfantsPercent = array_map(function($it) use($counterPersons){
-    return round(($it / $counterPersons) * 100);
+    return round(($it / $counterPersons) * 100,1);
 }, $nbrEnfants);
 //////// chambres /////
 $sql = "SELECT type_chambre as room FROM sejours WHERE arrive_timestamp >=:datestartts AND arrive_timestamp <=:dateendts";

@@ -232,7 +232,7 @@ for ($i = 0; $i < count($resultsConnaissance); $i++) {
     $resultsConnaissanceTotal += $resultsConnaissance[$i];
 }
 $resultsConnaissancePercent = array_map(function ($it) use ($resultsConnaissanceTotal) {
-    return round(($it / $resultsConnaissanceTotal) * 100);
+    return round(($it / $resultsConnaissanceTotal) * 100,1);
 }, $resultsConnaissance);
 
 
@@ -305,7 +305,7 @@ for ($i = 0; $i < count($resultsConnaissanceParis); $i++) {
     $resultsConnaissanceParisTotal += $resultsConnaissanceParis[$i];
 }
 $resultsConnaissanceParisPercent = array_map(function ($it) use ($resultsConnaissanceParisTotal) {
-    return round(($it / $resultsConnaissanceParisTotal) * 100);
+    return round(($it / $resultsConnaissanceParisTotal) * 100,1);
 }, $resultsConnaissanceParis);
 
 ////////////////////////////
@@ -342,9 +342,125 @@ foreach($clientsParisiensParDeps as $k=>$deptParis){
     }
 }
 
+/////////////////////////// Context du séjour
+
+$sql = "SELECT COUNT(*) as num FROM clients WHERE arrive_mois=:arrive_mois AND arrive_annee=:arrive_annee AND departement_num=:deptnum";
+$stmt = $pdo->prepare($sql);
+$effectifsParDept = [];
+$effectifsParDeptPercent = [];
+$selected = [];
+$countEffectifOtherDepts = 0;
+foreach($departements as $num=>$name){
+    $stmt->bindValue(":arrive_mois", $monthStart);
+    $stmt->bindValue(":arrive_annee", $annee);
+    $stmt->bindValue(":deptnum", $num);
+    $stmt->execute();
+    $tmp = $stmt->fetch();
+    if($tmp){
+        $effectifsParDept[$num] = $tmp["num"];
+        $effectifsParDeptPercent[$num] = round(($tmp["num"] / $numEntry) * 100,1);
+        // selection des departements les plus representatifs
+        if($effectifsParDeptPercent[$num] >= 1.5){
+            $selected[] = ["dept_num"=>$num, "dept_name"=>$name, "effectif"=>$tmp["num"], "percent"=>$effectifsParDeptPercent[$num]];
+        } else {
+            $countEffectifOtherDepts += $tmp["num"];
+        }
+    }
+}
+// rearragement des departements representatifs dans l'ordre decroissant du pourcentage
+usort($selected, function($a,$b){
+    if($a["percent"] == $b["percent"]){
+        return 0;
+    }
+    return ($a["percent"] < $b["percent"]) ? 1 : -1;
+});
+
+//////////////// temps de trajet
+$tpsTrajet = [0,0,0];
+foreach($clients as $c){
+    if($c["tps_trajet"]>0){
+        $tpsTrajet[$c["tps_trajet"] - 1]++;
+    }
+
+}
+$tpsTrajetPercent = array_map(function($it) use ($numEntry){
+    return round(($it/$numEntry) * 100,1);
+}, $tpsTrajet);
+////////////
 
 
+///////////////////// sejour
+/////////// nbre personnes
+///// adultes
+$sql = "SELECT nbre_adulte as ad, nbre_enfant as en FROM sejours WHERE arrive_timestamp >=:datestartts AND arrive_timestamp <=:dateendts";
+$stmt = $pdo->prepare($sql);
 
+$stmt->bindValue(":datestartts",$dateStartTs);
+$stmt->bindValue(":dateendts",$dateEndTs);
+$stmt->execute();
+
+$result = $stmt->fetchAll();
+$nbrAdultes = [0,0,0,0,0,0];
+$nbrEnfants = [0,0,0,0,0,0];
+$counterPersons = 0;
+if($result){
+    foreach($result as $k=>$v){
+        if(($v["ad"] == 6 && $v["ad"] == 6) || ($v["ad"] == 0 && $v["ad"] == 0) || ($v["ad"] == 6 && ($v["en"] == 6 || $v["en"] == 0)) || ($v["ad"] == 0 && ($v["en"] == 6 || $v["en"] == 0))){
+            continue;
+        }
+        $counterPersons++;
+        switch($v["ad"]){
+            case 0:
+            case 6:
+            default:
+                $nbrAdultes[5]++;
+                break;
+            case 1:
+                $nbrAdultes[0]++;
+                break;
+            case 2:
+                $nbrAdultes[1]++;
+                break;
+            case 3:
+                $nbrAdultes[2]++;
+                break;
+            case 4:
+                $nbrAdultes[3]++;
+                break;
+            case 5:
+                $nbrAdultes[4]++;
+                break;
+        }
+        switch($v["en"]){
+            case 0:
+            case 6:
+            default:
+                $nbrEnfants[5]++;
+                break;
+            case 1:
+                $nbrEnfants[0]++;
+                break;
+            case 2:
+                $nbrEnfants[1]++;
+                break;
+            case 3:
+                $nbrEnfants[2]++;
+                break;
+            case 4:
+                $nbrEnfants[3]++;
+                break;
+            case 5:
+                $nbrEnfants[4]++;
+                break;
+        }
+    }
+}
+$nbrAdultesPercent = array_map(function($it) use($counterPersons){
+    return round(($it / $counterPersons) * 100,1);
+}, $nbrAdultes);
+$nbrEnfantsPercent = array_map(function($it) use($counterPersons){
+    return round(($it / $counterPersons) * 100,1);
+}, $nbrEnfants);
 
 
 
@@ -564,9 +680,9 @@ include(dirname(__FILE__) . "/page_08.php"); /* Intention de revenir (fidélisat
 include(dirname(__FILE__) . "/page_09.php"); /* Recommandation à des proches */
 include(dirname(__FILE__) . "/page_10.php"); /* Origine de la connaissance de l'hôtel - total échantillon */
 include(dirname(__FILE__) . "/page_11.php"); /* Origine de la connaissance de l'hôtel - Région Parisienne */
-//include(dirname(__FILE__) . "/page_12.php"); /* mensuel - zone - Perception du rapport qualité/prix de l'hôtel */
-//include(dirname(__FILE__) . "/page_13.php"); /* mensuel - zone - Satisfaction concernant le SPA */
-//include(dirname(__FILE__) . "/page_14.php"); /* mensuel - zone - visite zoo */
+include(dirname(__FILE__) . "/page_12.php"); /* Principaux départements d'origine et durée du trajet */
+include(dirname(__FILE__) . "/page_13.php"); /* mensuel - zone - Satisfaction concernant le SPA */
+include(dirname(__FILE__) . "/page_14.php"); /* Type de chambre occupée et nombre de nuits */
 //include(dirname(__FILE__) . "/page_15.php"); /* mensuel - zone - revenir */
 //include(dirname(__FILE__) . "/page_16.php"); /* mensuel - zone - recommander */
 $content = ob_get_clean();

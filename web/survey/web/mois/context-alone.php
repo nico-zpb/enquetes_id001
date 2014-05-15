@@ -66,7 +66,7 @@
                     <tr>
                         <td>Autres</td>
                         <td><?php echo $countEffectifOtherDepts; ?></td>
-                        <td><?php echo round(($countEffectifOtherDepts / $numEntry) * 100); ?>%</td>
+                        <td><?php echo round(($countEffectifOtherDepts / $numEntry) * 100,1); ?>%</td>
                     </tr>
                     <tr>
                         <td>Total</td>
