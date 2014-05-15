@@ -31,5 +31,11 @@
         </tr>
     </table>
     <!-- TODO charts Satisfaction des différents services -->
-
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%; text-align: center;">
+                <img src="img/services.png" alt=""/>
+            </td>
+        </tr>
+    </table>
 </page>

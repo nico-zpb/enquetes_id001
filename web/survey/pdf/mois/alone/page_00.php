@@ -382,14 +382,13 @@ $picture = new pImage(600,450,$datas);
 $picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
 $pie = new pPie($picture, $datas);
 
-$pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"boreder"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
+$pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"Border"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
 $pie->drawPieLegend(20, 390, ["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"FontR"=>"50","FontG"=>"50","FontB"=>"50"]);
 $picture->render("img/satif-globale.png");
 
 
 // bar chart satisfaction services img/services.png
-/*$datas = new pData();
-
+$datas = new pData();
 $points = [[],[],[],[]];
 foreach($allServicesSatif as $k=>$v){
     //$datas->addPoints([], "pourceantages_" . $k);
@@ -399,15 +398,21 @@ foreach($allServicesSatif as $k=>$v){
 }
 
 foreach($points as $k=>$v){
-    $datas->addPoints($v, "pourcentages_" . $k);
+    $datas->addPoints($v, $datas_satisfaction_bis[$k]);
 }
 
-$datas->addPoints($datas_satisfaction_bis, "legende");
+$datas->addPoints($datas_services, "legende");
 $datas->setAbscissa("legende");
-$picture = new pImage(800,650,$datas);
-$picture->setGraphArea(5,5,795,645);*/
-// $picture->drawStackedBarChart([]);
-// $picture->render("img/services.png"); //TODO finir bar chart
+$picture = new pImage(800,450,$datas);
+$picture->setGraphArea(300,50,750,400);
+$picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
+$picture->drawScale(["Pos"=>SCALE_POS_TOPBOTTOM, "Mode"=>SCALE_MODE_ADDALL]);
+$picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
+$picture->drawLegend(20,20);
+
+
+$picture->drawStackedBarChart(["DisplayOrientation"=>ORIENTATION_VERTICAL]);
+$picture->render("img/services.png");
 
 
 
@@ -426,7 +431,7 @@ $picture = new pImage(600,450,$datas);
 $picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
 $pie = new pPie($picture, $datas);
 
-$pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"boreder"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
+$pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"Border"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
 $pie->drawPieLegend(20, 390, ["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"FontR"=>"50","FontG"=>"50","FontB"=>"50"]);
 $picture->render("img/rapport-qualprix.png");
 
@@ -446,7 +451,7 @@ $picture = new pImage(600,450,$datas);
 $picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
 $pie = new pPie($picture, $datas);
 
-$pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"boreder"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
+$pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"Border"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
 $pie->drawPieLegend(20, 390, ["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"FontR"=>"50","FontG"=>"50","FontB"=>"50"]);
 $picture->render("img/revenir.png");
 
@@ -465,7 +470,7 @@ $picture = new pImage(600,450,$datas);
 $picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
 $pie = new pPie($picture, $datas);
 
-$pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"boreder"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
+$pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"Border"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
 $pie->drawPieLegend(20, 390, ["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"FontR"=>"50","FontG"=>"50","FontB"=>"50"]);
 $picture->render("img/recommander.png");
 
