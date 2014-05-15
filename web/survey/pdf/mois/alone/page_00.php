@@ -805,7 +805,7 @@ include(dirname(__FILE__) . "/page_13.php"); /* mensuel - zone - Satisfaction co
 include(dirname(__FILE__) . "/page_14.php"); /* Type de chambre occupée et nombre de nuits */
 include(dirname(__FILE__) . "/page_15.php"); /* Visite du ZooParc pendant la durée du séjour */
 include(dirname(__FILE__) . "/page_16.php"); /* Satisfaction concernant le SPA */
-//include(dirname(__FILE__) . "/page_16.php"); /* Satisfaction concernant le SPA */
+include(dirname(__FILE__) . "/page_16.php"); /* Utilisation de la connexion Wifi de l'hôtel */
 $content = ob_get_clean();
 
 try{
