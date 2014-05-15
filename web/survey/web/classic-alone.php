@@ -482,7 +482,7 @@ if($result){
     }
 }
 $roomsPercent = array_map(function($it) use ($countRooms){
-    return round( ($it/$countRooms) * 100);
+    return round( ($it/$countRooms) * 100,1);
 }, $rooms);
 //////// combien de nuits
 $sql = "SELECT nbre_nuit as nuites FROM sejours WHERE arrive_timestamp >=:datestartts AND arrive_timestamp <=:dateendts";

@@ -278,12 +278,12 @@
                     <tr>
                         <td>Oui</td>
                         <td><?php echo $visiteZoo[0]; ?></td>
-                        <td><?php echo $visiteZooPercent[0]; ?>%</td></td>
+                        <td><?php echo $visiteZooPercent[0]; ?>%</td>
                     </tr>
                     <tr>
                         <td>Non</td>
                         <td><?php echo $visiteZoo[1]; ?></td>
-                        <td><?php echo $visiteZooPercent[1]; ?>%</td></td>
+                        <td><?php echo $visiteZooPercent[1]; ?>%</td>
                     </tr>
                     <tr>
                         <td>Total</td>

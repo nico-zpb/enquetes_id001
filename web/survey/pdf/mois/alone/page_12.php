@@ -18,7 +18,7 @@
       (__<  |mm_|mm_|  |mm_|mm_|
 */ 
 ?>
-<page pageset="0">
+<page pageset="old">
     <bookmark title="Principaux départements d'origine et durée du trajet" level="0"></bookmark>
     <table class="page-header">
         <tr>

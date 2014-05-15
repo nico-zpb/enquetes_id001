@@ -463,16 +463,118 @@ $nbrEnfantsPercent = array_map(function($it) use($counterPersons){
 }, $nbrEnfants);
 
 
+//////// chambres /////
+$sql = "SELECT type_chambre as room FROM sejours WHERE arrive_timestamp >=:datestartts AND arrive_timestamp <=:dateendts";
+$stmt = $pdo->prepare($sql);
 
+$stmt->bindValue(":datestartts",$dateStartTs);
+$stmt->bindValue(":dateendts",$dateEndTs);
+$stmt->execute();
+$result = $stmt->fetchAll();
+$countRooms = count($result);
+$rooms = [0,0,0,0];
+if($result){
+    foreach($result as $k=>$v){
+        if($v["room"]>0){
+            $rooms[$v["room"] - 1]++;
+        }
 
+    }
+}
+$roomsPercent = array_map(function($it) use ($countRooms){
+    return round( ($it/$countRooms) * 100,1);
+}, $rooms);
+//////// combien de nuits
+$sql = "SELECT nbre_nuit as nuites FROM sejours WHERE arrive_timestamp >=:datestartts AND arrive_timestamp <=:dateendts";
+$stmt = $pdo->prepare($sql);
+$stmt->bindValue(":datestartts",$dateStartTs);
+$stmt->bindValue(":dateendts",$dateEndTs);
+$stmt->execute();
+$result = $stmt->fetchAll();
+$countNuites = count($result);
+$nuites = [0,0,0,0];
+if($result){
+    foreach($result as $k=>$v){
+        if($v["nuites"] == 1){
+            $nuites[0]++;
+        }
+        if($v["nuites"] == 2){
+            $nuites[1]++;
+        }
+        if($v["nuites"] == 3){
+            $nuites[2]++;
+        }
+        if($v["nuites"] >= 4){
+            $nuites[3]++;
+        }
+    }
+}
+$nuitesPercent = array_map(function($it) use($countNuites){
+    return round(($it/$countNuites) * 100);
+}, $nuites);
+///////// visite zoo
+$sql = "SELECT visite_zoo as visite FROM sejours WHERE arrive_timestamp >=:datestartts AND arrive_timestamp <=:dateendts";
+$stmt = $pdo->prepare($sql);
+$stmt->bindValue(":datestartts",$dateStartTs);
+$stmt->bindValue(":dateendts",$dateEndTs);
+$stmt->execute();
+$result = $stmt->fetchAll();
+$countVisite = count($result);
+$visiteZoo = [0,0];
+if($result){
+    foreach($result as $k=>$v){
+        if($v["visite"] == 1){
+            $visiteZoo[0]++;
+        }
+        if($v["visite"] == 2){
+            $visiteZoo[1]++;
+        }
+    }
+}
+$visiteZooPercent = array_map(function($it) use ($countVisite) {
+    return round(($it/$countVisite) * 100);
+}, $visiteZoo);
+////////// spa
+$sql = "SELECT spa FROM satisfaction WHERE client_id=:id";
+$stmt = $pdo->prepare($sql);
+$spa = [0,0,0,0];
+$spaCounter = 0;
+foreach($clients as $k=>$c){
+    $stmt->bindValue(":id", $c["id"]);
+    $stmt->execute();
+    $tmp = $stmt->fetch();
+    if($tmp && $tmp["spa"]>0){
+        $spaCounter++;
+        $spa[$tmp["spa"] - 1]++;
 
+    }
+}
+$spaPercent = array_map(function($it) use ($spaCounter){
+    return round(($it/$spaCounter) *100);
+}, $spa);
 
+///////// wifi
+$sql = "SELECT wifi FROM sejours WHERE arrive_timestamp >=:datestartts AND arrive_timestamp <=:dateendts";
+$stmt = $pdo->prepare($sql);
+$stmt->bindValue(":datestartts",$dateStartTs);
+$stmt->bindValue(":dateendts",$dateEndTs);
+$stmt->execute();
+$stmt->execute();
+$result = $stmt->fetchAll();
+$wifi = [0,0,0];
+$wifiCounter = 0;
+if($result){
+    foreach($result as $k=>$v){
+        if($v["wifi"]>0){
+            $wifiCounter++;
+            $wifi[$v["wifi"] - 1]++;
+        }
 
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-$endTime = microtime(true);
+    }
+}
+$wifiPercent = array_map(function($it) use ($wifiCounter){
+    return round(($it/$wifiCounter) * 100);
+}, $wifi);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -662,7 +764,25 @@ $pie = new pPie($picture, $datas);
 $pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"Border"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
 $pie->drawPieLegend(20, 390, ["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"FontR"=>"50","FontG"=>"50","FontB"=>"50"]);
 $picture->render("img/recommander.png");
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//bar chart type de chambre chambre.png
+$datas = new pData();
+$datas->addPoints($roomsPercent, "values");
+$datas->addPoints($datas_type_chambre, "legende");
+$datas->setAbscissa("legende");
+$picture = new pImage(800,350,$datas);
+$picture->setGraphArea(300,50,750,300);
+$picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
+$picture->drawScale(["Pos"=>SCALE_POS_TOPBOTTOM, "Mode"=>SCALE_MODE_ADDALL]);
+$palette = [
+    "0"=>["R"=>230,"G"=>97,"B"=>68,"Alpha"=>100],
+    "1"=>["R"=>47,"G"=>112,"B"=>187,"Alpha"=>100],
+    "2"=>["R"=>213,"G"=>137,"B"=>196,"Alpha"=>100],
+    "3"=>["R"=>107,"G"=>197,"B"=>87,"Alpha"=>100]
+];
+$picture->drawBarChart(["DisplayPos"=>LABEL_POS_INSIDE, "DisplayValues"=>true,"DisplayR"=>50,"DisplayG"=>50,"DisplayB"=>50,"OverrideColors"=>$palette]);
+$picture->render("img/chambre.png");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -683,8 +803,9 @@ include(dirname(__FILE__) . "/page_11.php"); /* Origine de la connaissance de l'
 include(dirname(__FILE__) . "/page_12.php"); /* Principaux départements d'origine et durée du trajet */
 include(dirname(__FILE__) . "/page_13.php"); /* mensuel - zone - Satisfaction concernant le SPA */
 include(dirname(__FILE__) . "/page_14.php"); /* Type de chambre occupée et nombre de nuits */
-//include(dirname(__FILE__) . "/page_15.php"); /* mensuel - zone - revenir */
-//include(dirname(__FILE__) . "/page_16.php"); /* mensuel - zone - recommander */
+include(dirname(__FILE__) . "/page_15.php"); /* Visite du ZooParc pendant la durée du séjour */
+include(dirname(__FILE__) . "/page_16.php"); /* Satisfaction concernant le SPA */
+//include(dirname(__FILE__) . "/page_16.php"); /* Satisfaction concernant le SPA */
 $content = ob_get_clean();
 
 try{
