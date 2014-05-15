@@ -36,5 +36,11 @@
         </tr>
     </table>
     <!-- TODO charts Satisfaction concernant la restauration -->
-
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%; text-align: center;">
+                <img src="img/restauration.png" alt=""/>
+            </td>
+        </tr>
+    </table>
 </page>

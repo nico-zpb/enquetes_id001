@@ -386,21 +386,19 @@ $pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"Border"=>true, "Writ
 $pie->drawPieLegend(20, 390, ["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"FontR"=>"50","FontG"=>"50","FontB"=>"50"]);
 $picture->render("img/satif-globale.png");
 
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // bar chart satisfaction services img/services.png
 $datas = new pData();
 $points = [[],[],[],[]];
 foreach($allServicesSatif as $k=>$v){
-    //$datas->addPoints([], "pourceantages_" . $k);
     foreach($v as $l=>$m){
         $points[$l][] = $m;
     }
 }
-
 foreach($points as $k=>$v){
     $datas->addPoints($v, $datas_satisfaction_bis[$k]);
 }
-
 $datas->addPoints($datas_services, "legende");
 $datas->setAbscissa("legende");
 $picture = new pImage(800,450,$datas);
@@ -408,14 +406,87 @@ $picture->setGraphArea(300,50,750,400);
 $picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
 $picture->drawScale(["Pos"=>SCALE_POS_TOPBOTTOM, "Mode"=>SCALE_MODE_ADDALL]);
 $picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
-$picture->drawLegend(20,20);
-
-
+$picture->drawLegend(20,100);
 $picture->drawStackedBarChart(["DisplayOrientation"=>ORIENTATION_VERTICAL]);
 $picture->render("img/services.png");
 
-
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// bar chart satisfaction restauration img/restauration.png
+$datas = new pData();
+$points = [[],[],[],[]];
+foreach($allRestoSatif as $k=>$v){
+    foreach($v as $l=>$m){
+        $points[$l][] = $m;
+    }
+}
+foreach($points as $k=>$v){
+    $datas->addPoints($v, $datas_satisfaction_bis[$k]);
+}
+$datas->addPoints($datas_resto, "legende");
+$datas->setAbscissa("legende");
+$picture = new pImage(800,450,$datas);
+$picture->setGraphArea(300,50,750,400);
+$picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
+$picture->drawScale(["Pos"=>SCALE_POS_TOPBOTTOM, "Mode"=>SCALE_MODE_ADDALL]);
+$picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
+$picture->drawLegend(20,100);
+$picture->drawStackedBarChart(["DisplayOrientation"=>ORIENTATION_VERTICAL]);
+$picture->render("img/restauration.png");
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// bar chat connaissance hotel total connaissance_total.png
+$datas = new pData();
+$datas->addPoints($resultsConnaissancePercent, "values");
+$datas->addPoints($connaissance_types, "legende");
+$datas->setAbscissa("legende");
+$picture = new pImage(800,450,$datas);
+$picture->setGraphArea(300,50,750,400);
+$picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
+$picture->drawScale(["Pos"=>SCALE_POS_TOPBOTTOM, "Mode"=>SCALE_MODE_ADDALL]);
+$palette = [
+    "0"=>["R"=>241,"G"=>225,"B"=>79,"Alpha"=>100],
+    "1"=>["R"=>246,"G"=>158,"B"=>16,"Alpha"=>100],
+    "2"=>["R"=>227,"G"=>115,"B"=>17,"Alpha"=>100],
+    "3"=>["R"=>230,"G"=>97,"B"=>68,"Alpha"=>100],
+    "4"=>["R"=>29,"G"=>186,"B"=>214,"Alpha"=>100],
+    "5"=>["R"=>47,"G"=>112,"B"=>187,"Alpha"=>100],
+    "6"=>["R"=>143,"G"=>126,"B"=>204,"Alpha"=>100],
+    "7"=>["R"=>213,"G"=>137,"B"=>196,"Alpha"=>100],
+    "8"=>["R"=>123,"G"=>239,"B"=>162,"Alpha"=>100],
+    "9"=>["R"=>107,"G"=>197,"B"=>87,"Alpha"=>100],
+    "10"=>["R"=>38,"G"=>128,"B"=>18,"Alpha"=>100],
+];
+$picture->drawBarChart(["DisplayPos"=>LABEL_POS_INSIDE, "DisplayValues"=>true,"DisplayR"=>50,"DisplayG"=>50,"DisplayB"=>50,"OverrideColors"=>$palette]);
+$picture->render("img/connaissance_total.png");
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// bar chat connaissance hotel total connaissance_paris.png
+$datas = new pData();
+$datas->addPoints($resultsConnaissanceParisPercent, "values");
+$datas->addPoints($connaissance_types, "legende");
+$datas->setAbscissa("legende");
+$picture = new pImage(800,350,$datas);
+$picture->setGraphArea(300,50,750,300);
+$picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
+$picture->drawScale(["Pos"=>SCALE_POS_TOPBOTTOM, "Mode"=>SCALE_MODE_ADDALL]);
+$palette = [
+    "0"=>["R"=>241,"G"=>225,"B"=>79,"Alpha"=>100],
+    "1"=>["R"=>246,"G"=>158,"B"=>16,"Alpha"=>100],
+    "2"=>["R"=>227,"G"=>115,"B"=>17,"Alpha"=>100],
+    "3"=>["R"=>230,"G"=>97,"B"=>68,"Alpha"=>100],
+    "4"=>["R"=>29,"G"=>186,"B"=>214,"Alpha"=>100],
+    "5"=>["R"=>47,"G"=>112,"B"=>187,"Alpha"=>100],
+    "6"=>["R"=>143,"G"=>126,"B"=>204,"Alpha"=>100],
+    "7"=>["R"=>213,"G"=>137,"B"=>196,"Alpha"=>100],
+    "8"=>["R"=>123,"G"=>239,"B"=>162,"Alpha"=>100],
+    "9"=>["R"=>107,"G"=>197,"B"=>87,"Alpha"=>100],
+    "10"=>["R"=>38,"G"=>128,"B"=>18,"Alpha"=>100],
+];
+$picture->drawBarChart(["DisplayPos"=>LABEL_POS_INSIDE, "DisplayValues"=>true,"DisplayR"=>50,"DisplayG"=>50,"DisplayB"=>50,"OverrideColors"=>$palette]);
+$picture->render("img/connaissance_paris.png");
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // pie chart perception prix img/rapport-qualprix.png
 $datas = new pData();
 $datas->addPoints($perceptionPrixPercent,"pourcentage");
@@ -435,7 +506,8 @@ $pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"Border"=>true, "Writ
 $pie->drawPieLegend(20, 390, ["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"FontR"=>"50","FontG"=>"50","FontB"=>"50"]);
 $picture->render("img/rapport-qualprix.png");
 
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // pie chart revenir img/revenir.png
 $datas = new pData();
 $datas->addPoints($revenirPercent,"pourcentage");
@@ -454,7 +526,8 @@ $pie = new pPie($picture, $datas);
 $pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"Border"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
 $pie->drawPieLegend(20, 390, ["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"FontR"=>"50","FontG"=>"50","FontB"=>"50"]);
 $picture->render("img/revenir.png");
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // pie chart revenir img/recommander.png
 $datas = new pData();
 $datas->addPoints($recommanderPercent,"pourcentage");
