@@ -52,6 +52,11 @@
             <?php endforeach; ?>
         </tbody>
     </table>
-
-<!-- TODO graph -->
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%; text-align: center;">
+                <img src="img/connaissance_total_evolution.png" alt=""/>
+            </td>
+        </tr>
+    </table>
 </page>

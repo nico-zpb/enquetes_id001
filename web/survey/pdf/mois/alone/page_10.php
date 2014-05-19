@@ -31,7 +31,6 @@
             <td style="width: 100%; text-align: center; font-weight: bold;">Comment avez-vous connu l'Hôtel Les Jardins de Beauval ? Etait-ce par...</td>
         </tr>
     </table>
-    <!-- TODO charts Origine de la connaissance de l'hôtel - total échantillon -->
     <table style="width: 100%;">
         <tr>
             <td style="width: 100%; text-align: center;">

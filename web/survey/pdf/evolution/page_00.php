@@ -210,10 +210,19 @@ $connaissanceRegionParisByMonth = [];
 $connaissanceRegionParisByMonthTotal = [];
 $connaissanceRegionAutresByMonth = [];
 $connaissanceRegionAutresByMonthTotal = [];
+$connaissanceToutConfonduByMonth = [];
+$connaissanceToutConfonduByMonthTotal = [];
+
 
 $sql = "SELECT type_id FROM client_connaissance_type WHERE client_id=:id";
 $stmt = $pdo->prepare($sql);
 foreach($clientsByMonth as $month=>$clients){
+    if(empty($connaissanceToutConfonduByMonth[$month])){
+        $connaissanceToutConfonduByMonth[$month] = getEmptyConnaissanceArr();
+    }
+    if(empty($connaissanceToutConfonduByMonthTotal[$month])){
+        $connaissanceToutConfonduByMonthTotal[$month] = 0;
+    }
 
     if(empty($connaissanceRegionCentreByMonth[$month])){
         $connaissanceRegionCentreByMonth[$month] = getEmptyConnaissanceArr();
@@ -241,6 +250,12 @@ foreach($clientsByMonth as $month=>$clients){
         $stmt->execute();
         $result = $stmt->fetchAll();
         if($result){
+            foreach($result as $key=>$type){
+                if($type["type_id"]>0){
+                    $connaissanceToutConfonduByMonth[$month][$type["type_id"] - 1]++;
+                    $connaissanceToutConfonduByMonthTotal[$month]++;
+                }
+            }
             if (in_array($c["departement_num"], $depsCentre)) {
                 foreach($result as $key=>$type){
                     if($type["type_id"]>0){
@@ -470,6 +485,57 @@ foreach($clientsByMonth as $month=>$client){
         }
     }
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//charts
+
+include_once(LIBS.DIRECTORY_SEPARATOR."pChart".DIRECTORY_SEPARATOR."pData.class.php");
+include_once(LIBS.DIRECTORY_SEPARATOR."pChart".DIRECTORY_SEPARATOR."pDraw.class.php");
+include_once(LIBS.DIRECTORY_SEPARATOR."pChart".DIRECTORY_SEPARATOR."pPie.class.php");
+include_once(LIBS.DIRECTORY_SEPARATOR."pChart".DIRECTORY_SEPARATOR."pImage.class.php");
+
+
+$points = [];
+$values = array_values($connaissanceToutConfonduByMonth);
+$numTypes = count($values[0]);
+for($i=0;$i<$numTypes;$i++){
+    $points[] = [];
+}
+
+$datas = new pData();
+
+foreach($connaissanceToutConfonduByMonth as $month=>$typeArray){
+    foreach($typeArray as $k=>$v){
+        $percent = round(($v/$connaissanceToutConfonduByMonthTotal[$month])*100,1);
+        $points[$k][] = $percent;
+    }
+}
+
+foreach($points as $k=>$point){
+    $datas->addPoints($point, $connaissance_types[$k]);
+}
+
+
+$datas->addPoints($datas_mois, "mois");
+$datas->setAbscissa("mois");
+$picture = new pImage(1000,350,$datas);
+$picture->setGraphArea(20,20,980,320);
+$picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
+$picture->drawScale(["Pos"=>SCALE_POS_LEFTRIGHT, "Mode"=>SCALE_MODE_ADDALL]);
+$picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
+$picture->drawLegend(600,20);
+$picture->drawBarChart(["DisplayOrientation"=>ORIENTATION_HORIZONTAL,"Interleave"=>1.5]);
+$picture->render("img/connaissance_total_evolution.png");
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 require_once(LIBS . DIRECTORY_SEPARATOR . "html2pdf.class.php");
 
