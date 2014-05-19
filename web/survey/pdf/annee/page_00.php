@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: Nicolas Canfrère
- * Date: 14/05/14
- * Time: 08:55
+ * Date: 19/05/14
+ * Time: 15:31
  */
   /*
            ____________________
@@ -17,36 +17,53 @@
     (_ (_   |   |   |  |   |   |
       (__<  |mm_|mm_|  |mm_|mm_|
 */
+include_once "../../../../datas/all.php";
+include_once "../../../../php/functions.php";
+include_once "../../../../php/enquete-connexion.php";
+
+//TODO get year ( form on front page .....)
+$annee = 2014; //provisoire
+$monthStart = 1;
+$dateStart = DateTime::createFromFormat("j-n-Y", "1-".$monthStart."-".$annee);
+
+// aujourd'hui
+$dateForToday = new DateTime();
+// mois actuel
+$monthEnd = $dateForToday->format("n");
+
+if($debug){
+    $monthEnd = 12;
+}
 
 
-include_once "../../../../../datas/all.php";
-include_once "../../../../../php/functions.php";
-include_once "../../../../../php/enquete-connexion.php";
+$tmpDateEnd = DateTime::createFromFormat("j-n-Y", "1-" . $monthEnd . "-" . $annee);
+// nombre de jours dans le mois actuel
+$lastDayOfMonthEnd = $tmpDateEnd->format("t");
+// datetime du dernier jour du mois actuel
+$dateEnd = DateTime::createFromFormat("j-n-Y", $lastDayOfMonthEnd . "-" . $monthEnd . "-" .$annee);
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// TODO formulaire pour recup mois
-// pour test $monthStart = 4
-$monthStart = 4;
-$annee = 2014;
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-$dateStart = DateTime::createFromFormat("j-n-Y","1-" . $monthStart . "-" . $annee);
+// recup des timestamps
 $dateStartTs = $dateStart->getTimestamp();
-$lastDay = $dateStart->format("t");
-$dateEnd = DateTime::createFromFormat("j-n-Y",$lastDay . "-" . $monthStart . "-" . $annee);
 $dateEndTs = $dateEnd->getTimestamp();
 
-$sql = "SELECT * FROM clients WHERE arrive_mois=:arrive_mois AND arrive_annee=:arrive_annee";
+
+$numEntry = 0;
+
+// verif il y a t-il des enregistrements pour la periode ?
+$sql = "SELECT * FROM clients WHERE arrive_timestamp>=:datestartts AND arrive_timestamp<=:dateendts";
 $stmt = $pdo->prepare($sql);
-$stmt->bindValue(":arrive_mois", $monthStart);
-$stmt->bindValue(":arrive_annee", $annee);
+$stmt->bindValue(":datestartts", $dateStartTs);
+$stmt->bindValue(":dateendts", $dateEndTs);
 $stmt->execute();
 $clients = $stmt->fetchAll();
-$numEntry = count($clients);
 
+if(!$clients){
+    die("no clients"); //TODO revoit sur page principale en cas de 0 entry
+    /*setFlash("Il n'y a pas de résultats sur la période demandée.");
+    header("Location: /survey/to-web.php");
+    die();*/
+}
+$numEntry = count($clients);
 $numMale = 0;
 $numFemale = 0;
 $tranchesAgeCount=[];
@@ -107,6 +124,7 @@ foreach ($clients as $k => $c) {
         $satisfaction[] = $result;
     }
 }
+/////////////////////////////
 /////////////////////////////
 $toPercent = function ($it) use ($numEntry) {
     return round(($it / $numEntry) * 100,1);
@@ -206,6 +224,7 @@ $revenirPercent = array_map($toPercent, $revenir);
 $recommanderPercent = array_map($toPercent, $recommander);
 
 
+/////////////////////////////////////////
 /////////////////////////////////////////
 $sql = "SELECT type_id FROM client_connaissance_type WHERE client_id=:id";
 $stmt = $pdo->prepare($sql);
@@ -580,7 +599,7 @@ include_once(LIBS.DIRECTORY_SEPARATOR."pChart".DIRECTORY_SEPARATOR."pDraw.class.
 include_once(LIBS.DIRECTORY_SEPARATOR."pChart".DIRECTORY_SEPARATOR."pPie.class.php");
 include_once(LIBS.DIRECTORY_SEPARATOR."pChart".DIRECTORY_SEPARATOR."pImage.class.php");
 
-//pie chart satisfaction globale img/satif-globale.png
+//pie chart satisfaction globale img/satif-globale-annee.png
 $datas = new pData();
 $datas->addPoints($globalSatisfPercent,"pourcentage");
 
@@ -598,11 +617,10 @@ $pie = new pPie($picture, $datas);
 
 $pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"Border"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
 $pie->drawPieLegend(20, 390, ["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"FontR"=>"50","FontG"=>"50","FontB"=>"50"]);
-$picture->render("img/satif-globale.png");
-
+$picture->render("img/satif-globale-annee.png");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// bar chart satisfaction services img/services.png
+// bar chart satisfaction services img/services-annee.png
 $datas = new pData();
 $points = [[],[],[],[]];
 foreach($allServicesSatif as $k=>$v){
@@ -622,11 +640,32 @@ $picture->drawScale(["Pos"=>SCALE_POS_TOPBOTTOM, "Mode"=>SCALE_MODE_ADDALL]);
 $picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
 $picture->drawLegend(20,100);
 $picture->drawStackedBarChart(["DisplayOrientation"=>ORIENTATION_VERTICAL]);
-$picture->render("img/services.png");
+$picture->render("img/services-annee.png");
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// pie chart perception prix img/rapport-qualprix-annee.png
+$datas = new pData();
+$datas->addPoints($perceptionPrixPercent,"pourcentage");
 
+$legend = [];
+foreach($datas_perception_prix as $k=>$v){
+    $legend[] = $v . " " . $perceptionPrixPercent[$k] ."%";
+}
+$datas->addPoints($legend,"legende");
+$datas->setAbscissa("legende");
+
+$picture = new pImage(600,450,$datas);
+$picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
+$pie = new pPie($picture, $datas);
+
+$pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"Border"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
+$pie->drawPieLegend(20, 390, ["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"FontR"=>"50","FontG"=>"50","FontB"=>"50"]);
+$picture->render("img/rapport-qualprix-annee.png");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// bar chart satisfaction restauration img/restauration.png
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// bar chart satisfaction restauration img/restauration-annee.png
 $datas = new pData();
 $points = [[],[],[],[]];
 foreach($allRestoSatif as $k=>$v){
@@ -646,10 +685,10 @@ $picture->drawScale(["Pos"=>SCALE_POS_TOPBOTTOM, "Mode"=>SCALE_MODE_ADDALL]);
 $picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
 $picture->drawLegend(20,100);
 $picture->drawStackedBarChart(["DisplayOrientation"=>ORIENTATION_VERTICAL]);
-$picture->render("img/restauration.png");
+$picture->render("img/restauration-annee.png");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// bar chat connaissance hotel total connaissance_total.png
+// bar chat connaissance hotel total connaissance_total-annee.png
 $datas = new pData();
 $datas->addPoints($resultsConnaissancePercent, "values");
 $datas->addPoints($connaissance_types, "legende");
@@ -672,10 +711,10 @@ $palette = [
     "10"=>["R"=>38,"G"=>128,"B"=>18,"Alpha"=>100],
 ];
 $picture->drawBarChart(["DisplayPos"=>LABEL_POS_INSIDE, "DisplayValues"=>true,"DisplayR"=>50,"DisplayG"=>50,"DisplayB"=>50,"OverrideColors"=>$palette]);
-$picture->render("img/connaissance_total.png");
+$picture->render("img/connaissance_total-annee.png");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// bar chat connaissance hotel total connaissance_paris.png
+// bar chat connaissance hotel total connaissance_paris-annee.png
 $datas = new pData();
 $datas->addPoints($resultsConnaissanceParisPercent, "values");
 $datas->addPoints($connaissance_types, "legende");
@@ -698,31 +737,11 @@ $palette = [
     "10"=>["R"=>38,"G"=>128,"B"=>18,"Alpha"=>100],
 ];
 $picture->drawBarChart(["DisplayPos"=>LABEL_POS_INSIDE, "DisplayValues"=>true,"DisplayR"=>50,"DisplayG"=>50,"DisplayB"=>50,"OverrideColors"=>$palette]);
-$picture->render("img/connaissance_paris.png");
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// pie chart perception prix img/rapport-qualprix.png
-$datas = new pData();
-$datas->addPoints($perceptionPrixPercent,"pourcentage");
-
-$legend = [];
-foreach($datas_perception_prix as $k=>$v){
-    $legend[] = $v . " " . $perceptionPrixPercent[$k] ."%";
-}
-$datas->addPoints($legend,"legende");
-$datas->setAbscissa("legende");
-
-$picture = new pImage(600,450,$datas);
-$picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
-$pie = new pPie($picture, $datas);
-
-$pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"Border"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
-$pie->drawPieLegend(20, 390, ["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"FontR"=>"50","FontG"=>"50","FontB"=>"50"]);
-$picture->render("img/rapport-qualprix.png");
+$picture->render("img/connaissance_paris-annee.png");
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// pie chart revenir img/revenir.png
+// pie chart revenir img/revenir-annee.png
 $datas = new pData();
 $datas->addPoints($revenirPercent,"pourcentage");
 
@@ -739,10 +758,10 @@ $pie = new pPie($picture, $datas);
 
 $pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"Border"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
 $pie->drawPieLegend(20, 390, ["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"FontR"=>"50","FontG"=>"50","FontB"=>"50"]);
-$picture->render("img/revenir.png");
+$picture->render("img/revenir-annee.png");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// pie chart revenir img/recommander.png
+// pie chart revenir img/recommander-annee.png
 $datas = new pData();
 $datas->addPoints($recommanderPercent,"pourcentage");
 
@@ -759,7 +778,7 @@ $pie = new pPie($picture, $datas);
 
 $pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"Border"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
 $pie->drawPieLegend(20, 390, ["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"FontR"=>"50","FontG"=>"50","FontB"=>"50"]);
-$picture->render("img/recommander.png");
+$picture->render("img/recommander-annee.png");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //bar chart type de chambre chambre.png
@@ -778,7 +797,7 @@ $palette = [
     "3"=>["R"=>107,"G"=>197,"B"=>87,"Alpha"=>100]
 ];
 $picture->drawBarChart(["DisplayPos"=>LABEL_POS_INSIDE, "DisplayValues"=>true,"DisplayR"=>50,"DisplayG"=>50,"DisplayB"=>50,"OverrideColors"=>$palette]);
-$picture->render("img/chambre.png");
+$picture->render("img/chambre-annee.png");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -786,24 +805,24 @@ require_once(LIBS . DIRECTORY_SEPARATOR . "html2pdf.class.php");
 
 ob_start();
 include(dirname(__FILE__) . "/page_01.php");
-include(dirname(__FILE__) . "/page_02.php"); /* sommaire */
-include(dirname(__FILE__) . "/page_03.php"); /* profil */
-include(dirname(__FILE__) . "/page_04.php"); /* satisfaction globale */
-include(dirname(__FILE__) . "/page_05.php"); /* Satisfaction des différents services */
-include(dirname(__FILE__) . "/page_06.php"); /* Perception du rapport qualité/prix de l'hôtel */
-include(dirname(__FILE__) . "/page_07.php"); /* Satisfaction concernant la restauration */
-include(dirname(__FILE__) . "/page_08.php"); /* Intention de revenir (fidélisation) */
-include(dirname(__FILE__) . "/page_09.php"); /* Recommandation à des proches */
-include(dirname(__FILE__) . "/page_10.php"); /* Origine de la connaissance de l'hôtel - total échantillon */
-include(dirname(__FILE__) . "/page_11.php"); /* Origine de la connaissance de l'hôtel - Région Parisienne */
-include(dirname(__FILE__) . "/page_12.php"); /* Principaux départements d'origine et durée du trajet */
-include(dirname(__FILE__) . "/page_13.php"); /* mensuel - zone - Satisfaction concernant le SPA */
-include(dirname(__FILE__) . "/page_14.php"); /* Type de chambre occupée et nombre de nuits */
-include(dirname(__FILE__) . "/page_15.php"); /* Visite du ZooParc pendant la durée du séjour */
-include(dirname(__FILE__) . "/page_16.php"); /* Satisfaction concernant le SPA */
-include(dirname(__FILE__) . "/page_17.php"); /* Utilisation de la connexion Wifi de l'hôtel */
-$content = ob_get_clean();
+include(dirname(__FILE__) . "/page_02.php");
+include(dirname(__FILE__) . "/page_03.php");
+include(dirname(__FILE__) . "/page_04.php");
+include(dirname(__FILE__) . "/page_05.php");
+include(dirname(__FILE__) . "/page_06.php");
+include(dirname(__FILE__) . "/page_07.php");
+include(dirname(__FILE__) . "/page_08.php");
+include(dirname(__FILE__) . "/page_09.php");
+include(dirname(__FILE__) . "/page_10.php");
+include(dirname(__FILE__) . "/page_11.php");
+include(dirname(__FILE__) . "/page_12.php");
+include(dirname(__FILE__) . "/page_13.php");
+include(dirname(__FILE__) . "/page_14.php");
+include(dirname(__FILE__) . "/page_15.php");
+include(dirname(__FILE__) . "/page_16.php");
+include(dirname(__FILE__) . "/page_17.php");
 
+$content = ob_get_clean();
 try{
     $converter = new HTML2PDF('L','A4','fr',true,'UTF-8',[0,0,0,0]);
     $converter->pdf->SetDisplayMode('fullpage');
