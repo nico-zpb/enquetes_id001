@@ -26,7 +26,7 @@
         </tr>
     </table>
     <?php $cols = count($connaissancePercentByMonth) + 1; $colwidth = (84/$cols);?>
-    <table class="table" style="width: 100%;" cellspacing="0">
+    <table class="table" style="width: 100%; font-size:9pt;">
         <thead>
             <tr>
                 <th style="width: 16%;"></th>

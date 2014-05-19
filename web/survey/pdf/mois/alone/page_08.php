@@ -38,7 +38,6 @@
             <td style="width: 100%; text-align: center; font-weight: bold;">Reviendriez-vous à l'Hôtel Les Jardins de Beauval si vous en aviez l'occasion ?</td>
         </tr>
     </table>
-    <!-- TODO charts Intention de revenir (fidélisation) -->
     <table style="width: 100%;">
         <tr>
             <td style="width: 100%; text-align: center;">

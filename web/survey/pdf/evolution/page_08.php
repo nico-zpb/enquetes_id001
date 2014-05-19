@@ -25,5 +25,41 @@
         </tr>
     </table>
 
-<!-- TODO charts -->
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%; text-align: center;">
+                <img src="img/connaissance_paris_evolution.png" alt=""/>
+            </td>
+        </tr>
+    </table>
+</page>
+<page pageset="old">
+    <table class="page-header">
+        <tr>
+            <td><span class="regular">Origine de la connaissance de l'hôtel</span></td>
+        </tr>
+    </table>
+
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%; text-align: center;">
+                <img src="img/connaissance_centre_evolution.png" alt=""/>
+            </td>
+        </tr>
+    </table>
+</page>
+<page pageset="old">
+    <table class="page-header">
+        <tr>
+            <td><span class="regular">Origine de la connaissance de l'hôtel</span></td>
+        </tr>
+    </table>
+
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%; text-align: center;">
+                <img src="img/connaissance_autre_evolution.png" alt=""/>
+            </td>
+        </tr>
+    </table>
 </page>

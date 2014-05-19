@@ -163,8 +163,12 @@ $region_centre = [
 
 $deptParisNums = array_keys($region_paris);
 
+$connaissance_types_small = [
+  "un article","une affiche","le prospectus de l'hôtel","le prospectus du ZooParc","le bouche à oreille","votre C.E.","lors d'un séminaire","internet","un guide touristique","à la télé","autre",
+];
+
 $connaissance_types = [
-  "un article dans la presse","une affiche","le prospectus de l'hôtel","le prospectus du ZooParc de Beauval","le bouche à oreille (amis, relations...)","votre comité d'entreprise","lors d'un séminaire","internet","un guide touristique","une émission de TV","autre",
+    "un article dans la presse","une affiche","le prospectus de l'hôtel","le prospectus du ZooParc de Beauval","le bouche à oreille (amis, relations...)","votre comité d'entreprise","lors d'un séminaire","internet","un guide touristique","une émission de TV","autre",
 ];
 
 $datas_tps_trajet = ["moins d'une heure","de 1 à 2 heures","plus de 2 heures"];

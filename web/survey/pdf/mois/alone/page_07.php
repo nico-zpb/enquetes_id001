@@ -35,7 +35,6 @@
             <td style="width: 100%; text-align: center; font-weight: bold;">En ce concerne la restauration de l'hôtel, avez-vous été satisfait de :</td>
         </tr>
     </table>
-    <!-- TODO charts Satisfaction concernant la restauration -->
     <table style="width: 100%;">
         <tr>
             <td style="width: 100%; text-align: center;">

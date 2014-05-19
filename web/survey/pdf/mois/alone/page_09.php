@@ -38,7 +38,6 @@
             <td style="width: 100%; text-align: center; font-weight: bold;">Et recommanderiez-vous l'hôtel à des proches ?</td>
         </tr>
     </table>
-    <!-- TODO charts Recommandation à des proches -->
     <table style="width: 100%;">
         <tr>
             <td style="width: 100%; text-align: center;">

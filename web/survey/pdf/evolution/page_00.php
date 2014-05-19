@@ -513,24 +513,127 @@ foreach($connaissanceToutConfonduByMonth as $month=>$typeArray){
 }
 
 foreach($points as $k=>$point){
-    $datas->addPoints($point, $connaissance_types[$k]);
+    $datas->addPoints($point, $connaissance_types_small[$k]);
 }
 
 
 $datas->addPoints($datas_mois, "mois");
 $datas->setAbscissa("mois");
 $picture = new pImage(1000,350,$datas);
-$picture->setGraphArea(20,20,980,320);
+$picture->setGraphArea(20,35,980,320);
 $picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
 $picture->drawScale(["Pos"=>SCALE_POS_LEFTRIGHT, "Mode"=>SCALE_MODE_ADDALL]);
 $picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
-$picture->drawLegend(600,20);
+$picture->drawLegend(20,20,["Mode"=>LEGEND_HORIZONTAL,"Style"=>LEGEND_NOBORDER,"FontSize"=>8]);
 $picture->drawBarChart(["DisplayOrientation"=>ORIENTATION_HORIZONTAL,"Interleave"=>1.5]);
 $picture->render("img/connaissance_total_evolution.png");
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$points = [];
+$values = array_values($connaissanceRegionParisByMonth);
+$numTypes = count($values[0]);
+for($i=0;$i<$numTypes;$i++){
+    $points[] = [];
+}
+
+$datas = new pData();
+foreach($connaissanceRegionParisByMonth as $month=>$typeArray){
+    foreach($typeArray as $k=>$v){
+        $percent = round(($v/$connaissanceRegionParisByMonthTotal[$month])*100,1);
+        $points[$k][] = $percent;
+    }
+}
+
+foreach($points as $k=>$point){
+    $datas->addPoints($point, $connaissance_types_small[$k]);
+}
+
+$datas->addPoints($datas_mois, "mois");
+$datas->setAbscissa("mois");
+$picture = new pImage(1000,500,$datas);
+$picture->setGraphArea(20,20,980,480);
+
+$picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
+$picture->drawText(70, 70, "Région Parisienne",["FontSize"=>20,"R"=>"0","G"=>"0","B"=>"0"]);
+$picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
+$picture->drawScale(["Pos"=>SCALE_POS_LEFTRIGHT, "Mode"=>SCALE_MODE_ADDALL]);
+$picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
+$picture->drawLegend(20,20,["Mode"=>LEGEND_HORIZONTAL,"Style"=>LEGEND_NOBORDER,"FontSize"=>8]);
+$picture->drawBarChart(["DisplayOrientation"=>ORIENTATION_HORIZONTAL,"Interleave"=>1.5]);
+$picture->render("img/connaissance_paris_evolution.png");
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$points = [];
+$values = array_values($connaissanceRegionCentreByMonth);
+$numTypes = count($values[0]);
+for($i=0;$i<$numTypes;$i++){
+    $points[] = [];
+}
+
+$datas = new pData();
+foreach($connaissanceRegionCentreByMonth as $month=>$typeArray){
+    foreach($typeArray as $k=>$v){
+        $percent = round(($v/$connaissanceRegionCentreByMonthTotal[$month])*100,1);
+        $points[$k][] = $percent;
+    }
+}
+
+foreach($points as $k=>$point){
+    $datas->addPoints($point, $connaissance_types_small[$k]);
+}
+
+$datas->addPoints($datas_mois, "mois");
+$datas->setAbscissa("mois");
+$picture = new pImage(1000,500,$datas);
+$picture->setGraphArea(20,20,980,480);
+$picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
+$picture->drawText(70, 70, "Région Centre",["FontSize"=>20,"R"=>"0","G"=>"0","B"=>"0"]);
+$picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
+$picture->drawScale(["Pos"=>SCALE_POS_LEFTRIGHT, "Mode"=>SCALE_MODE_ADDALL]);
+$picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
+$picture->drawLegend(20,20,["Mode"=>LEGEND_HORIZONTAL,"Style"=>LEGEND_NOBORDER,"FontSize"=>8]);
+$picture->drawBarChart(["DisplayOrientation"=>ORIENTATION_HORIZONTAL,"Interleave"=>1.5]);
+$picture->render("img/connaissance_centre_evolution.png");
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+$points = [];
+$values = array_values($connaissanceRegionAutresByMonth);
+$numTypes = count($values[0]);
+for($i=0;$i<$numTypes;$i++){
+    $points[] = [];
+}
+
+$datas = new pData();
+foreach($connaissanceRegionAutresByMonth as $month=>$typeArray){
+    foreach($typeArray as $k=>$v){
+        $percent = round(($v/$connaissanceRegionAutresByMonthTotal[$month])*100,1);
+        $points[$k][] = $percent;
+    }
+}
+
+foreach($points as $k=>$point){
+    $datas->addPoints($point, $connaissance_types_small[$k]);
+}
+
+$datas->addPoints($datas_mois, "mois");
+$datas->setAbscissa("mois");
+$picture = new pImage(1000,500,$datas);
+$picture->setGraphArea(20,20,980,480);
+$picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
+$picture->drawText(70, 70, "Autres départements",["FontSize"=>20,"R"=>"0","G"=>"0","B"=>"0"]);
+$picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
+$picture->drawScale(["Pos"=>SCALE_POS_LEFTRIGHT, "Mode"=>SCALE_MODE_ADDALL]);
+$picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
+$picture->drawLegend(20,20,["Mode"=>LEGEND_HORIZONTAL,"Style"=>LEGEND_NOBORDER,"FontSize"=>8]);
+$picture->drawBarChart(["DisplayOrientation"=>ORIENTATION_HORIZONTAL,"Interleave"=>1.5]);
+$picture->render("img/connaissance_autre_evolution.png");
 
 
 
