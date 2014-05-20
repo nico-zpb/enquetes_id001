@@ -17,12 +17,24 @@
     (_ (_   |   |   |  |   |   |
       (__<  |mm_|mm_|  |mm_|mm_|
 */
+session_start();
 include_once "../../../../datas/all.php";
 include_once "../../../../php/functions.php";
-include_once "../../../../php/enquete-connexion.php";
 
-//TODO get year ( form on front page .....)
-$annee = 2014; //provisoire
+if(!isConnected()){
+    header("Location: /index.php");
+    die();
+}
+
+if(!isPost() || !postExists("form_pdfe_range")){
+    header("Location: /index.php");
+    die();
+}
+
+
+
+
+$annee = (int)$form["annee"];
 $monthStart = 1;
 $dateStart = DateTime::createFromFormat("j-n-Y", "1-".$monthStart."-".$annee);
 
@@ -48,6 +60,7 @@ $dateEndTs = $dateEnd->getTimestamp();
 
 
 $numEntry = 0;
+include_once "../../../../php/enquete-connexion.php";
 
 // verif il y a t-il des enregistrements pour la periode ?
 $sql = "SELECT COUNT(*) as num FROM clients WHERE arrive_timestamp>=:datestartts AND arrive_timestamp<=:dateendts";
@@ -57,10 +70,9 @@ $stmt->bindValue(":dateendts", $dateEndTs);
 $stmt->execute();
 $numEntry = $stmt->fetch()["num"];
 if(!$numEntry){
-    die("no clients"); //TODO revoit sur page principale en cas de 0 entry
-    /*setFlash("Il n'y a pas de résultats sur la période demandée.");
-    header("Location: /survey/to-web.php");
-    die();*/
+    setFlash("Il n'y a pas de résultats sur la période demandée.");
+    header("Location: /survey/to-pdf.php");
+    die();
 }
 
 $clientsByMonth = [];

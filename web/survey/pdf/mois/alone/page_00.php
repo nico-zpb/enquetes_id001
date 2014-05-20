@@ -19,26 +19,37 @@
 */
 
 
+session_start();
 include_once "../../../../../datas/all.php";
 include_once "../../../../../php/functions.php";
-include_once "../../../../../php/enquete-connexion.php";
 
+if(!isConnected()){
+    header("Location: /index.php");
+    die();
+}
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// TODO formulaire pour recup mois
-// pour test $monthStart = 4
-$monthStart = 4;
-$annee = 2014;
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+if(!isPost() || !postExists("form_pdfm_range")){
+    header("Location: /index.php");
+    die();
+}
+$form = getPost("form_pdfm_range");
+
+$annee = (int)$form["annee"];
+
+$monthStart = (int)$form["month_start"];
+$dateTest = new DateTime();
+$dateTestMonth = $dateTest->format("n");
+if($monthStart> $dateTestMonth){
+    setFlash("Choisissez parmis le mois en cours et les mois précédents.");
+    header("Location: /survey/to-pdf");
+}
 
 $dateStart = DateTime::createFromFormat("j-n-Y","1-" . $monthStart . "-" . $annee);
 $dateStartTs = $dateStart->getTimestamp();
 $lastDay = $dateStart->format("t");
 $dateEnd = DateTime::createFromFormat("j-n-Y",$lastDay . "-" . $monthStart . "-" . $annee);
 $dateEndTs = $dateEnd->getTimestamp();
-
+include_once "../../../../../php/enquete-connexion.php";
 $sql = "SELECT * FROM clients WHERE arrive_mois=:arrive_mois AND arrive_annee=:arrive_annee";
 $stmt = $pdo->prepare($sql);
 $stmt->bindValue(":arrive_mois", $monthStart);
