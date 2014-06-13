@@ -820,7 +820,7 @@ try{
     $converter->pdf->SetDisplayMode('fullpage');
     $converter->writeHTML($content, false);
     $converter->createIndex('', null, 15, false, true, 2);
-    $converter->Output('about.pdf');
+    $converter->Output('presentation.pdf');
 
 } catch(HTML2PDF_exception $e) {
     echo $e;
