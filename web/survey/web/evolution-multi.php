@@ -98,13 +98,20 @@ foreach ($ClientsByMonth as $monthShortName => $clientsInMonth) {
     $all = $connaissanceNumByMonth[$monthShortName];
 
     $connaissancePercentByMonth[$monthShortName] = array_map(function ($it) use ($all) {
-        return round(($it / $all) * 100);
+        if($all>0){
+            return round(($it / $all) * 100);
+        }
+        return 0;
+
     }, $connaissanceByMonth[$monthShortName]);
 
 }
 
 $connaissancePercentTotal = array_map(function ($it) use ($connaissanceEntries) {
-    return round(($it / $connaissanceEntries) * 100);
+    if($connaissanceEntries>0){
+        return round(($it / $connaissanceEntries) * 100);
+    }
+    return 0;
 }, $connaissanceTotal);
 
 
@@ -162,16 +169,28 @@ foreach ($ClientsByMonth as $m => $d) {
 
 }
 $numCentreByMonthPercent = array_map(function ($it, $to) {
-    return round(($it / $to) * 100,1);
+    if($to>0){
+        return round(($it / $to) * 100,1);
+    }
+    return 0;
 }, $numCentreByMonth, $totalByMonth);
 $numParisByMonthPercent = array_map(function ($it, $to) {
-    return round(($it / $to) * 100,1);
+    if($to>0){
+        return round(($it / $to) * 100,1);
+    }
+    return 0;
 }, $numParisByMonth, $totalByMonth);
 $numOtherByMonthPercent = array_map(function ($it, $to) {
-    return round(($it / $to) * 100,1);
+    if($to>0){
+        return round(($it / $to) * 100,1);
+    }
+    return 0;
 }, $numOtherByMonth, $totalByMonth);
 $numEtrangerByMonthPercent = array_map(function ($it, $to) {
-    return round(($it / $to) * 100,1);
+    if($to>0){
+        return round(($it / $to) * 100,1);
+    }
+    return 0;
 }, $numEtrangerByMonth, $totalByMonth);
 
 ///////// connaissance par zone page-3
@@ -488,7 +507,11 @@ foreach($ClientsByMonth as $month=>$client){
         foreach($connaissanceRegionParisByMonth as $month=>$d){
             $datas .= '{month:"'.$month.'", ';
             foreach($d as $k=>$v){
-                $percent = round(($v / $connaissanceRegionParisByMonthTotal[$month]) * 100);
+            $percent = 0;
+                if($connaissanceRegionParisByMonthTotal[$month]>0){
+                    $percent = round(($v / $connaissanceRegionParisByMonthTotal[$month]) * 100);
+                }
+
                 $datas .= 'type'.$k.':'.$percent.', ';
             }
             $datas = rtrim($datas, ", ");
@@ -517,7 +540,11 @@ foreach($ClientsByMonth as $month=>$client){
         foreach($connaissanceRegionCentreByMonth as $month=>$d){
             $datas .= '{month:"'.$month.'", ';
             foreach($d as $k=>$v){
-                $percent = round(($v / $connaissanceRegionCentreByMonthTotal[$month]) * 100);
+                $percent = 0;
+                if($connaissanceRegionCentreByMonthTotal[$month]>0){
+                    $percent = round(($v / $connaissanceRegionCentreByMonthTotal[$month]) * 100);
+                }
+
                 $datas .= 'type'.$k.':'.$percent.', ';
             }
             $datas = rtrim($datas, ", ");
@@ -546,7 +573,11 @@ foreach($ClientsByMonth as $month=>$client){
         foreach($connaissanceRegionAutresByMonth as $month=>$d){
             $datas .= '{month:"'.$month.'", ';
             foreach($d as $k=>$v){
-                $percent = round(($v / $connaissanceRegionAutresByMonthTotal[$month]) * 100);
+                $percent = 0;
+                if($connaissanceRegionAutresByMonthTotal[$month]>0){
+                    $percent = round(($v / $connaissanceRegionAutresByMonthTotal[$month]) * 100);
+                }
+
                 $datas .= 'type'.$k.':'.$percent.', ';
             }
             $datas = rtrim($datas, ", ");

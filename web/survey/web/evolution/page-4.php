@@ -74,9 +74,13 @@
                                 <?php $totalBySatisfaction = 0; ?>
                                 <?php foreach($monthes as $l=>$w): ?>
                                     <?php
+                                    $percentVS = 0; $percentS = 0;
                                     $totalBySatisfaction += $satisfactionByMonth[$w][$name][0] + $satisfactionByMonth[$w][$name][1];
-                                    $percentVS = round(($satisfactionByMonth[$w][$name][0] / $satisfactionByMonthTotal[$w]) * 100);
-                                    $percentS = round(($satisfactionByMonth[$w][$name][1] / $satisfactionByMonthTotal[$w]) * 100);
+                                    if($satisfactionByMonthTotal[$w]>0){
+                                        $percentVS = round(($satisfactionByMonth[$w][$name][0] / $satisfactionByMonthTotal[$w]) * 100);
+                                        $percentS = round(($satisfactionByMonth[$w][$name][1] / $satisfactionByMonthTotal[$w]) * 100);
+                                    }
+
                                     $sum = $percentS + $percentVS;
                                     $class = "";
                                     if($sum >= 90){
@@ -90,7 +94,11 @@
                                     <td <?php echo $class; ?>><?php echo $sum; ?>%</td><!-- !pourcentage -->
                                 <?php endforeach; ?>
                                 <?php
-                                $total = round(($totalBySatisfaction/$totalSatisfaction) * 100);
+                                $total = 0;
+                                if($totalSatisfaction>0){
+                                    $total = round(($totalBySatisfaction/$totalSatisfaction) * 100);
+                                }
+
                                 if($total >= 90){
                                     $classT = " class='success'";
                                 } elseif($total<90 && $total >= 80){
@@ -142,10 +150,14 @@
                                 <?php $totalBySatisfaction = 0; ?>
                                 <?php foreach($monthes as $l=>$w): ?>
                                     <?php $totalBySatisfaction += $satisfactionByMonth[$w][$name][0]; ?>
-                                    <td><?php echo round(($satisfactionByMonth[$w][$name][0] / $satisfactionByMonthTotal[$w]) * 100); ?>%</td><!-- !pourcentage -->
+                                    <td><?php if($satisfactionByMonthTotal[$w]>0){echo round(($satisfactionByMonth[$w][$name][0] / $satisfactionByMonthTotal[$w]) * 100);} else {echo "0";}  ?>%</td><!-- !pourcentage -->
                                 <?php endforeach; ?>
                                 <?php
-                                $total = round(($totalBySatisfaction/$totalSatisfaction) * 100);
+                                $total = 0;
+                                if($totalSatisfaction>0){
+                                    $total = round(($totalBySatisfaction/$totalSatisfaction) * 100);
+                                }
+
                                 ?>
                                 <td><?php echo $total; ?>%</td>
                             </tr>

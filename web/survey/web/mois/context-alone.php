@@ -66,7 +66,7 @@
                     <tr>
                         <td>Autres</td>
                         <td><?php echo $countEffectifOtherDepts; ?></td>
-                        <td><?php echo round(($countEffectifOtherDepts / $numEntry) * 100,1); ?>%</td>
+                        <td><?php if($numEntry>0){echo round(($countEffectifOtherDepts / $numEntry) * 100,1);} else {echo "0";}  ?>%</td>
                     </tr>
                     <tr>
                         <td>Total</td>
@@ -138,11 +138,11 @@
                     <tbody>
                     <tr>
                         <td>Adultes et enfants de 11 ans et plus</td>
-                        <td><?php echo $moyenAdulte = round(($nbrAdultes[0] + ($nbrAdultes[1]*2) +  ($nbrAdultes[2]*3) + ($nbrAdultes[3]*4) + ($nbrAdultes[4]*5)) / $counterPersons, 1);?></td>
+                        <td><?php $moyenAdulte=0; if($counterPersons>0){echo $moyenAdulte = round(($nbrAdultes[0] + ($nbrAdultes[1]*2) +  ($nbrAdultes[2]*3) + ($nbrAdultes[3]*4) + ($nbrAdultes[4]*5)) / $counterPersons, 1);} else {echo "0";} ?></td>
                     </tr>
                     <tr>
                         <td>Enfants de moins de 11 ans</td>
-                        <td><?php echo $moyenEnfant = round(($nbrEnfants[0] + ($nbrEnfants[1]*2) +  ($nbrEnfants[2]*3) + ($nbrEnfants[3]*4) + ($nbrEnfants[4]*5)) / $counterPersons, 1);?></td>
+                        <td><?php $moyenEnfant=0; if($counterPersons>0){echo $moyenEnfant = round(($nbrEnfants[0] + ($nbrEnfants[1]*2) +  ($nbrEnfants[2]*3) + ($nbrEnfants[3]*4) + ($nbrEnfants[4]*5)) / $counterPersons, 1);} else {echo "0";} ?></td>
                     </tr>
                     <tr class="success">
                         <td>Total</td>

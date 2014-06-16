@@ -117,7 +117,10 @@ foreach ($clients as $k => $c) {
 }
 /////////////////////////////
 $toPercent = function ($it) use ($numEntry) {
-    return round(($it / $numEntry) * 100);
+    if($numEntry>0){
+        return round(($it / $numEntry) * 100);
+    }
+    return 0;
 };
 
 // satisfaction globale
@@ -234,7 +237,10 @@ for ($i = 0; $i < count($resultsConnaissance); $i++) {
     $resultsConnaissanceTotal += $resultsConnaissance[$i];
 }
 $resultsConnaissancePercent = array_map(function ($it) use ($resultsConnaissanceTotal) {
-    return round(($it / $resultsConnaissanceTotal) * 100);
+    if($resultsConnaissanceTotal>0){
+        return round(($it / $resultsConnaissanceTotal) * 100);
+    }
+    return 0;
 }, $resultsConnaissance);
 
 ////////////////////////////
@@ -303,7 +309,10 @@ for ($i = 0; $i < count($resultsConnaissanceParis); $i++) {
     $resultsConnaissanceParisTotal += $resultsConnaissanceParis[$i];
 }
 $resultsConnaissanceParisPercent = array_map(function ($it) use ($resultsConnaissanceParisTotal) {
-    return round(($it / $resultsConnaissanceParisTotal) * 100);
+    if($resultsConnaissanceParisTotal>0){
+        return round(($it / $resultsConnaissanceParisTotal) * 100);
+    }
+
 }, $resultsConnaissanceParis);
 
 ////////////////////////////
@@ -380,7 +389,10 @@ foreach($clients as $c){
     }
 }
 $tpsTrajetPercent = array_map(function($it) use ($numEntry){
-    return round(($it/$numEntry) * 100);
+    if($numEntry>0){
+        return round(($it/$numEntry) * 100);
+    }
+    return 0;
 }, $tpsTrajet);
 ////////////
 ///////////////////// sejour
@@ -450,10 +462,16 @@ if($result){
     }
 }
 $nbrAdultesPercent = array_map(function($it) use($counterPersons){
-    return round(($it / $counterPersons) * 100);
+    if($counterPersons>0){
+        return round(($it / $counterPersons) * 100);
+    }
+    return 0;
 }, $nbrAdultes);
 $nbrEnfantsPercent = array_map(function($it) use($counterPersons){
-    return round(($it / $counterPersons) * 100);
+    if($counterPersons>0){
+        return round(($it / $counterPersons) * 100);
+    }
+    return 0;
 }, $nbrEnfants);
 //////// chambres /////
 $sql = "SELECT type_chambre as room FROM sejours WHERE arrive_timestamp >=:datestartts AND arrive_timestamp <=:dateendts";
@@ -473,7 +491,10 @@ if($result){
     }
 }
 $roomsPercent = array_map(function($it) use ($countRooms){
-    return round( ($it/$countRooms) * 100);
+    if($countRooms){
+        return round( ($it/$countRooms) * 100);
+    }
+    return 0;
 }, $rooms);
 //////// combien de nuits
 $sql = "SELECT nbre_nuit as nuites FROM sejours WHERE arrive_timestamp >=:datestartts AND arrive_timestamp <=:dateendts";
@@ -501,7 +522,10 @@ if($result){
     }
 }
 $nuitesPercent = array_map(function($it) use($countNuites){
-    return round(($it/$countNuites) * 100);
+    if($countNuites>0){
+        return round(($it/$countNuites) * 100);
+    }
+    return 0;
 }, $nuites);
 ///////// visite zoo
 $sql = "SELECT visite_zoo as visite FROM sejours WHERE arrive_timestamp >=:datestartts AND arrive_timestamp <=:dateendts";
@@ -523,7 +547,10 @@ if($result){
     }
 }
 $visiteZooPercent = array_map(function($it) use ($countVisite) {
-    return round(($it/$countVisite) * 100);
+    if($countVisite>0){
+        return round(($it/$countVisite) * 100);
+    }
+    return 0;
 }, $visiteZoo);
 ////////// spa
 $sql = "SELECT spa FROM satisfaction WHERE client_id=:id";
@@ -540,7 +567,10 @@ foreach($clients as $k=>$c){
     }
 }
 $spaPercent = array_map(function($it) use ($spaCounter){
-    return round(($it/$spaCounter) *100);
+    if($spaCounter>0){
+        return round(($it/$spaCounter) *100);
+    }
+    return 0;
 }, $spa);
 ///////// wifi
 $sql = "SELECT wifi FROM sejours WHERE arrive_timestamp >=:datestartts AND arrive_timestamp <=:dateendts";
@@ -561,7 +591,10 @@ if($result){
     }
 }
 $wifiPercent = array_map(function($it) use ($wifiCounter){
-    return round(($it/$wifiCounter) * 100);
+    if($wifiCounter>0){
+        return round(($it/$wifiCounter) * 100);
+    }
+    return 0;
 }, $wifi);
 ?>
 
@@ -572,7 +605,7 @@ $wifiPercent = array_map(function($it) use ($wifiCounter){
     var pieChartGlobalSatisf = {
         dataSource: [
             <?php foreach($datas_satisfaction as $k=>$v): ?>
-            {category: "<?php echo $v["name"]; ?>", value: <?php echo round(($globalSatisf[$k] / $numEntry) * 100); ?>},
+            {category: "<?php echo $v["name"]; ?>", value: <?php if($numEntry>0){echo round(($globalSatisf[$k] / $numEntry) * 100);} else {echo "0";}  ?>},
             <?php endforeach; ?>
         ],
         series: {

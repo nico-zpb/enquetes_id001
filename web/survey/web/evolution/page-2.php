@@ -62,28 +62,28 @@
                             <?php foreach($numCentreByMonthPercent as $k=>$v): ?>
                                 <td><?php echo $v; ?>%</td>
                             <?php endforeach; ?>
-                            <td><?php echo round(($totalCentre/$totalOriginEntry) * 100,1); ?>%</td>
+                            <td><?php if($totalOriginEntry>0){echo round(($totalCentre/$totalOriginEntry) * 100,1);} else {echo "0";}  ?>%</td>
                         </tr>
                         <tr>
                             <td>Région Parisienne</td>
                             <?php foreach($numParisByMonthPercent as $k=>$v): ?>
                                 <td><?php echo $v; ?>%</td>
                             <?php endforeach; ?>
-                            <td><?php echo round(($totalParis/$totalOriginEntry) * 100,1);  ?>%</td>
+                            <td><?php if($totalOriginEntry>0){echo round(($totalParis/$totalOriginEntry) * 100,1);} else {echo "0";}   ?>%</td>
                         </tr>
                         <tr>
                             <td>Autres départements</td>
                             <?php foreach($numOtherByMonthPercent as $k=>$v): ?>
                                 <td><?php echo $v; ?>%</td>
                             <?php endforeach; ?>
-                            <td><?php echo round(($totalOther/$totalOriginEntry) * 100,1);  ?>%</td>
+                            <td><?php if($totalOriginEntry>0){echo round(($totalOther/$totalOriginEntry) * 100,1);} else {echo "0";}   ?>%</td>
                         </tr>
                         <tr>
                             <td>Pays étrangers</td>
                             <?php foreach($numEtrangerByMonthPercent as $k=>$v): ?>
                                 <td><?php echo $v; ?>%</td>
                             <?php endforeach; ?>
-                            <td><?php echo round(($totalEtranger/$totalOriginEntry) * 100,1);  ?>%</td>
+                            <td><?php if($totalOriginEntry>0){echo round(($totalEtranger/$totalOriginEntry) * 100,1);} else {echo "0";}   ?>%</td>
                         </tr>
                         <tr>
                             <td>Total</td>
