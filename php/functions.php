@@ -21,7 +21,7 @@
 defined("ROOT") || define("ROOT", realpath(dirname(__DIR__)));
 defined("LIBS") || define("LIBS", ROOT . DIRECTORY_SEPARATOR . "libs");
 
-$debug = true;
+$debug = false;
 
 ini_set("date.timezone", "Europe/Paris");
 ini_set("max_execution_time", 180);
