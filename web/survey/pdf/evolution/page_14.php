@@ -53,17 +53,25 @@
                 $totalOui += $visiteZooByMonth[$w][0];
                 $totalAll += $visiteZooTotalByMonth[$w];
                 ?>
-                <td style="width:<?php echo $colwidth; ?>%;"><?php echo round(($visiteZooByMonth[$w][0] / $visiteZooTotalByMonth[$w]) * 100); ?>%</td>
+                <td style="width:<?php echo $colwidth; ?>%;">
+                    <?php if($visiteZooTotalByMonth[$w]>0){echo round(($visiteZooByMonth[$w][0] / $visiteZooTotalByMonth[$w]) * 100);} else {echo "0";}  ?>%
+                </td>
             <?php endforeach; ?>
-            <td style="width:<?php echo $colwidth; ?>%;"><?php echo round(($totalOui/$totalAll) * 100); ?>%</td>
+            <td style="width:<?php echo $colwidth; ?>%;">
+                <?php if($totalAll>0){ echo round(($totalOui/$totalAll) * 100);} else {echo "0";} ?>%
+            </td>
         </tr>
         <tr class="even">
             <td style="width: 16%;">Non</td>
             <?php foreach($monthes as $l=>$w): ?>
                 <?php $totalNon += $visiteZooByMonth[$w][1]; ?>
-                <td style="width:<?php echo $colwidth; ?>%;"><?php echo round(($visiteZooByMonth[$w][1] / $visiteZooTotalByMonth[$w]) * 100); ?>%</td>
+                <td style="width:<?php echo $colwidth; ?>%;">
+                    <?php if($visiteZooTotalByMonth[$w]>0){  echo round(($visiteZooByMonth[$w][1] / $visiteZooTotalByMonth[$w]) * 100);} else {echo "0";} ?>%
+                </td>
             <?php endforeach; ?>
-            <td style="width:<?php echo $colwidth; ?>%;"><?php echo round(($totalNon/$totalAll) * 100); ?>%</td>
+            <td style="width:<?php echo $colwidth; ?>%;">
+                <?php if($totalAll>0){echo round(($totalNon/$totalAll) * 100);} else {echo "0";}  ?>%
+            </td>
         </tr>
         <tr class="odd">
             <td style="width: 16%;">Total</td>

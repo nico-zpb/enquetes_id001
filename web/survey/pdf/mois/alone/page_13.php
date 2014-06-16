@@ -121,11 +121,15 @@
                     <tbody>
                     <tr class="odd">
                         <td style="width: 75%;">Adultes et enfants de 11 ans et plus</td>
-                        <td style="width: 25%;"><?php echo $moyenAdulte = round(($nbrAdultes[0] + ($nbrAdultes[1]*2) +  ($nbrAdultes[2]*3) + ($nbrAdultes[3]*4) + ($nbrAdultes[4]*5)) / $counterPersons, 1);?></td>
+                        <td style="width: 25%;">
+                            <?php if($counterPersons>0){echo $moyenAdulte = round(($nbrAdultes[0] + ($nbrAdultes[1]*2) +  ($nbrAdultes[2]*3) + ($nbrAdultes[3]*4) + ($nbrAdultes[4]*5)) / $counterPersons, 1);}else{$moyenAdulte=0;echo "0";} ?>
+                        </td>
                     </tr>
                     <tr class="even">
                         <td style="width: 75%;">Enfants de moins de 11 ans</td>
-                        <td style="width: 25%;"><?php echo $moyenEnfant = round(($nbrEnfants[0] + ($nbrEnfants[1]*2) +  ($nbrEnfants[2]*3) + ($nbrEnfants[3]*4) + ($nbrEnfants[4]*5)) / $counterPersons, 1);?></td>
+                        <td style="width: 25%;">
+                            <?php if($counterPersons>0){echo $moyenEnfant = round(($nbrEnfants[0] + ($nbrEnfants[1]*2) +  ($nbrEnfants[2]*3) + ($nbrEnfants[3]*4) + ($nbrEnfants[4]*5)) / $counterPersons, 1);}else{$moyenEnfant=0;echo "0";} ?>
+                        </td>
                     </tr>
                     <tr class="odd">
                         <td style="width: 75%;">Total</td>

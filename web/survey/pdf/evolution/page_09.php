@@ -48,14 +48,20 @@
                         <tr <?php if(($k+1)%2 == 0){echo 'class="even"'; } else {echo 'class="odd"';} ?>>
                             <td style="width: 16%;"><?php echo $v; ?></td>
                             <?php foreach($monthes as $l=>$w): ?>
-                                <td style="width:<?php echo $colwidth; ?>%;"><?php echo round(($connaissanceRegionParisByMonth[$w][$k]/$connaissanceRegionParisByMonthTotal[$w]) * 100,1); ?>%</td>
+                                <td style="width:<?php echo $colwidth; ?>%;">
+                                    <?php if($connaissanceRegionParisByMonthTotal[$w]>0){echo round(($connaissanceRegionParisByMonth[$w][$k]/$connaissanceRegionParisByMonthTotal[$w]) * 100,1);} else {echo "0";}  ?>%
+                                </td>
                             <?php endforeach; ?>
                             <?php
                             $sum = 0;
                             foreach($monthes as $l=>$w){
                                 $sum += $connaissanceRegionParisByMonth[$w][$k];
                             }
-                            $percent = round(($sum / $totalByType) * 100, 1);
+                            $percent = 0;
+                            if($totalByType>0){
+                                $percent = round(($sum / $totalByType) * 100, 1);
+                            }
+
                             ?>
                             <td style="width:<?php echo $colwidth; ?>%;"><?php echo $percent; ?>%</td>
                         </tr>
@@ -86,14 +92,20 @@
                         <tr <?php if(($k+1)%2 == 0){echo 'class="even"'; } else {echo 'class="odd"';} ?>>
                             <td style="width: 16%;"><?php echo $v; ?></td>
                             <?php foreach($monthes as $l=>$w): ?>
-                                <td style="width:<?php echo $colwidth; ?>%;"><?php echo round(($connaissanceRegionCentreByMonth[$w][$k]/$connaissanceRegionCentreByMonthTotal[$w]) * 100,1); ?>%</td>
+                                <td style="width:<?php echo $colwidth; ?>%;">
+                                    <?php if($connaissanceRegionCentreByMonthTotal[$w]>0){echo round(($connaissanceRegionCentreByMonth[$w][$k]/$connaissanceRegionCentreByMonthTotal[$w]) * 100,1);} else {echo "0";}  ?>%
+                                </td>
                             <?php endforeach; ?>
                             <?php
                             $sum = 0;
                             foreach($monthes as $l=>$w){
                                 $sum += $connaissanceRegionCentreByMonth[$w][$k];
                             }
-                            $percent = round(($sum / $totalByType) * 100,1);
+                            $percent = 0;
+                            if($totalByType>0){
+                                $percent = round(($sum / $totalByType) * 100,1);
+                            }
+
                             ?>
                             <td style="width:<?php echo $colwidth; ?>%;"><?php echo $percent; ?>%</td>
                         </tr>
@@ -124,14 +136,19 @@
                         <tr <?php if(($k+1)%2 == 0){echo 'class="even"'; } else {echo 'class="odd"';} ?>>
                             <td style="width: 16%;"><?php echo $v; ?></td>
                             <?php foreach($monthes as $l=>$w): ?>
-                                <td style="width:<?php echo $colwidth; ?>%;"><?php echo round(($connaissanceRegionAutresByMonth[$w][$k]/$connaissanceRegionAutresByMonthTotal[$w]) * 100,1); ?>%</td>
+                                <td style="width:<?php echo $colwidth; ?>%;">
+                                    <?php if($connaissanceRegionAutresByMonthTotal[$w]>0){echo round(($connaissanceRegionAutresByMonth[$w][$k]/$connaissanceRegionAutresByMonthTotal[$w]) * 100,1);} else {echo "0";}  ?>%
+                                </td>
                             <?php endforeach; ?>
                             <?php
                             $sum = 0;
                             foreach($monthes as $l=>$w){
                                 $sum += $connaissanceRegionAutresByMonth[$w][$k];
                             }
-                            $percent = round(($sum / $totalByType) * 100,1);
+                            $percent = 0;
+                            if($totalByType>0){
+                                $percent = round(($sum / $totalByType) * 100,1);
+                            }
                             ?>
                             <td style="width:<?php echo $colwidth; ?>%;"><?php echo $percent; ?>%</td>
                         </tr>

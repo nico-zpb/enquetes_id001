@@ -32,7 +32,7 @@ if(!isPost() || !postExists("form_pdfe_range")){
 }
 
 
-
+$form = getPost("form_pdfe_range");
 
 $annee = (int)$form["annee"];
 $monthStart = 1;
@@ -69,6 +69,7 @@ $stmt->bindValue(":datestartts", $dateStartTs);
 $stmt->bindValue(":dateendts", $dateEndTs);
 $stmt->execute();
 $numEntry = $stmt->fetch()["num"];
+
 if(!$numEntry){
     setFlash("Il n'y a pas de résultats sur la période demandée.");
     header("Location: /survey/to-pdf.php");
@@ -138,13 +139,23 @@ foreach ($clientsByMonth as $monthShortName => $clientsInMonth) {
     $all = $connaissanceNumByMonth[$monthShortName];
 
     $connaissancePercentByMonth[$monthShortName] = array_map(function ($it) use ($all) {
-        return round(($it / $all) * 100);
+        if($all>0){
+            return round(($it / $all) * 100);
+        } else {
+            return 0;
+        }
+
     }, $connaissanceByMonth[$monthShortName]);
 
 }
 
 $connaissancePercentTotal = array_map(function ($it) use ($connaissanceEntries) {
-    return round(($it / $connaissanceEntries) * 100);
+    if($connaissanceEntries>0){
+        return round(($it / $connaissanceEntries) * 100);
+    } else {
+        return 0;
+    }
+
 }, $connaissanceTotal);
 
 
@@ -202,16 +213,37 @@ foreach ($clientsByMonth as $m => $d) {
 
 }
 $numCentreByMonthPercent= array_map(function ($it, $to) {
-    return round(($it / $to) * 100,1);
+    if($to>0){
+        return round(($it / $to) * 100,1);
+    } else {
+        return 0;
+    }
+
 }, $numCentreByMonth, $totalByMonth);
+
 $numParisByMonthPercent = array_map(function ($it, $to) {
-    return round(($it / $to) * 100,1);
+    if($to>0){
+        return round(($it / $to) * 100,1);
+    } else {
+        return 0;
+    }
+
 }, $numParisByMonth, $totalByMonth);
+
 $numOtherByMonthPercent = array_map(function ($it, $to) {
-    return round(($it / $to) * 100,1);
+    if($to>0){
+        return round(($it / $to) * 100,1);
+    } else {
+        return 0;
+    }
 }, $numOtherByMonth, $totalByMonth);
+
 $numEtrangerByMonthPercent = array_map(function ($it, $to) {
-    return round(($it / $to) * 100,1);
+    if($to>0){
+        return round(($it / $to) * 100,1);
+    } else {
+        return 0;
+    }
 }, $numEtrangerByMonth, $totalByMonth);
 
 
@@ -507,7 +539,7 @@ include_once(LIBS.DIRECTORY_SEPARATOR."pChart".DIRECTORY_SEPARATOR."pDraw.class.
 include_once(LIBS.DIRECTORY_SEPARATOR."pChart".DIRECTORY_SEPARATOR."pPie.class.php");
 include_once(LIBS.DIRECTORY_SEPARATOR."pChart".DIRECTORY_SEPARATOR."pImage.class.php");
 
-
+$baseDir = realpath(__DIR__);
 $points = [];
 $values = array_values($connaissanceToutConfonduByMonth);
 $numTypes = count($values[0]);
@@ -519,7 +551,11 @@ $datas = new pData();
 
 foreach($connaissanceToutConfonduByMonth as $month=>$typeArray){
     foreach($typeArray as $k=>$v){
-        $percent = round(($v/$connaissanceToutConfonduByMonthTotal[$month])*100,1);
+        $percent = 0;
+        if($connaissanceToutConfonduByMonthTotal[$month]>0){
+            $percent = round(($v/$connaissanceToutConfonduByMonthTotal[$month])*100,1);
+        }
+
         $points[$k][] = $percent;
     }
 }
@@ -538,7 +574,7 @@ $picture->drawScale(["Pos"=>SCALE_POS_LEFTRIGHT, "Mode"=>SCALE_MODE_ADDALL]);
 $picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
 $picture->drawLegend(20,20,["Mode"=>LEGEND_HORIZONTAL,"Style"=>LEGEND_NOBORDER,"FontSize"=>8]);
 $picture->drawBarChart(["DisplayOrientation"=>ORIENTATION_HORIZONTAL,"Interleave"=>1.5]);
-$picture->render("img/connaissance_total_evolution.png");
+$picture->render($baseDir ."/img/connaissance_total_evolution.png");
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -553,7 +589,11 @@ for($i=0;$i<$numTypes;$i++){
 $datas = new pData();
 foreach($connaissanceRegionParisByMonth as $month=>$typeArray){
     foreach($typeArray as $k=>$v){
-        $percent = round(($v/$connaissanceRegionParisByMonthTotal[$month])*100,1);
+        $percent = 0;
+        if($connaissanceRegionParisByMonthTotal[$month]>0){
+            $percent = round(($v/$connaissanceRegionParisByMonthTotal[$month])*100,1);
+        }
+
         $points[$k][] = $percent;
     }
 }
@@ -574,7 +614,7 @@ $picture->drawScale(["Pos"=>SCALE_POS_LEFTRIGHT, "Mode"=>SCALE_MODE_ADDALL]);
 $picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
 $picture->drawLegend(20,20,["Mode"=>LEGEND_HORIZONTAL,"Style"=>LEGEND_NOBORDER,"FontSize"=>8]);
 $picture->drawBarChart(["DisplayOrientation"=>ORIENTATION_HORIZONTAL,"Interleave"=>1.5]);
-$picture->render("img/connaissance_paris_evolution.png");
+$picture->render($baseDir ."/img/connaissance_paris_evolution.png");
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -589,7 +629,11 @@ for($i=0;$i<$numTypes;$i++){
 $datas = new pData();
 foreach($connaissanceRegionCentreByMonth as $month=>$typeArray){
     foreach($typeArray as $k=>$v){
-        $percent = round(($v/$connaissanceRegionCentreByMonthTotal[$month])*100,1);
+        $percent = 0;
+        if($connaissanceRegionCentreByMonthTotal[$month]>0){
+            $percent = round(($v/$connaissanceRegionCentreByMonthTotal[$month])*100,1);
+        }
+
         $points[$k][] = $percent;
     }
 }
@@ -609,7 +653,7 @@ $picture->drawScale(["Pos"=>SCALE_POS_LEFTRIGHT, "Mode"=>SCALE_MODE_ADDALL]);
 $picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
 $picture->drawLegend(20,20,["Mode"=>LEGEND_HORIZONTAL,"Style"=>LEGEND_NOBORDER,"FontSize"=>8]);
 $picture->drawBarChart(["DisplayOrientation"=>ORIENTATION_HORIZONTAL,"Interleave"=>1.5]);
-$picture->render("img/connaissance_centre_evolution.png");
+$picture->render($baseDir ."/img/connaissance_centre_evolution.png");
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -625,7 +669,12 @@ for($i=0;$i<$numTypes;$i++){
 $datas = new pData();
 foreach($connaissanceRegionAutresByMonth as $month=>$typeArray){
     foreach($typeArray as $k=>$v){
-        $percent = round(($v/$connaissanceRegionAutresByMonthTotal[$month])*100,1);
+        if($connaissanceRegionAutresByMonthTotal[$month]>0){
+            $percent = round(($v/$connaissanceRegionAutresByMonthTotal[$month])*100,1);
+        } else {
+            $percent = 0;
+        }
+
         $points[$k][] = $percent;
     }
 }
@@ -645,7 +694,7 @@ $picture->drawScale(["Pos"=>SCALE_POS_LEFTRIGHT, "Mode"=>SCALE_MODE_ADDALL]);
 $picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
 $picture->drawLegend(20,20,["Mode"=>LEGEND_HORIZONTAL,"Style"=>LEGEND_NOBORDER,"FontSize"=>8]);
 $picture->drawBarChart(["DisplayOrientation"=>ORIENTATION_HORIZONTAL,"Interleave"=>1.5]);
-$picture->render("img/connaissance_autre_evolution.png");
+$picture->render($baseDir ."/img/connaissance_autre_evolution.png");
 
 
 

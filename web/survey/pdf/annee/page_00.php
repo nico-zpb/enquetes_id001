@@ -136,7 +136,12 @@ foreach ($clients as $k => $c) {
 /////////////////////////////
 /////////////////////////////
 $toPercent = function ($it) use ($numEntry) {
-    return round(($it / $numEntry) * 100,1);
+    if($numEntry>0){
+        return round(($it / $numEntry) * 100,1);
+    } else {
+        return 0;
+    }
+
 };
 
 // satisfaction globale
@@ -256,7 +261,12 @@ for ($i = 0; $i < count($resultsConnaissance); $i++) {
     $resultsConnaissanceTotal += $resultsConnaissance[$i];
 }
 $resultsConnaissancePercent = array_map(function ($it) use ($resultsConnaissanceTotal) {
-    return round(($it / $resultsConnaissanceTotal) * 100,1);
+    if($resultsConnaissanceTotal>0){
+        return round(($it / $resultsConnaissanceTotal) * 100,1);
+    }else{
+        return 0;
+    }
+
 }, $resultsConnaissance);
 
 
@@ -329,7 +339,12 @@ for ($i = 0; $i < count($resultsConnaissanceParis); $i++) {
     $resultsConnaissanceParisTotal += $resultsConnaissanceParis[$i];
 }
 $resultsConnaissanceParisPercent = array_map(function ($it) use ($resultsConnaissanceParisTotal) {
-    return round(($it / $resultsConnaissanceParisTotal) * 100,1);
+    if($resultsConnaissanceParisTotal>0){
+        return round(($it / $resultsConnaissanceParisTotal) * 100,1);
+    } else {
+        return 0;
+    }
+
 }, $resultsConnaissanceParis);
 
 ////////////////////////////
@@ -382,7 +397,12 @@ foreach($departements as $num=>$name){
     $tmp = $stmt->fetch();
     if($tmp){
         $effectifsParDept[$num] = $tmp["num"];
-        $effectifsParDeptPercent[$num] = round(($tmp["num"] / $numEntry) * 100,1);
+        if($numEntry>0){
+            $effectifsParDeptPercent[$num] = round(($tmp["num"] / $numEntry) * 100,1);
+        } else {
+            $effectifsParDeptPercent[$num] = 0;
+        }
+
         // selection des departements les plus representatifs
         if($effectifsParDeptPercent[$num] >= 1.5){
             $selected[] = ["dept_num"=>$num, "dept_name"=>$name, "effectif"=>$tmp["num"], "percent"=>$effectifsParDeptPercent[$num]];
@@ -408,7 +428,11 @@ foreach($clients as $c){
 
 }
 $tpsTrajetPercent = array_map(function($it) use ($numEntry){
-    return round(($it/$numEntry) * 100,1);
+    if($numEntry>0){
+        return round(($it/$numEntry) * 100,1);
+    } else {
+        return 0;
+    }
 }, $tpsTrajet);
 ////////////
 
@@ -480,10 +504,19 @@ if($result){
     }
 }
 $nbrAdultesPercent = array_map(function($it) use($counterPersons){
-    return round(($it / $counterPersons) * 100,1);
+    if($counterPersons>0){
+        return round(($it / $counterPersons) * 100,1);
+    } else {
+        return 0;
+    }
+
 }, $nbrAdultes);
 $nbrEnfantsPercent = array_map(function($it) use($counterPersons){
-    return round(($it / $counterPersons) * 100,1);
+    if($counterPersons>0){
+        return round(($it / $counterPersons) * 100,1);
+    } else {
+        return 0;
+    }
 }, $nbrEnfants);
 
 
@@ -534,7 +567,12 @@ if($result){
     }
 }
 $nuitesPercent = array_map(function($it) use($countNuites){
-    return round(($it/$countNuites) * 100);
+    if($countNuites>0){
+        return round(($it/$countNuites) * 100);
+    } else {
+        return 0;
+    }
+
 }, $nuites);
 ///////// visite zoo
 $sql = "SELECT visite_zoo as visite FROM sejours WHERE arrive_timestamp >=:datestartts AND arrive_timestamp <=:dateendts";
@@ -556,7 +594,12 @@ if($result){
     }
 }
 $visiteZooPercent = array_map(function($it) use ($countVisite) {
-    return round(($it/$countVisite) * 100);
+    if($countVisite>0){
+        return round(($it/$countVisite) * 100);
+    } else{
+        return 0;
+    }
+
 }, $visiteZoo);
 ////////// spa
 $sql = "SELECT spa FROM satisfaction WHERE client_id=:id";
@@ -574,7 +617,12 @@ foreach($clients as $k=>$c){
     }
 }
 $spaPercent = array_map(function($it) use ($spaCounter){
-    return round(($it/$spaCounter) *100);
+    if($spaCounter>0){
+        return round(($it/$spaCounter) *100);
+    } else{
+        return 0;
+    }
+
 }, $spa);
 
 ///////// wifi
@@ -597,7 +645,12 @@ if($result){
     }
 }
 $wifiPercent = array_map(function($it) use ($wifiCounter){
-    return round(($it/$wifiCounter) * 100);
+    if($wifiCounter>0){
+        return round(($it/$wifiCounter) * 100);
+    } else {
+        return 0;
+    }
+
 }, $wifi);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -607,7 +660,7 @@ include_once(LIBS.DIRECTORY_SEPARATOR."pChart".DIRECTORY_SEPARATOR."pData.class.
 include_once(LIBS.DIRECTORY_SEPARATOR."pChart".DIRECTORY_SEPARATOR."pDraw.class.php");
 include_once(LIBS.DIRECTORY_SEPARATOR."pChart".DIRECTORY_SEPARATOR."pPie.class.php");
 include_once(LIBS.DIRECTORY_SEPARATOR."pChart".DIRECTORY_SEPARATOR."pImage.class.php");
-
+$baseDir = realpath(__DIR__);
 //pie chart satisfaction globale img/satif-globale-annee.png
 $datas = new pData();
 $datas->addPoints($globalSatisfPercent,"pourcentage");
@@ -626,7 +679,7 @@ $pie = new pPie($picture, $datas);
 
 $pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"Border"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
 $pie->drawPieLegend(20, 390, ["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"FontR"=>"50","FontG"=>"50","FontB"=>"50"]);
-$picture->render("img/satif-globale-annee.png");
+$picture->render($baseDir ."/img/satif-globale-annee.png");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // bar chart satisfaction services img/services-annee.png
@@ -649,7 +702,7 @@ $picture->drawScale(["Pos"=>SCALE_POS_TOPBOTTOM, "Mode"=>SCALE_MODE_ADDALL]);
 $picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
 $picture->drawLegend(20,100);
 $picture->drawStackedBarChart(["DisplayOrientation"=>ORIENTATION_VERTICAL]);
-$picture->render("img/services-annee.png");
+$picture->render($baseDir ."/img/services-annee.png");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // pie chart perception prix img/rapport-qualprix-annee.png
@@ -669,7 +722,7 @@ $pie = new pPie($picture, $datas);
 
 $pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"Border"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
 $pie->drawPieLegend(20, 390, ["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"FontR"=>"50","FontG"=>"50","FontB"=>"50"]);
-$picture->render("img/rapport-qualprix-annee.png");
+$picture->render($baseDir ."/img/rapport-qualprix-annee.png");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -694,7 +747,7 @@ $picture->drawScale(["Pos"=>SCALE_POS_TOPBOTTOM, "Mode"=>SCALE_MODE_ADDALL]);
 $picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
 $picture->drawLegend(20,100);
 $picture->drawStackedBarChart(["DisplayOrientation"=>ORIENTATION_VERTICAL]);
-$picture->render("img/restauration-annee.png");
+$picture->render($baseDir ."/img/restauration-annee.png");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // bar chat connaissance hotel total connaissance_total-annee.png
@@ -720,7 +773,7 @@ $palette = [
     "10"=>["R"=>38,"G"=>128,"B"=>18,"Alpha"=>100],
 ];
 $picture->drawBarChart(["DisplayPos"=>LABEL_POS_INSIDE, "DisplayValues"=>true,"DisplayR"=>50,"DisplayG"=>50,"DisplayB"=>50,"OverrideColors"=>$palette]);
-$picture->render("img/connaissance_total-annee.png");
+$picture->render($baseDir ."/img/connaissance_total-annee.png");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // bar chat connaissance hotel total connaissance_paris-annee.png
@@ -746,7 +799,7 @@ $palette = [
     "10"=>["R"=>38,"G"=>128,"B"=>18,"Alpha"=>100],
 ];
 $picture->drawBarChart(["DisplayPos"=>LABEL_POS_INSIDE, "DisplayValues"=>true,"DisplayR"=>50,"DisplayG"=>50,"DisplayB"=>50,"OverrideColors"=>$palette]);
-$picture->render("img/connaissance_paris-annee.png");
+$picture->render($baseDir ."/img/connaissance_paris-annee.png");
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -767,7 +820,7 @@ $pie = new pPie($picture, $datas);
 
 $pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"Border"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
 $pie->drawPieLegend(20, 390, ["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"FontR"=>"50","FontG"=>"50","FontB"=>"50"]);
-$picture->render("img/revenir-annee.png");
+$picture->render($baseDir ."/img/revenir-annee.png");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // pie chart revenir img/recommander-annee.png
@@ -787,7 +840,7 @@ $pie = new pPie($picture, $datas);
 
 $pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"Border"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
 $pie->drawPieLegend(20, 390, ["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"FontR"=>"50","FontG"=>"50","FontB"=>"50"]);
-$picture->render("img/recommander-annee.png");
+$picture->render($baseDir ."/img/recommander-annee.png");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //bar chart type de chambre chambre.png
@@ -806,7 +859,7 @@ $palette = [
     "3"=>["R"=>107,"G"=>197,"B"=>87,"Alpha"=>100]
 ];
 $picture->drawBarChart(["DisplayPos"=>LABEL_POS_INSIDE, "DisplayValues"=>true,"DisplayR"=>50,"DisplayG"=>50,"DisplayB"=>50,"OverrideColors"=>$palette]);
-$picture->render("img/chambre-annee.png");
+$picture->render($baseDir ."/img/chambre-annee.png");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

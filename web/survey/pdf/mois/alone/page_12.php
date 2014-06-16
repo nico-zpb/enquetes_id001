@@ -59,7 +59,7 @@
                                     <tr <?php if(($k+2)%2 == 0){echo 'class="even"'; } else {echo 'class="odd"';} ?>>
                                         <td style="width: 50%;">Autres</td>
                                         <td style="width: 25%;"><?php echo $countEffectifOtherDepts; ?></td>
-                                        <td style="width: 25%;"><?php echo round(($countEffectifOtherDepts / $numEntry) * 100,1); ?>%</td>
+                                        <td style="width: 25%;"><?php if($numEntry>0){echo round(($countEffectifOtherDepts / $numEntry) * 100,1);}else{echo "0";}  ?>%</td>
                                     </tr>
                                     <tr <?php if(($k+3)%2 == 0){echo 'class="even"'; } else {echo 'class="odd"';} ?>>
                                         <td style="width: 50%;">Total</td>

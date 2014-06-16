@@ -42,28 +42,28 @@
                 <?php foreach($numCentreByMonthPercent as $k=>$v): ?>
                     <td style="width:<?php echo $colwidth; ?>%;"><?php echo $v; ?>%</td>
                 <?php endforeach; ?>
-                <td style="width:<?php echo $colwidth; ?>%;"><?php echo round(($totalCentre/$totalOriginEntry) * 100,1); ?>%</td>
+                <td style="width:<?php echo $colwidth; ?>%;"><?php if($totalOriginEntry>0){echo round(($totalCentre/$totalOriginEntry) * 100,1);} else {echo "0";}  ?>%</td>
             </tr>
             <tr class="even">
                 <td style="width: 16%;">Région Parisienne</td>
                 <?php foreach($numParisByMonthPercent as $k=>$v): ?>
                     <td style="width:<?php echo $colwidth; ?>%;"><?php echo $v; ?>%</td>
                 <?php endforeach; ?>
-                <td style="width:<?php echo $colwidth; ?>%;"><?php echo round(($totalParis/$totalOriginEntry) * 100,1);  ?>%</td>
+                <td style="width:<?php echo $colwidth; ?>%;"><?php if($totalOriginEntry>0){echo round(($totalParis/$totalOriginEntry) * 100,1);} else {echo "0";} ?>%</td>
             </tr>
             <tr class="odd">
                 <td style="width: 16%;">Autres départements</td>
                 <?php foreach($numOtherByMonthPercent as $k=>$v): ?>
                     <td style="width:<?php echo $colwidth; ?>%;"><?php echo $v; ?>%</td>
                 <?php endforeach; ?>
-                <td style="width:<?php echo $colwidth; ?>%;"><?php echo round(($totalOther/$totalOriginEntry) * 100,1);  ?>%</td>
+                <td style="width:<?php echo $colwidth; ?>%;"><?php if($totalOriginEntry>0){echo round(($totalOther/$totalOriginEntry) * 100,1);} else {echo "0";} ?>%</td>
             </tr>
             <tr class="even">
                 <td style="width: 16%;">Pays étrangers</td>
                 <?php foreach($numEtrangerByMonthPercent as $k=>$v): ?>
                     <td style="width:<?php echo $colwidth; ?>%;"><?php echo $v; ?>%</td>
                 <?php endforeach; ?>
-                <td style="width:<?php echo $colwidth; ?>%;"><?php echo round(($totalEtranger/$totalOriginEntry) * 100,1);  ?>%</td>
+                <td style="width:<?php echo $colwidth; ?>%;"><?php if($totalOriginEntry>0){echo round(($totalEtranger/$totalOriginEntry) * 100,1);} else {echo "0";} ?>%</td>
             </tr>
             <tr class="odd">
                 <td style="width: 16%;">Total</td>

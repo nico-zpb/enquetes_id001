@@ -89,21 +89,27 @@ foreach($clients as $k=>$client){
     }
 }
 
-$numMalePercent = round(($numMale / $numEntry) * 100);
-$numFemalePercent = round(($numFemale / $numEntry) * 100);
+$numMalePercent = 0;
+$numFemalePercent = 0;
+if($numEntry>0){
+    $numMalePercent = round(($numMale / $numEntry) * 100);
+}
+if($numEntry>0){
+    $numFemalePercent = round(($numFemale / $numEntry) * 100);
+}
 foreach($tranchesAgeCount as $k=>$v){
     if($v>$max){
         $max = $v;
         $highlightAge = $k;
     }
-    $tranchesAge[] = ["name" => $datas_trancheAge[$k]["name"], "num" => $v, "percent" => round(($v / $numEntry) * 100,1)];
+    $tranchesAge[] = ["name" => $datas_trancheAge[$k]["name"], "num" => $v, "percent" => ($numEntry>0) ? round(($v / $numEntry) * 100,1) : 0];
 }
 foreach($profCount as $k=>$v){
     if($v>$maxProf){
         $maxProf = $v;
         $highlightProf = $k;
     }
-    $prof[] = ["name" => $datas_professions[$k]["name"], "num" => $v, "percent" => round(($v / $numEntry) * 100,1)];
+    $prof[] = ["name" => $datas_professions[$k]["name"], "num" => $v, "percent" => ($numEntry>0) ? round(($v / $numEntry) * 100,1) : 0];
 }
 
 // satisfaction
@@ -120,7 +126,10 @@ foreach ($clients as $k => $c) {
 }
 /////////////////////////////
 $toPercent = function ($it) use ($numEntry) {
-    return round(($it / $numEntry) * 100,1);
+    if($numEntry>0){
+        return round(($it / $numEntry) * 100,1);
+    }
+   return 0;
 };
 
 // satisfaction globale
@@ -239,7 +248,10 @@ for ($i = 0; $i < count($resultsConnaissance); $i++) {
     $resultsConnaissanceTotal += $resultsConnaissance[$i];
 }
 $resultsConnaissancePercent = array_map(function ($it) use ($resultsConnaissanceTotal) {
-    return round(($it / $resultsConnaissanceTotal) * 100,1);
+    if($resultsConnaissanceTotal>0){
+        return round(($it / $resultsConnaissanceTotal) * 100,1);
+    }
+    return 0;
 }, $resultsConnaissance);
 
 
@@ -312,7 +324,10 @@ for ($i = 0; $i < count($resultsConnaissanceParis); $i++) {
     $resultsConnaissanceParisTotal += $resultsConnaissanceParis[$i];
 }
 $resultsConnaissanceParisPercent = array_map(function ($it) use ($resultsConnaissanceParisTotal) {
-    return round(($it / $resultsConnaissanceParisTotal) * 100,1);
+    if($resultsConnaissanceParisTotal>0){
+        return round(($it / $resultsConnaissanceParisTotal) * 100,1);
+    }
+    return 0;
 }, $resultsConnaissanceParis);
 
 ////////////////////////////
@@ -391,7 +406,10 @@ foreach($clients as $c){
 
 }
 $tpsTrajetPercent = array_map(function($it) use ($numEntry){
-    return round(($it/$numEntry) * 100,1);
+    if($numEntry>0){
+        return round(($it/$numEntry) * 100,1);
+    }
+    return 0;
 }, $tpsTrajet);
 ////////////
 
@@ -463,10 +481,16 @@ if($result){
     }
 }
 $nbrAdultesPercent = array_map(function($it) use($counterPersons){
-    return round(($it / $counterPersons) * 100,1);
+    if($counterPersons>0){
+        return round(($it / $counterPersons) * 100,1);
+    }
+    return 0;
 }, $nbrAdultes);
 $nbrEnfantsPercent = array_map(function($it) use($counterPersons){
-    return round(($it / $counterPersons) * 100,1);
+    if($counterPersons>0){
+        return round(($it / $counterPersons) * 100,1);
+    }
+    return 0;
 }, $nbrEnfants);
 
 
@@ -539,7 +563,10 @@ if($result){
     }
 }
 $visiteZooPercent = array_map(function($it) use ($countVisite) {
-    return round(($it/$countVisite) * 100);
+    if($countVisite>0){
+        return round(($it/$countVisite) * 100);
+    }
+    return 0;
 }, $visiteZoo);
 ////////// spa
 $sql = "SELECT spa FROM satisfaction WHERE client_id=:id";
@@ -557,7 +584,10 @@ foreach($clients as $k=>$c){
     }
 }
 $spaPercent = array_map(function($it) use ($spaCounter){
-    return round(($it/$spaCounter) *100);
+    if($spaCounter>0){
+        return round(($it/$spaCounter) *100);
+    }
+    return 0;
 }, $spa);
 
 ///////// wifi
@@ -591,6 +621,8 @@ include_once(LIBS.DIRECTORY_SEPARATOR."pChart".DIRECTORY_SEPARATOR."pDraw.class.
 include_once(LIBS.DIRECTORY_SEPARATOR."pChart".DIRECTORY_SEPARATOR."pPie.class.php");
 include_once(LIBS.DIRECTORY_SEPARATOR."pChart".DIRECTORY_SEPARATOR."pImage.class.php");
 
+$baseDir = realpath(__DIR__);
+
 //pie chart satisfaction globale img/satif-globale.png
 $datas = new pData();
 $datas->addPoints($globalSatisfPercent,"pourcentage");
@@ -609,7 +641,7 @@ $pie = new pPie($picture, $datas);
 
 $pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"Border"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
 $pie->drawPieLegend(20, 390, ["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"FontR"=>"50","FontG"=>"50","FontB"=>"50"]);
-$picture->render("img/satif-globale.png");
+$picture->render($baseDir ."/img/satif-globale.png");
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -633,7 +665,7 @@ $picture->drawScale(["Pos"=>SCALE_POS_TOPBOTTOM, "Mode"=>SCALE_MODE_ADDALL]);
 $picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
 $picture->drawLegend(20,100);
 $picture->drawStackedBarChart(["DisplayOrientation"=>ORIENTATION_VERTICAL]);
-$picture->render("img/services.png");
+$picture->render($baseDir ."/img/services.png");
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -657,7 +689,7 @@ $picture->drawScale(["Pos"=>SCALE_POS_TOPBOTTOM, "Mode"=>SCALE_MODE_ADDALL]);
 $picture->setFontProperties(["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"R"=>"50","G"=>"50","B"=>"50"]);
 $picture->drawLegend(20,100);
 $picture->drawStackedBarChart(["DisplayOrientation"=>ORIENTATION_VERTICAL]);
-$picture->render("img/restauration.png");
+$picture->render($baseDir ."/img/restauration.png");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // bar chat connaissance hotel total connaissance_total.png
@@ -683,7 +715,7 @@ $palette = [
     "10"=>["R"=>38,"G"=>128,"B"=>18,"Alpha"=>100],
 ];
 $picture->drawBarChart(["DisplayPos"=>LABEL_POS_INSIDE, "DisplayValues"=>true,"DisplayR"=>50,"DisplayG"=>50,"DisplayB"=>50,"OverrideColors"=>$palette]);
-$picture->render("img/connaissance_total.png");
+$picture->render($baseDir ."/img/connaissance_total.png");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // bar chat connaissance hotel total connaissance_paris.png
@@ -709,7 +741,7 @@ $palette = [
     "10"=>["R"=>38,"G"=>128,"B"=>18,"Alpha"=>100],
 ];
 $picture->drawBarChart(["DisplayPos"=>LABEL_POS_INSIDE, "DisplayValues"=>true,"DisplayR"=>50,"DisplayG"=>50,"DisplayB"=>50,"OverrideColors"=>$palette]);
-$picture->render("img/connaissance_paris.png");
+$picture->render($baseDir ."/img/connaissance_paris.png");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // pie chart perception prix img/rapport-qualprix.png
@@ -729,7 +761,7 @@ $pie = new pPie($picture, $datas);
 
 $pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"Border"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
 $pie->drawPieLegend(20, 390, ["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"FontR"=>"50","FontG"=>"50","FontB"=>"50"]);
-$picture->render("img/rapport-qualprix.png");
+$picture->render($baseDir ."/img/rapport-qualprix.png");
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -750,7 +782,7 @@ $pie = new pPie($picture, $datas);
 
 $pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"Border"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
 $pie->drawPieLegend(20, 390, ["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"FontR"=>"50","FontG"=>"50","FontB"=>"50"]);
-$picture->render("img/revenir.png");
+$picture->render($baseDir ."/img/revenir.png");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // pie chart revenir img/recommander.png
@@ -770,7 +802,7 @@ $pie = new pPie($picture, $datas);
 
 $pie->draw2DPie(300,250,["Radius"=>140, "DrawLabels"=>true,"Border"=>true, "WriteValues"=>PIE_VALUE_NATURAL,"ValueSuffix"=>"%" ]);
 $pie->drawPieLegend(20, 390, ["FontName"=>LIBS . DIRECTORY_SEPARATOR . "fonts/calibri.ttf", "FontSize"=>10,"FontR"=>"50","FontG"=>"50","FontB"=>"50"]);
-$picture->render("img/recommander.png");
+$picture->render($baseDir ."/img/recommander.png");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //bar chart type de chambre chambre.png
@@ -789,7 +821,7 @@ $palette = [
     "3"=>["R"=>107,"G"=>197,"B"=>87,"Alpha"=>100]
 ];
 $picture->drawBarChart(["DisplayPos"=>LABEL_POS_INSIDE, "DisplayValues"=>true,"DisplayR"=>50,"DisplayG"=>50,"DisplayB"=>50,"OverrideColors"=>$palette]);
-$picture->render("img/chambre.png");
+$picture->render($baseDir ."/img/chambre.png");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -50,9 +50,13 @@ __      /     ______         \
                 <td style="width: 16%;"><?php echo $name; ?></td>
                 <?php foreach($monthes as $l=>$w): ?>
                     <?php $totalProp += $satisfactionByMonth[$w]["spa"][$k]; ?>
-                    <td style="width:<?php echo $colwidth; ?>%;"><?php echo round(($satisfactionByMonth[$w]["spa"][$k]/$satisfactionByMonthTotal[$w]) * 100); ?>%</td>
+                    <td style="width:<?php echo $colwidth; ?>%;">
+                        <?php if($satisfactionByMonthTotal[$w]>0){echo round(($satisfactionByMonth[$w]["spa"][$k]/$satisfactionByMonthTotal[$w]) * 100);}else{echo "0";}  ?>%
+                    </td>
                 <?php endforeach; ?>
-                <td style="width:<?php echo $colwidth; ?>%;"><?php echo round(($totalProp / $totalSatisfaction ) * 100); ?>%</td>
+                <td style="width:<?php echo $colwidth; ?>%;">
+                    <?php if($totalSatisfaction>0){echo round(($totalProp / $totalSatisfaction ) * 100);} else {echo "0";}  ?>%
+                </td>
             </tr>
         <?php endforeach; ?>
         <tr class="odd">

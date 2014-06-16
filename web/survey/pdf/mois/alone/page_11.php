@@ -54,7 +54,7 @@
             <tr <?php if(($k+1)%2 == 0){echo 'class="even"'; } else {echo 'class="odd"';} ?>>
                 <td><?php echo $ct; ?></td>
                 <?php foreach($resultsConnaissanceParisParDepts as $depNum=>$values): ?>
-                    <td><?php echo round(($values[$k] / $resultsConnaissanceParisParDeptsTotal[$depNum]) * 100,1); ?>%</td>
+                    <td><?php if($resultsConnaissanceParisParDeptsTotal[$depNum]>0){echo round(($values[$k] / $resultsConnaissanceParisParDeptsTotal[$depNum]) * 100,1);}else {echo "0";}  ?>%</td>
                 <?php endforeach; ?>
             </tr>
         <?php endforeach; ?>
