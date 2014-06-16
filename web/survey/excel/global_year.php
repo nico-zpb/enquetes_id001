@@ -87,7 +87,10 @@ for ($i = $monthStart; $i < $monthEnd + 1; $i++) {
     }
 }
 $percentByMonth = array_map(function ($it) use ($effectifTotal) {
-    return round(($it / $effectifTotal) * 100,1);
+    if($effectifTotal>0){
+        return round(($it / $effectifTotal) * 100,1);
+    }
+    return 0;
 }, $effectifsByMonth);
 //// connaissance de d l'hôtel global/mois
 function getEmptyConnaissanceArr()
@@ -113,8 +116,8 @@ $totalOther = 0;
 $totalEtranger = 0;
 $totalOriginEntry = 0;
 /// par departements
-$clientsByDeptsByMonth = $departements;
-foreach ($clientsByDeptsByMonth as $num => $name) {
+$clientsByDeptsByMonth = [];
+foreach ($departements as $num => $name) {
     $clientsByDeptsByMonth[$num] = [];
     foreach ($datas_mois as $mois) {
         $clientsByDeptsByMonth[$num][$mois] = 0;
@@ -176,7 +179,10 @@ foreach ($clientsByMonth as $month => $clients) {
         $connaissanceRegionAutresByMonthTotal[$month] = 0;
     }
     foreach ($clients as $key => $client) {
-        $clientsByDeptsTotal[$client["departement_num"]]++;
+        if($client["departement_num"] != null){
+            $clientsByDeptsTotal[$client["departement_num"]]++;
+        }
+
         //// connaissance de d l'hôtel global/mois
         $stmt->bindValue(":id", $client["id"]);
         $stmt->execute();
@@ -247,7 +253,10 @@ foreach ($clientsByMonth as $month => $clients) {
         }
         $totalByMonth[$month]++;
         /// par departement
-        $clientsByDeptsByMonth[$client["departement_num"]][$month]++;
+        if($client["departement_num"] != null){
+            $clientsByDeptsByMonth[$client["departement_num"]][$month]++;
+        }
+
     }
     //// connaissance de d l'hôtel global/mois
     $connaissanceTotalByMonth[$month] = 0;
@@ -256,27 +265,45 @@ foreach ($clientsByMonth as $month => $clients) {
     }
     $all = $connaissanceTotalByMonth[$month];
     $connaissancePercentByMonthByType[$month] = array_map(function ($it) use ($all) {
-        return round(($it / $all) * 100, 1);
+        if($all>0){
+            return round(($it / $all) * 100, 1);
+        }
+        return 0;
     }, $connaissanceByMonthByType[$month]);
 }
 $connaissanceRegionParisByDepsByTypePercent = [];
 foreach($connaissanceRegionParisByDepsByType as $dep=>$types){
     $total = $connaissanceRegionParisByDepsTotal[$dep];
     $connaissanceRegionParisByDepsByTypePercent[$dep] = array_map(function($it) use ($total){
-        return round(($it/$total)*100,1);
+        if($total>0){
+            return round(($it/$total)*100,1);
+        }
+       return 0;
     }, $connaissanceRegionParisByDepsByType[$dep]);
 }
 $numCentreByMonthPercent = array_map(function ($it, $to) {
-    return round(($it / $to) * 100, 1);
+    if($to>0){
+        return round(($it / $to) * 100, 1);
+    }
+    return 0;
 }, $numCentreByMonth, $totalByMonth);
 $numParisByMonthPercent = array_map(function ($it, $to) {
-    return round(($it / $to) * 100, 1);
+    if($to>0){
+        return round(($it / $to) * 100, 1);
+    }
+    return 0;
 }, $numParisByMonth, $totalByMonth);
 $numOtherByMonthPercent = array_map(function ($it, $to) {
-    return round(($it / $to) * 100, 1);
+    if($to>0){
+        return round(($it / $to) * 100, 1);
+    }
+    return 0;
 }, $numOtherByMonth, $totalByMonth);
 $numEtrangerByMonthPercent = array_map(function ($it, $to) {
-    return round(($it / $to) * 100, 1);
+    if($to>0){
+        return round(($it / $to) * 100, 1);
+    }
+    return 0;
 }, $numEtrangerByMonth, $totalByMonth);
 $numAllDeptsByMonthPercent = [];
 foreach ($clientsByDeptsByMonth as $k => $v) {
@@ -285,7 +312,11 @@ foreach ($clientsByDeptsByMonth as $k => $v) {
         $numAllDeptsByMonthPercent[$k] = [];
     }
     foreach ($v as $m => $e) {
-        $numAllDeptsByMonthPercent[$k][$m] = round(($clientsByDeptsByMonth[$k][$m] / $totalByMonth[$m]) * 100, 1) . "%";
+        $numAllDeptsByMonthPercent[$k][$m] = "0%";
+        if($totalByMonth[$m]>0){
+            $numAllDeptsByMonthPercent[$k][$m] = round(($clientsByDeptsByMonth[$k][$m] / $totalByMonth[$m]) * 100, 1) . "%";
+        }
+
     }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -580,7 +611,11 @@ $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
 $startRow += 1;
 $endRow = $startRow;
 foreach($connaissance_types as $key=>$type){
-    $result = round(($connaissanceTotalByType[$key] / $connaissanceTotal) * 100, 1);
+    $result = 0;
+    if($connaissanceTotal>0){
+        $result = round(($connaissanceTotalByType[$key] / $connaissanceTotal) * 100, 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($endCol, $startRow + $key, $result . "%");
 }
 foreach ($connaissance_types as $key => $type) {
@@ -646,9 +681,19 @@ foreach ($numOtherByMonthPercent as $k => $v) {
 foreach ($monthes as $k => $v) {
     $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow + 3, $totalByMonth[$v]);
 }
-$activeSheet->setCellValueByColumnAndRow($endCol, $startRow, round(($totalCentre/$totalOriginEntry)*100,1) . "%");
-$activeSheet->setCellValueByColumnAndRow($endCol, $startRow+1, round(($totalParis/$totalOriginEntry)*100,1) . "%");
-$activeSheet->setCellValueByColumnAndRow($endCol, $startRow+2, round(($totalOther/$totalOriginEntry)*100,1) . "%");
+$tc = 0; $tp =0; $to =0;
+if($totalOriginEntry>0){
+    $tc = round(($totalCentre/$totalOriginEntry)*100,1);
+    $tp = round(($totalParis/$totalOriginEntry)*100,1);
+    $to = round(($totalOther/$totalOriginEntry)*100,1);
+}
+
+
+
+
+$activeSheet->setCellValueByColumnAndRow($endCol, $startRow, $tc . "%");
+$activeSheet->setCellValueByColumnAndRow($endCol, $startRow+1, $tp . "%");
+$activeSheet->setCellValueByColumnAndRow($endCol, $startRow+2, $to . "%");
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow+3, $totalOriginEntry);
 $endRow = $startRow + 3;
 $activeSheet->getStyle($columnNames[$startCol + 1] . ($startRow - 1) . ":" . $columnNames[$endCol] . ($startRow - 1))->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
@@ -702,7 +747,11 @@ foreach ($numAllDeptsByMonthPercent as $dep => $mois) {
 }
 $row = 0;
 foreach($departements as $num=>$name){
-    $result = round(($clientsByDeptsTotal[$num] / $effectifTotal) * 100, 1);
+    $result = 0;
+    if($effectifTotal>0){
+        $result = round(($clientsByDeptsTotal[$num] / $effectifTotal) * 100, 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($endCol, $startRow+$row, $result . "%");
     $row++;
 }
@@ -747,14 +796,22 @@ $endCol+=1;
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
 $startRow +=1;
 foreach($connaissance_types as $key=>$type){
-    $result = round(($connaissanceRegionParisByTypeTotal[$key] / $connaissanceRegionParisTotal) * 100, 1);
+    $result = 0;
+    if($connaissanceRegionParisTotal>0){
+        $result = round(($connaissanceRegionParisByTypeTotal[$key] / $connaissanceRegionParisTotal) * 100, 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($endCol, $startRow+$key, $result . "%");
 }
 foreach($connaissance_types as $key=>$type){
     $activeSheet->setCellValueByColumnAndRow($startCol, $startRow + $key, $type);
 
     foreach ($monthes as $k => $v) {
-        $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow + $key, round(($connaissanceRegionParisByMonthByType[$v][$key]/$connaissanceRegionParisByMonthTotal[$v])*100,1)."%" );
+        $res = 0;
+        if($connaissanceRegionParisByMonthTotal[$v]>0){
+            $res = round(($connaissanceRegionParisByMonthByType[$v][$key]/$connaissanceRegionParisByMonthTotal[$v])*100,1);
+        }
+        $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow + $key, $res."%" );
     }
     $endRow++;
 }
@@ -798,14 +855,22 @@ $endCol+=1;
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
 $startRow +=1;
 foreach($connaissance_types as $key=>$type){
-    $result = round(($connaissanceRegionCentreByTypeTotal[$key] / $connaissanceRegionCentreTotal) * 100, 1);
+    $result = 0;
+    if($connaissanceRegionCentreTotal>0){
+        $result = round(($connaissanceRegionCentreByTypeTotal[$key] / $connaissanceRegionCentreTotal) * 100, 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($endCol, $startRow+$key, $result . "%");
 }
 foreach($connaissance_types as $key=>$type){
     $activeSheet->setCellValueByColumnAndRow($startCol, $startRow + $key, $type);
 
     foreach ($monthes as $k => $v) {
-        $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow + $key, round(($connaissanceRegionCentreByMonthByType[$v][$key]/$connaissanceRegionCentreByMonthTotal[$v])*100,1)."%" );
+        $res = 0;
+        if($connaissanceRegionCentreByMonthTotal[$v]>0){
+            $res = round(($connaissanceRegionCentreByMonthByType[$v][$key]/$connaissanceRegionCentreByMonthTotal[$v])*100,1);
+        }
+        $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow + $key,$res ."%" );
 
     }
     $endRow++;
@@ -850,13 +915,20 @@ $endCol+=1;
 $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
 $startRow +=1;
 foreach($connaissance_types as $key=>$type){
-    $result = round(($connaissanceRegionAutresByTypeTotal[$key] / $connaissanceRegionAutresTotal) * 100, 1);
+    $result = 0;
+    if($connaissanceRegionAutresTotal>0){
+        $result = round(($connaissanceRegionAutresByTypeTotal[$key] / $connaissanceRegionAutresTotal) * 100, 1);
+    }
     $activeSheet->setCellValueByColumnAndRow($endCol, $startRow+$key, $result . "%");
 }
 foreach($connaissance_types as $key=>$type){
     $activeSheet->setCellValueByColumnAndRow($startCol, $startRow + $key, $type);
     foreach ($monthes as $k => $v) {
-        $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow + $key, round(($connaissanceRegionAutresByMonthByType[$v][$key]/$connaissanceRegionAutresByMonthTotal[$v])*100,1)."%" );
+        $res = 0;
+        if($connaissanceRegionAutresByMonthTotal[$v]){
+            $res = round(($connaissanceRegionAutresByMonthByType[$v][$key]/$connaissanceRegionAutresByMonthTotal[$v])*100,1);
+        }
+        $activeSheet->setCellValueByColumnAndRow($startCol + 1 + $k, $startRow + $key, $res ."%" );
     }
     $endRow++;
 }
@@ -967,23 +1039,47 @@ foreach($monthes as $k => $v){
         $tresSatisfaitTotal["rapport"] = 0;
     }
     $tresSatisfaitTotal["rapport"] += $satisfactionByMonth[$v]["rapport"][0];
-    $result = round( ( ( $satisfactionByMonth[$v]["globalement"][0] + $satisfactionByMonth[$v]["globalement"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if($satisfactionByMonthTotal[$v]>0){
+        $result = round( ( ( $satisfactionByMonth[$v]["globalement"][0] + $satisfactionByMonth[$v]["globalement"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    }
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow, $result."%");
-    $result = round( ( ( $satisfactionByMonth[$v]["chambres"][0] + $satisfactionByMonth[$v]["chambres"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if($satisfactionByMonthTotal[$v]>0){
+        $result = round( ( ( $satisfactionByMonth[$v]["chambres"][0] + $satisfactionByMonth[$v]["chambres"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    }
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+1, $result."%");
-    $result = round( ( ( $satisfactionByMonth[$v]["restauration"][0] + $satisfactionByMonth[$v]["restauration"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if($satisfactionByMonthTotal[$v]>0){
+        $result = round( ( ( $satisfactionByMonth[$v]["restauration"][0] + $satisfactionByMonth[$v]["restauration"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    }
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+2, $result."%");
-    $result = round( ( ( $satisfactionByMonth[$v]["bar"][0] + $satisfactionByMonth[$v]["bar"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if($satisfactionByMonthTotal[$v]>0){
+        $result = round( ( ( $satisfactionByMonth[$v]["bar"][0] + $satisfactionByMonth[$v]["bar"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    }
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+3, $result."%");
-    $result = round( ( ( $satisfactionByMonth[$v]["accueil"][0] + $satisfactionByMonth[$v]["accueil"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if($satisfactionByMonthTotal[$v]>0){
+        $result = round( ( ( $satisfactionByMonth[$v]["accueil"][0] + $satisfactionByMonth[$v]["accueil"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    }
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+4, $result."%");
-    $result = round( ( ( $satisfactionByMonth[$v]["environnement"][0] + $satisfactionByMonth[$v]["environnement"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if($satisfactionByMonthTotal[$v]>0){
+        $result = round( ( ( $satisfactionByMonth[$v]["environnement"][0] + $satisfactionByMonth[$v]["environnement"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    }
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+5, $result."%");
-    $result = round( ( ( $satisfactionByMonth[$v]["rapport"][0] + $satisfactionByMonth[$v]["rapport"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if($satisfactionByMonthTotal[$v]>0){
+        $result = round( ( ( $satisfactionByMonth[$v]["rapport"][0] + $satisfactionByMonth[$v]["rapport"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    }
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+6, $result."%");
 }
 foreach($datas_services_bis_shorts as $k=>$type){
-    $result = round((($satisfaitTotal[$type]+$tresSatisfaitTotal[$type])/$totalSatisfaction) *100, 1);
+    $result = 0;
+    if($totalSatisfaction){
+        $result = round((($satisfaitTotal[$type]+$tresSatisfaitTotal[$type])/$totalSatisfaction) *100, 1);
+    }
     $activeSheet->setCellValueByColumnAndRow($endCol, $startRow + $k, $result."%");
 }
 $endRow +=7;
@@ -1027,23 +1123,55 @@ foreach($datas_services_bis as $k=>$service){
     $activeSheet->setCellValueByColumnAndRow($startCol, $startRow+$k, $service);
 }
 foreach($monthes as $k => $v){
-    $result = round( ( $satisfactionByMonth[$v]["globalement"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if($satisfactionByMonthTotal[$v]>0){
+        $result = round( ( $satisfactionByMonth[$v]["globalement"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow, $result."%");
-    $result = round( ( $satisfactionByMonth[$v]["chambres"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if($satisfactionByMonthTotal[$v]>0){
+        $result = round( ( $satisfactionByMonth[$v]["chambres"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+1, $result."%");
-    $result = round( ( $satisfactionByMonth[$v]["restauration"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if($satisfactionByMonthTotal[$v]>0){
+        $result = round( ( $satisfactionByMonth[$v]["restauration"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+2, $result."%");
-    $result = round( ( $satisfactionByMonth[$v]["bar"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if($satisfactionByMonthTotal[$v]>0){
+        $result = round( ( $satisfactionByMonth[$v]["bar"][0] / $satisfactionByMonthTotal[$v] ) * 100 , 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+3, $result."%");
-    $result = round( ( $satisfactionByMonth[$v]["accueil"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if($satisfactionByMonthTotal[$v]>0){
+        $result = round( ( $satisfactionByMonth[$v]["accueil"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+4, $result."%");
-    $result = round( ( $satisfactionByMonth[$v]["environnement"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if($satisfactionByMonthTotal[$v]>0){
+        $result = round( ( $satisfactionByMonth[$v]["environnement"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+5, $result."%");
-    $result = round( ( $satisfactionByMonth[$v]["rapport"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if($satisfactionByMonthTotal[$v]>0){
+        $result = round( ( $satisfactionByMonth[$v]["rapport"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+6, $result."%");
 }
 foreach($datas_services_bis_shorts as $k=>$type){
-    $result = round(($tresSatisfaitTotal[$type]/$totalSatisfaction) *100, 1);
+    $result = 0;
+    if($totalSatisfaction>0){
+        $result = round(($tresSatisfaitTotal[$type]/$totalSatisfaction) *100, 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($endCol, $startRow + $k, $result."%");
 }
 $endRow +=7;
@@ -1145,21 +1273,49 @@ foreach($monthes as $k => $v){
         $tresSatisfaitTotal["resto_prix"] = 0;
     }
     $tresSatisfaitTotal["resto_prix"] += $satisfactionByMonth[$v]["resto_prix"][0];
-    $result = round( ( ( $satisfactionByMonth[$v]["resto_amabilite"][0] + $satisfactionByMonth[$v]["resto_amabilite"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if($satisfactionByMonthTotal[$v]>0){
+        $result = round( ( ( $satisfactionByMonth[$v]["resto_amabilite"][0] + $satisfactionByMonth[$v]["resto_amabilite"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow, $result."%");
-    $result = round( ( ( $satisfactionByMonth[$v]["resto_service"][0] + $satisfactionByMonth[$v]["resto_service"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if($satisfactionByMonthTotal[$v]>0){
+        $result = round( ( ( $satisfactionByMonth[$v]["resto_service"][0] + $satisfactionByMonth[$v]["resto_service"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+1, $result."%");
-    $result = round( ( ( $satisfactionByMonth[$v]["resto_diversite"][0] + $satisfactionByMonth[$v]["resto_diversite"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if($satisfactionByMonthTotal[$v]>0){
+        $result = round( ( ( $satisfactionByMonth[$v]["resto_diversite"][0] + $satisfactionByMonth[$v]["resto_diversite"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+2, $result."%");
-    $result = round( ( ( $satisfactionByMonth[$v]["resto_plats"][0] + $satisfactionByMonth[$v]["resto_plats"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if($satisfactionByMonthTotal[$v]>0){
+        $result = round( ( ( $satisfactionByMonth[$v]["resto_plats"][0] + $satisfactionByMonth[$v]["resto_plats"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+3, $result."%");
-    $result = round( ( ( $satisfactionByMonth[$v]["resto_vins"][0] + $satisfactionByMonth[$v]["resto_vins"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if($satisfactionByMonthTotal[$v]>0){
+        $result = round( ( ( $satisfactionByMonth[$v]["resto_vins"][0] + $satisfactionByMonth[$v]["resto_vins"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+4, $result."%");
-    $result = round( ( ( $satisfactionByMonth[$v]["resto_prix"][0] + $satisfactionByMonth[$v]["resto_prix"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if($satisfactionByMonthTotal[$v]>0){
+        $result = round( ( ( $satisfactionByMonth[$v]["resto_prix"][0] + $satisfactionByMonth[$v]["resto_prix"][1] ) /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+5, $result."%");
 }
 foreach($datas_resto_shorts as $k=>$type){
-    $result = round((($tresSatisfaitTotal[$type]+$satisfaitTotal[$type])/$totalSatisfaction) *100, 1);
+    $result = 0;
+    if($totalSatisfaction>0){
+        $result = round((($tresSatisfaitTotal[$type]+$satisfaitTotal[$type])/$totalSatisfaction) *100, 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($endCol, $startRow + $k, $result."%");
 }
 $endRow +=6;
@@ -1203,21 +1359,48 @@ foreach($datas_resto as $k=>$service){
     $activeSheet->setCellValueByColumnAndRow($startCol, $startRow+$k, $service);
 }
 foreach($monthes as $k => $v){
-    $result = round( ( $satisfactionByMonth[$v]["resto_amabilite"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if( $satisfactionByMonthTotal[$v]>0){
+        $result = round( ( $satisfactionByMonth[$v]["resto_amabilite"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow, $result."%");
-    $result = round( ( $satisfactionByMonth[$v]["resto_service"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if($satisfactionByMonthTotal[$v]>0){
+        $result = round( ( $satisfactionByMonth[$v]["resto_service"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+1, $result."%");
-    $result = round( (  $satisfactionByMonth[$v]["resto_diversite"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if($satisfactionByMonthTotal[$v]>0){
+
+        $result = round( (  $satisfactionByMonth[$v]["resto_diversite"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    }
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+2, $result."%");
-    $result = round( (  $satisfactionByMonth[$v]["resto_plats"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if($satisfactionByMonthTotal[$v]>0){
+
+        $result = round( (  $satisfactionByMonth[$v]["resto_plats"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    }
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+3, $result."%");
-    $result = round( (  $satisfactionByMonth[$v]["resto_vins"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if($satisfactionByMonthTotal[$v]>0){
+        $result = round( (  $satisfactionByMonth[$v]["resto_vins"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    }
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+4, $result."%");
-    $result = round( (  $satisfactionByMonth[$v]["resto_prix"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    $result = 0;
+    if($satisfactionByMonthTotal[$v]>0){
+        $result = round( (  $satisfactionByMonth[$v]["resto_prix"][0] /  $satisfactionByMonthTotal[$v]) * 100 , 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+5, $result."%");
 }
 foreach($datas_resto_shorts as $k=>$type){
-    $result = round(($tresSatisfaitTotal[$type]/$totalSatisfaction) *100, 1);
+    $result = 0;
+    if($totalSatisfaction>0){
+
+        $result = round(($tresSatisfaitTotal[$type]/$totalSatisfaction) *100, 1);
+    }
     $activeSheet->setCellValueByColumnAndRow($endCol, $startRow + $k, $result."%");
 }
 $endRow +=6;
@@ -1269,19 +1452,27 @@ $activeSheet->setCellValueByColumnAndRow($startCol, $endRow, "Total");
 $satisfactionPrixTotalByType = [0,0,0];
 $satisfactionPrixTotalEffectif = 0;
 foreach($monthes as $k=>$v){
-    if($satisfactionByMonthPrixTotalEffectif[$v] == 0){
+    if( !array_key_exists($v, $satisfactionByMonthPrixTotalEffectif) || $satisfactionByMonthPrixTotalEffectif[$v] == 0){
         continue;
     }
     $satisfactionPrixTotalEffectif += $satisfactionByMonthPrixTotalEffectif[$v];
     foreach($satisfactionByMonth[$v]["prix"] as $perc=>$num){
-        $result = round(($num / $satisfactionByMonthPrixTotalEffectif[$v]) * 100, 1);
+        $result = 0;
+        if($satisfactionByMonthPrixTotalEffectif[$v]>0){
+            $result = round(($num / $satisfactionByMonthPrixTotalEffectif[$v]) * 100, 1);
+        }
+
         $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+$perc, $result."%");
         $satisfactionPrixTotalByType[$perc] += $num;
     }
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $endRow, $satisfactionByMonthPrixTotalEffectif[$v]);
 }
 foreach($satisfactionPrixTotalByType as $k=>$v){
-    $result = round(($v/$satisfactionPrixTotalEffectif) * 100, 1);
+    $result = 0;
+    if($satisfactionPrixTotalEffectif>0){
+        $result = round(($v/$satisfactionPrixTotalEffectif) * 100, 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($endCol, $startRow+$k, $result . "%");
 }
 $activeSheet->setCellValueByColumnAndRow($endCol, $endRow, $satisfactionPrixTotalEffectif);
@@ -1333,19 +1524,27 @@ $activeSheet->setCellValueByColumnAndRow($startCol, $endRow, "Total");
 $satisfactionSpaTotalByType = [0,0,0,0];
 $satisfactionSpaTotalEffectif = 0;
 foreach($monthes as $k=>$v){
-    if($satisfactionByMonthSpaTotalEffectif[$v] == 0){
+    if(!array_key_exists($v, $satisfactionByMonthSpaTotalEffectif) || $satisfactionByMonthSpaTotalEffectif[$v] == 0){
         continue;
     }
     $satisfactionSpaTotalEffectif += $satisfactionByMonthSpaTotalEffectif[$v];
     foreach($satisfactionByMonth[$v]["spa"] as $perc=>$num){
-        $result = round(($num / $satisfactionByMonthSpaTotalEffectif[$v]) * 100, 1);
+        $result = 0;
+        if($satisfactionByMonthSpaTotalEffectif[$v]>0){
+            $result = round(($num / $satisfactionByMonthSpaTotalEffectif[$v]) * 100, 1);
+        }
+
         $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+$perc, $result."%");
         $satisfactionSpaTotalByType[$perc] += $num;
     }
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $endRow, $satisfactionByMonthSpaTotalEffectif[$v]);
 }
 foreach($satisfactionSpaTotalByType as $k=>$v){
-    $result = round(($v/$satisfactionSpaTotalEffectif) * 100, 1);
+    $result = 0;
+    if($satisfactionSpaTotalEffectif>0){
+        $result = round(($v/$satisfactionSpaTotalEffectif) * 100, 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($endCol, $startRow+$k, $result . "%");
 }
 $activeSheet->setCellValueByColumnAndRow($endCol, $endRow, $satisfactionSpaTotalEffectif );
@@ -1400,14 +1599,22 @@ foreach($monthes as $k => $v){
     }
     $visiteZooEffectifTotal +=  $visiteZooByMonthEffectif[$v];
     foreach($visiteZooByMonth[$v] as $key=>$yesNo){
-        $num = round(($yesNo / $visiteZooByMonthEffectif[$v]) * 100, 1);
+        $num = 0;
+        if($visiteZooByMonthEffectif[$v]>0){
+            $num = round(($yesNo / $visiteZooByMonthEffectif[$v]) * 100, 1);
+        }
+
         $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+$key, $num."%");
         $visiteZooByYesNoTotal[$key] += $yesNo;
     }
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $endRow, $visiteZooByMonthEffectif[$v]);
 }
 foreach($visiteZooByYesNoTotal as $k=>$v){
-    $result = round(($v/$visiteZooEffectifTotal) * 100, 1);
+    $result = 0;
+    if($visiteZooEffectifTotal>0){
+        $result = round(($v/$visiteZooEffectifTotal) * 100, 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($endCol, $startRow+$k, $result . "%");
 }
 $activeSheet->setCellValueByColumnAndRow($endCol, $endRow, $visiteZooEffectifTotal);
@@ -1459,7 +1666,7 @@ $activeSheet->setCellValueByColumnAndRow($startCol, $endRow, "Total");
 $satisfactionRevenirEffectifTotal = 0;
 $satisfactionRevenirByTypeEffectifTotal = [0,0,0,0];
 foreach($monthes as $k => $v){
-    if($satisfactionByMonthRevenirTotalEffectif[$v] == 0){
+    if(!array_key_exists($v, $satisfactionByMonthRevenirTotalEffectif) || $satisfactionByMonthRevenirTotalEffectif[$v] == 0){
         continue;
     }
     $satisfactionRevenirEffectifTotal += $satisfactionByMonthRevenirTotalEffectif[$v];
@@ -1471,7 +1678,11 @@ foreach($monthes as $k => $v){
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $endRow, $satisfactionByMonthRevenirTotalEffectif[$v]);
 }
 foreach($satisfactionRevenirByTypeEffectifTotal as $k=>$v){
-    $result = round(($v/$satisfactionRevenirEffectifTotal) * 100, 1);
+    $result = 0;
+    if($satisfactionRevenirEffectifTotal>0){
+        $result = round(($v/$satisfactionRevenirEffectifTotal) * 100, 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($endCol, $startRow+$k, $result . "%");
 }
 $activeSheet->setCellValueByColumnAndRow($endCol, $endRow, $satisfactionRevenirEffectifTotal);
@@ -1523,19 +1734,27 @@ $activeSheet->setCellValueByColumnAndRow($startCol, $endRow, "Total");
 $satisfactionRecommanderEffectifTotal = 0;
 $satisfactionRecommanderByTypeEffectifTotal = [0,0,0,0];
 foreach($monthes as $k => $v){
-    if($satisfactionByMonthRecommanderTotalEffectif[$v] == 0){
+    if(!array_key_exists($v, $satisfactionByMonthRecommanderTotalEffectif) || $satisfactionByMonthRecommanderTotalEffectif[$v] == 0){
         continue;
     }
     $satisfactionRecommanderEffectifTotal += $satisfactionByMonthRecommanderTotalEffectif[$v];
     foreach($satisfactionByMonth[$v]["recommander"] as $perc=>$num){
-        $result = round(($num / $satisfactionByMonthRecommanderTotalEffectif[$v]) * 100, 1);
+        $result = 0;
+        if($satisfactionByMonthRecommanderTotalEffectif[$v]>0){
+            $result = round(($num / $satisfactionByMonthRecommanderTotalEffectif[$v]) * 100, 1);
+        }
+
         $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+$perc, $result."%");
         $satisfactionRecommanderByTypeEffectifTotal[$perc] += $num;
     }
     $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $endRow, $satisfactionByMonthRecommanderTotalEffectif[$v]);
 }
 foreach($satisfactionRecommanderByTypeEffectifTotal as $k=>$v){
-    $result = round(($v/$satisfactionRecommanderEffectifTotal) * 100, 1);
+    $result = 0;
+    if($satisfactionRecommanderEffectifTotal>0){
+        $result = round(($v/$satisfactionRecommanderEffectifTotal) * 100, 1);
+    }
+
     $activeSheet->setCellValueByColumnAndRow($endCol, $startRow+$k, $result . "%");
 }
 $activeSheet->setCellValueByColumnAndRow($endCol, $endRow, $satisfactionRecommanderEffectifTotal);
