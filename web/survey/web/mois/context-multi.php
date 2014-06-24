@@ -23,7 +23,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="page-header page-header-hotel">
-                    <h2>Context du séjour à l'hôtel Les Jardins de Beauval</h2>
+                    <h2>Contexte du séjour à l'hôtel Les Jardins de Beauval</h2>
                 </div>
             </div>
         </div>

@@ -117,9 +117,11 @@ $totalEtranger = 0;
 $totalOriginEntry = 0;
 /// par departements
 $clientsByDeptsByMonth = [];
+$monthesList = array_slice($datas_mois, 0, $monthEnd-1);
 foreach ($departements as $num => $name) {
     $clientsByDeptsByMonth[$num] = [];
-    foreach ($datas_mois as $mois) {
+
+    foreach ($monthesList as $mois) {
         $clientsByDeptsByMonth[$num][$mois] = 0;
     }
 }
@@ -736,6 +738,7 @@ $activeSheet->setCellValueByColumnAndRow($endCol, $startRow, "Total");
 $startRow += 1;
 $endRow = $startRow;
 $counter = 0;
+
 foreach ($numAllDeptsByMonthPercent as $dep => $mois) {
     $activeSheet->setCellValueByColumnAndRow($startCol, $endRow, $dep . " - " . $departements[$dep]);
     $monthCounter = 0;
@@ -1671,7 +1674,11 @@ foreach($monthes as $k => $v){
     }
     $satisfactionRevenirEffectifTotal += $satisfactionByMonthRevenirTotalEffectif[$v];
     foreach($satisfactionByMonth[$v]["revenir"] as $perc=>$num){
-        $result = round(($num / $satisfactionByMonthRevenirTotalEffectif[$v]) * 100, 1);
+        $result = 0;
+        if($satisfactionByMonthRevenirTotalEffectif[$v]>0){
+            $result = round(($num / $satisfactionByMonthRevenirTotalEffectif[$v]) * 100, 1);
+        }
+
         $activeSheet->setCellValueByColumnAndRow($startCol+1+$k, $startRow+$perc, $result."%");
         $satisfactionRevenirByTypeEffectifTotal[$perc] += $num;
     }

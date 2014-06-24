@@ -52,14 +52,14 @@ $q1_8 = isset($f["q1"]["res_8"]) ? 1 : 0;
 $q1_9 = isset($f["q1"]["res_9"]) ? 1 : 0;
 $q1_10 = isset($f["q1"]["res_10"]) ? 1 : 0;
 $q1_11 = isset($f["q1"]["res_11"]) ? 1 : 0;
-$q1_12 = isset($f["q1"]["res_12"]) ? htmlentities(strip_tags($f["q1"]["res_12"]),ENT_COMPAT|ENT_HTML5) : "";
+$q1_12 = isset($f["q1"]["res_12"]) ? htmlentities(strip_tags($f["q1"]["res_12"]), ENT_COMPAT|ENT_HTML5, "UTF-8") : "";
 
 
 
 // ##################  Q2 ################## //
 // clients
 // departement_num
-$q2_1 = isset($f["q2"]["res_1"]) ? htmlentities(strip_tags($f["q2"]["res_1"]), ENT_COMPAT|ENT_HTML5) : "";
+$q2_1 = isset($f["q2"]["res_1"]) ? htmlentities(strip_tags($f["q2"]["res_1"]), ENT_COMPAT|ENT_HTML5, "UTF-8") : "";
 if(preg_match("/^[1-9]$/",$q2_1)){
     $q2_1 = "0" . $q2_1;
 }
@@ -70,7 +70,7 @@ if(!in_array($q2_1, $depts_num)){
 $departement_name = $departements[$q2_1];
 // pays
 // clients
-$q2_2 = isset($f["q2"]["res_2"]) ? htmlentities(strip_tags($f["q2"]["res_2"]), ENT_COMPAT|ENT_HTML5) : "";
+$q2_2 = isset($f["q2"]["res_2"]) ? htmlentities(strip_tags($f["q2"]["res_2"]), ENT_COMPAT|ENT_HTML5, "UTF-8") : "";
 
 
 
@@ -233,7 +233,7 @@ $q16 = (isset($f["q16"]) && is_numeric($f["q16"]) && $f["q16"] > 0 && $f["q16"] 
 // ##################  Q17 ################## //
 // clients
 // commentaire
-$q17 = isset($f["q17"]) ? htmlentities(strip_tags($f["q17"]), ENT_COMPAT|ENT_HTML5) : "";
+$q17 = isset($f["q17"]) ? htmlentities(strip_tags($f["q17"]), ENT_COMPAT|ENT_HTML5, "UTF-8") : "";
 
 
 
@@ -271,13 +271,13 @@ $q20 = (isset($f["q20"]) && is_numeric($f["q20"]) && $f["q20"] > -1 && $f["q20"]
 $q21 = (isset($f["q21"]) && is_numeric($f["q21"]) && ($f["q21"] == 1 || $f["q21"]==2)) ? $f["q21"] : 2;
 
 // clients
-$q_nom = isset($f["q_nom"]) ? htmlentities(strip_tags($f["q_nom"])) : "";
+$q_nom = isset($f["q_nom"]) ? htmlentities(strip_tags($f["q_nom"]), ENT_COMPAT|ENT_HTML5, "UTF-8") : "";
 
 
-$q_prenom = isset($f["q_prenom"]) ? htmlentities(strip_tags($f["q_prenom"])) : "";
+$q_prenom = isset($f["q_prenom"]) ? htmlentities(strip_tags($f["q_prenom"]), ENT_COMPAT|ENT_HTML5, "UTF-8") : "";
 
 
-$q_email = isset($f["q_email"]) ? htmlentities(strip_tags($f["q_email"])) : "";
+$q_email = isset($f["q_email"]) ? strip_tags($f["q_email"]) : "";
 
 
 

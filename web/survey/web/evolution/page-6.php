@@ -35,7 +35,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="page-header page-header-hotel">
-                    <h4>Question : &laquo; Au regard de la qualité des chambres et de l'environnement de l'hôtel, avez-vous trouvez le prix : &raquo;</h4>
+                    <h4>Question : &laquo; Au regard de la qualité des chambres et de l'environnement de l'hôtel, avez-vous trouvé le prix : &raquo;</h4>
                 </div>
             </div>
         </div>
